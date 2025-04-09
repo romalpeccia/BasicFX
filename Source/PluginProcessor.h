@@ -60,8 +60,8 @@ public:
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
     std::atomic<float>* gateParam;
-    int numSamplesFromPrevAttack = 0, numSamplesFromPrevRelease = 0;
-    bool attackOpenFromPrevBuffer = false, releaseOpenFromPrevBuffer = false;
+    int numSamplesFromPrevAttack = 0, numSamplesFromPrevRelease = 0, numSamplesFromPrevHold = 0;
+    bool attackOpenFromPrevBuffer = false, releaseOpenFromPrevBuffer = false, holdOpenFromPrevBuffer;
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicFXAudioProcessor)

@@ -44,6 +44,15 @@ void BasicFXAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock
     // initialisation that you need..
 }
 
+
+float calculateRMS(const float* samples, int numSamples) {
+    float sum = 0.0;
+    for (int i = 0; i < numSamples; ++i) {
+        sum += samples[i] * samples[i];  // Square each sample and add to sum
+    }
+    return std::sqrt(sum / numSamples);  // Take the square root of the average of the squared samples
+}
+
 void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
@@ -64,8 +73,9 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
 
 
-    //noise gate simple
+
     /*
+    //noise gate simple
     for (int sampleNum = 0; sampleNum < numSamples; ++sampleNum) {
         bool triggerGate = false;
         for (int channel = 0; channel < totalNumInputChannels; ++channel) {
@@ -82,43 +92,81 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
             }
         }
     }*/
+
     
-    /**/
-    float attack = 0.001;
+    //noise gate better
+    bool triggerGate = false;
+    for (int sampleNum = 0; sampleNum < numSamples; ++sampleNum) {
+
+        for (int channel = 0; channel < totalNumInputChannels; ++channel) {
+            auto* channelData = buffer.getWritePointer(channel);
+            if (calculateRMS(channelData, numSamples) < *gateParam) {
+                triggerGate = true;
+                break;
+            }
+        }
+
+    }
+    if (triggerGate == true) {
+
+        for (int channel = 0; channel < totalNumInputChannels; ++channel) {
+            auto* channelData = buffer.getWritePointer(channel);
+            for (int sampleNum = 0; sampleNum < numSamples; ++sampleNum) {
+                channelData[sampleNum] = 0;
+            }
+        }
+    }
+    
+
+
+    /*
+    //noise gate super overcomplicated
+    float attack = 0.01;
     float release = 0.2;
     float hold = 0.02;
     int samplesPerAttackWindow = attack * sampleRate;
     int samplesPerReleaseWindow = release * sampleRate;
     int samplesPerHoldWindow = hold * sampleRate;
 
-    int attackSampleCounter = 0, releaseSampleCounter = 0;
-    bool attackActive = false, releaseActive = false;
+    int attackSampleCounter = 0, releaseSampleCounter = 0, holdSampleCounter = 0;
+    bool attackActive = false, releaseActive = false, holdActive = false;
     
     if (attackOpenFromPrevBuffer) {
         attackActive = true;
         attackSampleCounter = numSamplesFromPrevAttack;
-       // DBG("ATTACK");
     }
     else if (releaseOpenFromPrevBuffer) {
         releaseActive = true;
         releaseSampleCounter = numSamplesFromPrevRelease;
-       // DBG("RELEASE");
+    }
+
+    if (holdOpenFromPrevBuffer) {
+        holdActive = true;
+        holdSampleCounter = numSamplesFromPrevHold;
     }
  
     for (int sampleNum = 0; sampleNum < numSamples; ++sampleNum) {
 
-        if (!attackActive && !releaseActive) {
+        if (1==1) {
             for (int channel = 0; channel < totalNumInputChannels; ++channel) {
                 auto* channelData = buffer.getWritePointer(channel); //TODO make this more efficient?
-                if (fabs(channelData[sampleNum]) < *gateParam && channelData[sampleNum] != 0) {
+                //if (fabs(channelData[sampleNum]) < *gateParam && channelData[sampleNum] != 0) {
+                if (calculateRMS(channelData,numSamples) < *gateParam){
+                    if (!releaseActive && !holdActive) {
+                        
+                        attackSampleCounter = samplesPerAttackWindow;
+                    }
+                    else {
+                        holdActive = true;
+                        holdSampleCounter = samplesPerHoldWindow;
+                    }
                     attackActive = true;
-                    attackSampleCounter = samplesPerAttackWindow;
                     break;
                 }
             }
         }
 
-        if (attackActive == true) {
+        if (attackActive == true ) {
             for (int channel = 0; channel < totalNumInputChannels; ++channel) {
                 auto* channelData = buffer.getWritePointer(channel);
                 float ratio = float(attackSampleCounter) / float(samplesPerAttackWindow);
@@ -127,23 +175,37 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
             attackSampleCounter--;
 
-            if (attackSampleCounter <= 0) {
-                attackActive = false;
-                attackOpenFromPrevBuffer = false;
+            if (holdActive == true) {
+                holdSampleCounter--;
+            }
 
-                releaseActive = true;
-                releaseSampleCounter = samplesPerReleaseWindow;
+            if (attackSampleCounter <= 0) {
+                if (holdActive == true) {
+                    if (holdSampleCounter <= 0) {
+                        holdActive = false;
+                    }
+                    attackSampleCounter = 0;//this sets the ratio to multiply the samples by to 0 while hold is active
+                }
+                else {
+                    attackActive = false;
+                    attackOpenFromPrevBuffer = false;
+
+                    releaseActive = true;
+                    releaseSampleCounter = samplesPerReleaseWindow;
+                }
+
             }
         }
 
-        if (releaseActive == true) {
+        if (releaseActive == true && holdActive == false) {
             for (int channel = 0; channel < totalNumInputChannels; ++channel) {
                 auto* channelData = buffer.getWritePointer(channel);
+
+
                 float ratio = 1 - (float(releaseSampleCounter) / float(samplesPerReleaseWindow));
                 channelData[sampleNum] *= ratio;
             }
             releaseSampleCounter--;
-
 
             if (releaseSampleCounter <= 0) {
                 releaseActive = false;
@@ -174,12 +236,18 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
         releaseOpenFromPrevBuffer = false;
         numSamplesFromPrevRelease = 0;
     }
-    
-
+    if (holdSampleCounter > 0) {
+        numSamplesFromPrevHold = holdSampleCounter;
+        holdOpenFromPrevBuffer = true;
+    }
+    */
     float gateValue = *gateParam; // NOTE: why cant i just put *gateParam in the function? weird
     auto db = juce::Decibels::toString(juce::Decibels::gainToDecibels(gateValue), 2, -100.f, false);
     //DBG(db);
 }
+
+
+
 //==============================================================================
 const juce::String BasicFXAudioProcessor::getName() const
 {
