@@ -22,7 +22,16 @@ BasicFXAudioProcessor::BasicFXAudioProcessor()
                        )
 #endif
 {
-    gateParam = apvts.getRawParameterValue(GATE_STRING);
+    gateOnParam = apvts.getRawParameterValue(GATE_ON_STRING);
+    thresholdParam = apvts.getRawParameterValue(THRESHOLD_STRING);
+    gateStateParam = apvts.getRawParameterValue(GATE_STATE_STRING);
+    attackParam = apvts.getRawParameterValue(ATTACK_STRING);
+    releaseParam = apvts.getRawParameterValue(RELEASE_STRING);
+    holdParam = apvts.getRawParameterValue(HOLD_STRING);
+
+    distortionOnParam = apvts.getRawParameterValue(DISTORTION_ON_STRING);
+    distortionParam = apvts.getRawParameterValue(DISTORTION_STRING);
+    distortionStateParam = apvts.getRawParameterValue(DISTORTION_STATE_STRING);
 }
 
 BasicFXAudioProcessor::~BasicFXAudioProcessor()
@@ -33,8 +42,16 @@ juce::AudioProcessorValueTreeState::ParameterLayout BasicFXAudioProcessor::creat
     //Creates all the parameters that change based on the user input and returns them in a AudioProcessorValueTreeState::ParameterLayout object
 
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
-    layout.add(std::make_unique<juce::AudioParameterFloat>(GATE_STRING, GATE_STRING.toLowerCase(), juce::NormalisableRange<float>(0, 1.f, 0.001f, 1.f), 0.f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(THRESHOLD_STRING, THRESHOLD_STRING.toLowerCase(), juce::NormalisableRange<float>(0, 1.f, 0.001, 1.f), 0.f));
+    layout.add(std::make_unique<juce::AudioParameterBool>(GATE_ON_STRING, GATE_ON_STRING.toLowerCase(), false));
+    layout.add(std::make_unique<juce::AudioParameterChoice>(GATE_STATE_STRING, GATE_STATE_STRING.toLowerCase(), juce::StringArray{ BASIC_GATE_STRING, RMS_GATE_STRING, ATTACK_HOLD_RELEASE_GATE_STRING }, 0));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ATTACK_STRING, ATTACK_STRING.toLowerCase(), juce::NormalisableRange<float>(0.00002, 0.15, 0.001, 1.f), 0.00002));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(RELEASE_STRING, RELEASE_STRING.toLowerCase(), juce::NormalisableRange<float>(0.0001, 3, 0.001, 1.f), 0.0001));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(HOLD_STRING, HOLD_STRING.toLowerCase(), juce::NormalisableRange<float>(0.001, 1.5, 0.001, 1.f), 0.001));
 
+    layout.add(std::make_unique<juce::AudioParameterBool>(DISTORTION_ON_STRING, DISTORTION_ON_STRING.toLowerCase(), false));
+    layout.add(std::make_unique<juce::AudioParameterChoice>(DISTORTION_STATE_STRING, DISTORTION_STATE_STRING.toLowerCase(), juce::StringArray {BIT_CRUSHER_STRING, WAVE_RECTIFIER_STRING, SOFT_CLIPPER_STRING, SLEW_LIMITER_STRING }, 0));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(DISTORTION_STRING, DISTORTION_STRING.toLowerCase(), juce::NormalisableRange<float>(0, 1.f, 0.001, 1.f), 0.f));
     return layout;
 
 }
@@ -45,19 +62,13 @@ void BasicFXAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock
 }
 
 
-float calculateRMS(const float* samples, int numSamples) {
-    float sum = 0.0;
-    for (int i = 0; i < numSamples; ++i) {
-        sum += samples[i] * samples[i];  // Square each sample and add to sum
-    }
-    return std::sqrt(sum / numSamples);  // Take the square root of the average of the squared samples
-}
-
 void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
+    int numSamples = buffer.getNumSamples();
+    int sampleRate = getSampleRate();
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
@@ -66,21 +77,78 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     // when they first compile a plugin, but obviously you don't need to keep
     // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear(i, 0, buffer.getNumSamples());
+        buffer.clear(i, 0, numSamples);
 
+    DBG(*gateStateParam);
+    if (*gateOnParam == true) {
+        if (*gateStateParam == 0) {
+            processGateSimple(buffer);
+        }
+        else if (*gateStateParam == 1) {
+            processGateMedium(buffer);
+        }
+        else if (*gateStateParam == 2) {
+            processGateAdvanced(buffer);
+        }
+    }
+   
+    if (*distortionOnParam == true) {
+        if (*distortionStateParam == 0) {
+            processDistortionWaveRectifier(buffer);
+        }
+        else if (*distortionStateParam == 1) {
+
+        }
+        else if (*distortionStateParam == 2) {
+
+        }
+        else if (*distortionStateParam == 3) {
+
+        }
+        
+    }
+
+}
+
+void BasicFXAudioProcessor::processDistortionWaveRectifier(juce::AudioBuffer<float>& buffer) {
+    //at 0 behaves as a half-wave rectifier, at 1 behaves as a full-wave rectifier,
+    auto totalNumInputChannels = getTotalNumInputChannels();
     int numSamples = buffer.getNumSamples();
-    int sampleRate = getSampleRate();
+    for (int channel = 0; channel < totalNumInputChannels; channel++) {
+        auto* channelData = buffer.getWritePointer(channel);
+        for (int sampleNum = 0; sampleNum < numSamples; sampleNum++) {
+            if (channelData[sampleNum] < 0) {
+                channelData[sampleNum] *= *distortionParam * -1;
+            }
+        }
+    }
+}
+void BasicFXAudioProcessor::processDistortionBitCrusher(juce::AudioBuffer<float>& buffer) {
 
+}
+void BasicFXAudioProcessor::processDistortionSoftClipper(juce::AudioBuffer<float>& buffer) {
 
+}
+void BasicFXAudioProcessor::processDistortionSlewLimiter(juce::AudioBuffer<float>& buffer) {
 
+}
 
-    /*
-    //noise gate simple
+float calculateRMS(const float* samples, int numSamples) {
+    float sum = 0.0;
+    for (int i = 0; i < numSamples; ++i) {
+        sum += samples[i] * samples[i];  
+    }
+    return std::sqrt(sum / numSamples);
+}
+
+void BasicFXAudioProcessor::processGateSimple(juce::AudioBuffer<float>& buffer) {
+    auto totalNumInputChannels = getTotalNumInputChannels();
+    int numSamples = buffer.getNumSamples();
     for (int sampleNum = 0; sampleNum < numSamples; ++sampleNum) {
         bool triggerGate = false;
         for (int channel = 0; channel < totalNumInputChannels; ++channel) {
             auto* channelData = buffer.getWritePointer(channel);
-            if (abs(channelData[sampleNum]) < *gateParam) {
+            if (abs(channelData[sampleNum]) < *thresholdParam) {
                 triggerGate = true;
                 break;
             }
@@ -91,21 +159,20 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
                 channelData[sampleNum] = 0;
             }
         }
-    }*/
+    }
+}
 
-    
-    //noise gate better
+void BasicFXAudioProcessor::processGateMedium(juce::AudioBuffer<float>& buffer) {
+    auto totalNumInputChannels = getTotalNumInputChannels();
+    int numSamples = buffer.getNumSamples();
+
     bool triggerGate = false;
-    for (int sampleNum = 0; sampleNum < numSamples; ++sampleNum) {
-
-        for (int channel = 0; channel < totalNumInputChannels; ++channel) {
-            auto* channelData = buffer.getWritePointer(channel);
-            if (calculateRMS(channelData, numSamples) < *gateParam) {
-                triggerGate = true;
-                break;
-            }
+    for (int channel = 0; channel < totalNumInputChannels; ++channel) {
+        auto* channelData = buffer.getWritePointer(channel);
+        if (calculateRMS(channelData, numSamples) < *thresholdParam) {
+            triggerGate = true;
+            break;
         }
-
     }
     if (triggerGate == true) {
 
@@ -116,57 +183,58 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
             }
         }
     }
-    
+}
 
-
-    /*
-    //noise gate super overcomplicated
-    float attack = 0.01;
-    float release = 0.2;
-    float hold = 0.02;
+void BasicFXAudioProcessor::processGateAdvanced(juce::AudioBuffer<float>& buffer) {
+    //TODO: try rewriting this with better handling of state. 
+    auto totalNumInputChannels = getTotalNumInputChannels();
+    int numSamples = buffer.getNumSamples();
+    int sampleRate = getSampleRate();
+    float attack = *attackParam;
+    float release = *releaseParam;
+    float hold = *holdParam;
     int samplesPerAttackWindow = attack * sampleRate;
     int samplesPerReleaseWindow = release * sampleRate;
     int samplesPerHoldWindow = hold * sampleRate;
 
     int attackSampleCounter = 0, releaseSampleCounter = 0, holdSampleCounter = 0;
     bool attackActive = false, releaseActive = false, holdActive = false;
-    
-    if (attackOpenFromPrevBuffer) {
+
+    if (attackActiveFromPrevBuffer) {
         attackActive = true;
         attackSampleCounter = numSamplesFromPrevAttack;
     }
-    else if (releaseOpenFromPrevBuffer) {
+    else if (releaseActiveFromPrevBuffer) {
         releaseActive = true;
         releaseSampleCounter = numSamplesFromPrevRelease;
     }
 
-    if (holdOpenFromPrevBuffer) {
+    if (holdActiveFromPrevBuffer) {
         holdActive = true;
         holdSampleCounter = numSamplesFromPrevHold;
     }
- 
+
     for (int sampleNum = 0; sampleNum < numSamples; ++sampleNum) {
 
-        if (1==1) {
-            for (int channel = 0; channel < totalNumInputChannels; ++channel) {
-                auto* channelData = buffer.getWritePointer(channel); //TODO make this more efficient?
-                //if (fabs(channelData[sampleNum]) < *gateParam && channelData[sampleNum] != 0) {
-                if (calculateRMS(channelData,numSamples) < *gateParam){
-                    if (!releaseActive && !holdActive) {
-                        
-                        attackSampleCounter = samplesPerAttackWindow;
-                    }
-                    else {
-                        holdActive = true;
-                        holdSampleCounter = samplesPerHoldWindow;
-                    }
-                    attackActive = true;
-                    break;
+        for (int channel = 0; channel < totalNumInputChannels; ++channel) {
+            auto* channelData = buffer.getWritePointer(channel); //TODO make this more efficient?
+            float rms = calculateRMS(channelData, numSamples);
+            if (rms < *thresholdParam && rms != 0) {
+                if (!releaseActive && !holdActive) {
+
+                    attackSampleCounter = samplesPerAttackWindow;
                 }
+                else {
+                    holdActive = true;
+                    holdSampleCounter = samplesPerHoldWindow;
+                }
+                attackActive = true;
+                break;
             }
         }
 
-        if (attackActive == true ) {
+        //holdActive = false; //for debugging
+        if (attackActive == true) {
             for (int channel = 0; channel < totalNumInputChannels; ++channel) {
                 auto* channelData = buffer.getWritePointer(channel);
                 float ratio = float(attackSampleCounter) / float(samplesPerAttackWindow);
@@ -178,6 +246,9 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
             if (holdActive == true) {
                 holdSampleCounter--;
             }
+            else {
+
+            }
 
             if (attackSampleCounter <= 0) {
                 if (holdActive == true) {
@@ -188,7 +259,7 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
                 }
                 else {
                     attackActive = false;
-                    attackOpenFromPrevBuffer = false;
+                    attackActiveFromPrevBuffer = false;
 
                     releaseActive = true;
                     releaseSampleCounter = samplesPerReleaseWindow;
@@ -201,7 +272,6 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
             for (int channel = 0; channel < totalNumInputChannels; ++channel) {
                 auto* channelData = buffer.getWritePointer(channel);
 
-
                 float ratio = 1 - (float(releaseSampleCounter) / float(samplesPerReleaseWindow));
                 channelData[sampleNum] *= ratio;
             }
@@ -209,44 +279,52 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
             if (releaseSampleCounter <= 0) {
                 releaseActive = false;
-                releaseOpenFromPrevBuffer = false;
+                releaseActiveFromPrevBuffer = false;
             }
+        }
+        else if (holdActive == true) {
+            holdSampleCounter--;
+            if (holdSampleCounter <= 0) {
+                holdActive = false;
+            }
+            else {
+                for (int channel = 0; channel < totalNumInputChannels; ++channel) {
+                    auto* channelData = buffer.getWritePointer(channel);
+                    channelData[sampleNum] = 0;
+                }
+            }
+
         }
 
         if (releaseActive == true && attackActive == true) {
-            DBG("ATTACK");
-            DBG(attackSampleCounter); //TODO: throw exception
-            DBG("RELEASE");
-            DBG(releaseSampleCounter);
+            DBG("ATTACK/RELEASE ERROR");
         }
     }
-    
+
     if (attackSampleCounter > 0) {
         numSamplesFromPrevAttack = attackSampleCounter;
-        attackOpenFromPrevBuffer = true;
+        attackActiveFromPrevBuffer = true;
     }
     else if (releaseSampleCounter > 0) {
         numSamplesFromPrevAttack = 0;
-        attackOpenFromPrevBuffer = false;
+        attackActiveFromPrevBuffer = false;
 
         numSamplesFromPrevRelease = releaseSampleCounter;
-        releaseOpenFromPrevBuffer = true;
+        releaseActiveFromPrevBuffer = true;
     }
     else {
-        releaseOpenFromPrevBuffer = false;
+        releaseActiveFromPrevBuffer = false;
         numSamplesFromPrevRelease = 0;
     }
     if (holdSampleCounter > 0) {
         numSamplesFromPrevHold = holdSampleCounter;
-        holdOpenFromPrevBuffer = true;
+        holdActiveFromPrevBuffer = true;
     }
-    */
-    float gateValue = *gateParam; // NOTE: why cant i just put *gateParam in the function? weird
+
+    float gateValue = *thresholdParam; // NOTE: why cant i just put *thresholdParam in the function? weird
     auto db = juce::Decibels::toString(juce::Decibels::gainToDecibels(gateValue), 2, -100.f, false);
     //DBG(db);
 }
-
-
 
 //==============================================================================
 const juce::String BasicFXAudioProcessor::getName() const

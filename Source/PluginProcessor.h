@@ -59,9 +59,27 @@ public:
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
-    std::atomic<float>* gateParam;
+    std::atomic<float>* thresholdParam;
+    std::atomic<float>* gateStateParam; 
+    std::atomic<float>* gateOnParam;
+    std::atomic<float>* attackParam;
+    std::atomic<float>* releaseParam;
+    std::atomic<float>* holdParam;
     int numSamplesFromPrevAttack = 0, numSamplesFromPrevRelease = 0, numSamplesFromPrevHold = 0;
-    bool attackOpenFromPrevBuffer = false, releaseOpenFromPrevBuffer = false, holdOpenFromPrevBuffer;
+    bool attackActiveFromPrevBuffer = false, releaseActiveFromPrevBuffer = false, holdActiveFromPrevBuffer = false;
+    void processGateSimple(juce::AudioBuffer<float>& buffer);
+    void processGateMedium(juce::AudioBuffer<float>& buffer);
+    void processGateAdvanced(juce::AudioBuffer<float>& buffer);
+
+    std::atomic<float>* distortionParam;
+    std::atomic<float>* distortionOnParam; //TODO: why does this not work as a bool? why does it work as a float? weird
+    std::atomic<float>* distortionStateParam;
+    void processDistortionWaveRectifier(juce::AudioBuffer<float>& buffer);
+    void processDistortionBitCrusher(juce::AudioBuffer<float>& buffer);
+    void processDistortionSoftClipper(juce::AudioBuffer<float>& buffer);
+    void processDistortionSlewLimiter(juce::AudioBuffer<float>& buffer);
+
+
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicFXAudioProcessor)

@@ -31,9 +31,25 @@ private:
     BasicFXAudioProcessor& audioProcessor;
     juce::AudioProcessorValueTreeState& apvts;
 
-    juce::Slider gateSlider{ juce::Slider::SliderStyle::Rotary,  juce::Slider::TextEntryBoxPosition::TextBoxBelow};
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gateAttachment;
 
+    //noise gate components
+    juce::TextButton gateButton{ "Gate" };
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> gateButtonAttachment;
+    juce::Slider thresholdSlider{ juce::Slider::SliderStyle::Rotary,  juce::Slider::TextEntryBoxPosition::TextBoxBelow};
+    juce::Slider attackSlider{ juce::Slider::SliderStyle::Rotary,  juce::Slider::TextEntryBoxPosition::TextBoxBelow };
+    juce::Slider holdSlider{ juce::Slider::SliderStyle::Rotary,  juce::Slider::TextEntryBoxPosition::TextBoxBelow };
+    juce::Slider releaseSlider{ juce::Slider::SliderStyle::Rotary,  juce::Slider::TextEntryBoxPosition::TextBoxBelow };
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> thresholdAttachment, attackAttachment, holdAttachment, releaseAttachment;
+    juce::ComboBox gateMenu;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> gateMenuAttachment;
+
+
+    juce::TextButton distortionButton{ "Distortion" };
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> distortionButtonAttachment;
+    juce::ComboBox distortionMenu;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> distortionMenuAttachment;
+    juce::Slider distortionSlider{ juce::Slider::SliderStyle::Rotary,  juce::Slider::TextEntryBoxPosition::TextBoxBelow };
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> distortionSliderAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicFXAudioProcessorEditor)
 };
