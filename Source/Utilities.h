@@ -57,13 +57,36 @@ const juce::Colour COMPONENT_COLOUR_OFF = juce::Colours::dimgrey;
 class CustomLookAndFeel : public juce::LookAndFeel_V4 {
 public:
 
+    juce::Slider::SliderLayout getSliderLayout(juce::Slider& slider) override
+    {
+        juce::Slider::SliderLayout layout;
+
+        // The bounds of the entire component
+        auto bounds = slider.getLocalBounds();
+
+        // You define where the slider part goes
+        layout.sliderBounds = bounds; // or a custom area
+
+        // Define your custom textbox bounds
+        int textAreaWidth = bounds.getWidth()/2;
+        int textAreaHeight = (bounds.getHeight() > textAreaWidth) ? textAreaWidth/2 : bounds.getHeight()/2;
+        layout.textBoxBounds = juce::Rectangle<int>(
+            bounds.getCentreX() - textAreaWidth/2 ,
+            bounds.getCentreY() - textAreaHeight/2,
+            textAreaWidth,
+            textAreaHeight
+        );
+
+        return layout;
+    }
+
     void drawRotarySlider(Graphics& g, int x, int y, int width, int height, float sliderPos,
         const float rotaryStartAngle, const float rotaryEndAngle, Slider& slider) override
     {
         auto outline = slider.findColour(Slider::rotarySliderOutlineColourId);
         auto fill = slider.findColour(Slider::rotarySliderFillColourId);
 
-        auto bounds = Rectangle<int>(x, y, width, height).toFloat().reduced(10);
+        auto bounds = Rectangle<int>(x, y, width, height).toFloat();
 
         auto radius = jmin(bounds.getWidth(), bounds.getHeight()) / 2.0f;
         auto toAngle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
@@ -108,6 +131,7 @@ public:
 };
 
 class CustomSlider : public juce::Slider {
+
     public:
         CustomSlider(juce::String name) {
             setColour(juce::Slider::ColourIds::backgroundColourId, COMPONENT_COLOUR_OFF);
@@ -122,7 +146,7 @@ class CustomSlider : public juce::Slider {
             setColour(juce::Slider::ColourIds::thumbColourId, secondaryColour);
             setColour(juce::Slider::ColourIds::backgroundColourId, COMPONENT_COLOUR_OFF);
             setSliderStyle(juce::Slider::SliderStyle::Rotary);
-            hideTextBox(true);
+            setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
             setName(name);
             setUnits(units);
             setLookAndFeel(&lnf);
@@ -133,7 +157,10 @@ class CustomSlider : public juce::Slider {
         };
 
         juce::String getUnits() { return units; }
-        void setUnits(juce::String _units){ units = _units; }
+        void setUnits(juce::String _units) {
+            units = _units; updateText();
+            
+        }
 
         void paint(juce::Graphics& g) override {
             auto startAngle = juce::degreesToRadians(180.f + 45.f);
@@ -146,11 +173,18 @@ class CustomSlider : public juce::Slider {
             auto y = bounds.getY();
             getLookAndFeel().drawRotarySlider(g, x, y, width , height ,jmap(getValue(), range.getStart(), range.getEnd(), 0.0, 1.0), startAngle, endAngle, *this);
 
-            int fontHeight = height * 0.05f;
+            //TODO: make this nicer looking / cleaner / make text editable
+            int textAreaWidth = bounds.getWidth() / 2;
+            int textAreaHeight = (bounds.getHeight() > textAreaWidth) ? textAreaWidth / 2 : bounds.getHeight() / 2;
+            x = bounds.getCentre().getX() - textAreaWidth/2 - textAreaWidth / 10;
+            y = bounds.getCentre().getY() - textAreaHeight/2;
+            int fontHeight = textAreaHeight /2;
             fontHeight = (fontHeight > 5) ? fontHeight : 5;
             g.setFont(fontHeight);
-            g.drawText(getName(), x, y + fontHeight, width, fontHeight, juce::Justification::centredLeft);
-            g.drawText(units, x + getName().length() + units.length(), y + fontHeight, width, fontHeight, juce::Justification::centred); // temp value, figure out rest of layout first
+            g.drawText(getName(), x, y , juce::Font(fontHeight).getStringWidth(getName()), fontHeight, juce::Justification::centred);
+            g.drawText(juce::String(getValue()), x, y + fontHeight, juce::Font(fontHeight).getStringWidth(juce::String(getValue())), fontHeight, juce::Justification::centred);
+            g.drawText(units, x + juce::Font(fontHeight).getStringWidth("0.000000"), y + fontHeight, juce::Font(fontHeight).getStringWidth(units), fontHeight, juce::Justification::centredRight); // temp value, figure out rest of layout first
+            
         };
     private:
         CustomLookAndFeel lnf;
