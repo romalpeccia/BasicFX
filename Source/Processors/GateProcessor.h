@@ -21,13 +21,13 @@ public:
     float getAttack() { return *attackParam; }
     float getRelease() { return *releaseParam; }
     float getHold() { return *holdParam; }
-    void processBlock(juce::AudioBuffer<float>& buffer, int _totalNumInputChannels, int sampleRate);
+    void processBlock(juce::AudioBuffer<float>& buffer);
+    void prepareToPlay(double _sampleRate, int _totalNumInputChannels) { sampleRate = _sampleRate, totalNumInputChannels = _totalNumInputChannels; }
 private:
     juce::AudioProcessorValueTreeState& apvts;
     int totalNumInputChannels = 2;
-
+    float sampleRate = 44100.f;
     
-
     std::atomic<float>* thresholdParam;
     std::atomic<float>* gateTypeParam;
     std::atomic<float>* onStateParam;
@@ -37,8 +37,7 @@ private:
 
     void processGateSimple(juce::AudioBuffer<float>& buffer);
     void processGateMedium(juce::AudioBuffer<float>& buffer);
-    void processGateAdvanced(juce::AudioBuffer<float>& buffer, int sampleRate);
-
+    void processGateAdvanced(juce::AudioBuffer<float>& buffer);
 
     enum class GateState {
         Open,

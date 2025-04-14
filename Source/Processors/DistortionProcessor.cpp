@@ -17,8 +17,7 @@ DistortionProcessor::DistortionProcessor(juce::AudioProcessorValueTreeState& _ap
     distortionTypeParam = apvts.getRawParameterValue(DISTORTION_TYPE_STRING);
 }
 
-void DistortionProcessor::processBlock(juce::AudioBuffer <float>& buffer, int _totalNumInputChannels, int sampleRate) {
-    totalNumInputChannels = _totalNumInputChannels;
+void DistortionProcessor::processBlock(juce::AudioBuffer <float>& buffer) {
     if (*onStateParam) {
         switch (int(*distortionTypeParam)) {
         case 0:
@@ -105,7 +104,6 @@ void DistortionProcessor::processDistortionSlewLimiter(juce::AudioBuffer<float>&
     float maxDelta = 1 - *amountParam;
     for (int channel = 0; channel < totalNumInputChannels; channel++) {
         auto* channelData = buffer.getWritePointer(channel);
-
         float prevSample;
         for (int sampleNum = 0; sampleNum < numSamples; sampleNum++) {
             float currSample = channelData[sampleNum];

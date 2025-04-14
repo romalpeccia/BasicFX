@@ -59,6 +59,9 @@ void BasicFXAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    gateProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
+    distortionProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
+    flangerProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
 }
 
 
@@ -75,9 +78,9 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
         buffer.clear(i, 0, numSamples);
 
 
-    gateProcessor.processBlock(buffer, totalNumInputChannels, sampleRate);
-    distortionProcessor.processBlock(buffer, totalNumInputChannels, sampleRate);
-    flangerProcessor.processBlock(buffer, totalNumInputChannels, sampleRate);
+    gateProcessor.processBlock(buffer);
+    distortionProcessor.processBlock(buffer);
+    flangerProcessor.processBlock(buffer);
     
 
 }

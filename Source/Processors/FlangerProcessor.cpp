@@ -15,18 +15,18 @@ FlangerProcessor::FlangerProcessor(juce::AudioProcessorValueTreeState& _apvts) :
     onStateParam = apvts.getRawParameterValue(FLANGER_ON_STRING);
     mixParam = apvts.getRawParameterValue(FLANGER_MIX_STRING);
 }
-void FlangerProcessor::processBlock(juce::AudioBuffer<float>& buffer, int totalNumInputChannels, int sampleRate) {
+void FlangerProcessor::processBlock(juce::AudioBuffer<float>& buffer) {
     if (*onStateParam) {
         int numSamples = buffer.getNumSamples();
-        float delayInSamples = *delayParam / float(sampleRate);
+        float delayInSamples = *delayParam * float(sampleRate);
         for (int channel = 0; channel < totalNumInputChannels; channel++) {
             auto* channelData = buffer.getWritePointer(channel);
-            for (int sampleNum = 0; sampleNum < delayInSamples; sampleNum++) {
+            for (int sampleNum = 0; sampleNum < numSamples; sampleNum++) {
 
-                float flangeSample = 1;
-
-                float drySample = (1 - *mixParam / 100) * channelData[sampleNum];
+                delayBuffer.write(channel, channelData[sampleNum]);
+                float flangeSample = delayBuffer.readInterpolated(channel, delayInSamples);
                 float wetSample = ((*mixParam) / 100) * flangeSample;
+                float drySample = (1 - *mixParam / 100) * channelData[sampleNum];
                 channelData[sampleNum] = drySample + wetSample;
             }
         }

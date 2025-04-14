@@ -18,11 +18,12 @@ public:
     float getAmount() { return *amountParam; }
     bool getOnState() { return bool(*onStateParam); }
     float getGateType() { return *distortionTypeParam; }
-    void processBlock(juce::AudioBuffer<float>& buffer, int _totalNumInputChannels, int sampleRate);
+    void processBlock(juce::AudioBuffer<float>& buffer);
+    void prepareToPlay(double _sampleRate, int _totalNumInputChannels) { sampleRate = _sampleRate, totalNumInputChannels = _totalNumInputChannels; }
 private:
     juce::AudioProcessorValueTreeState& apvts;
     int totalNumInputChannels = 2;
-
+    float sampleRate = 44100.f;
     std::atomic<float>* amountParam;
     std::atomic<float>* onStateParam; //TODO: why does this not work as a bool? why does it work as a float? weird
     std::atomic<float>* distortionTypeParam;

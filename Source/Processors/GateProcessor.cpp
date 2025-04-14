@@ -20,8 +20,7 @@ GateProcessor::GateProcessor(juce::AudioProcessorValueTreeState& _apvts) : apvts
     holdParam = apvts.getRawParameterValue(HOLD_STRING);
 }
 
-void GateProcessor::processBlock(juce::AudioBuffer <float>& buffer, int _totalNumInputChannels, int sampleRate) {
-    totalNumInputChannels = _totalNumInputChannels;
+void GateProcessor::processBlock(juce::AudioBuffer <float>& buffer) {
     if (*onStateParam) {
         switch (int(*gateTypeParam)) {
         case 0:
@@ -31,14 +30,11 @@ void GateProcessor::processBlock(juce::AudioBuffer <float>& buffer, int _totalNu
             processGateMedium(buffer);
             break;
         case 2:
-            processGateAdvanced(buffer, sampleRate);
+            processGateAdvanced(buffer);
             break;
         }
     }
 }
-
-
-
 
 
 float calculateRMS(const float* samples, int numSamples) {
@@ -100,7 +96,7 @@ void GateProcessor::processGateMedium(juce::AudioBuffer<float>& buffer) {
     }
 }
 
-void GateProcessor::processGateAdvanced(juce::AudioBuffer<float>& buffer, int sampleRate) {
+void GateProcessor::processGateAdvanced(juce::AudioBuffer<float>& buffer) {
 
     int numSamples = buffer.getNumSamples();
     float attack = *attackParam;
