@@ -46,10 +46,6 @@ void BasicFXAudioProcessorEditor::resized()
     gateComponent.setBounds(gateBounds);
     distortionComponent.setBounds(distortionBounds);
     flangerComponent.setBounds(flangerBounds);
-
-    
-
-
 }
 
 std::vector<juce::Component*> BasicFXAudioProcessorEditor::getVisibleComps() {

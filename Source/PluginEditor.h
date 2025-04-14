@@ -10,9 +10,9 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "GateComponent.h"
-#include "DistortionComponent.h"
-#include "FlangerComponent.h"
+#include "Components/GateComponent.h"
+#include "Components/DistortionComponent.h"
+#include "Components/FlangerComponent.h"
 //==============================================================================
 /**
 */
@@ -34,9 +34,7 @@ private:
     juce::AudioProcessorValueTreeState& apvts;
 
     GateComponent gateComponent{ apvts };
-
     DistortionComponent distortionComponent{ apvts };
-
     FlangerComponent flangerComponent{ apvts };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicFXAudioProcessorEditor)

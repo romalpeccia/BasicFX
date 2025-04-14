@@ -11,7 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-
+using namespace juce;
 
 
 const int MAX_INPUT_CHANNELS = 16;
@@ -45,3 +45,162 @@ const juce::String FLANGER_MIX_STRING = "FLANGER_MIX";
 const juce::String FLANGER_ON_STRING = "FLANGER_ON";
 //const float DELAY_MAX = 0.01; 
 const float DELAY_MAX = 1; //for debugging
+
+const juce::Colour GATE_COLOUR_1 = juce::Colours::mediumpurple;
+const juce::Colour GATE_COLOUR_2 = juce::Colours::darkorange;
+const juce::Colour DISTORTION_COLOUR_1 = juce::Colours::hotpink;
+const juce::Colour DISTORTION_COLOUR_2 = juce::Colours::deepskyblue;
+const juce::Colour FLANGER_COLOUR_1 = juce::Colours::darkolivegreen;
+const juce::Colour FLANGER_COLOUR_2 = juce::Colours::yellow;
+const juce::Colour COMPONENT_COLOUR_OFF = juce::Colours::dimgrey;
+
+class CustomLookAndFeel : public juce::LookAndFeel_V4 {
+public:
+
+    void drawRotarySlider(Graphics& g, int x, int y, int width, int height, float sliderPos,
+        const float rotaryStartAngle, const float rotaryEndAngle, Slider& slider) override
+    {
+        auto outline = slider.findColour(Slider::rotarySliderOutlineColourId);
+        auto fill = slider.findColour(Slider::rotarySliderFillColourId);
+
+        auto bounds = Rectangle<int>(x, y, width, height).toFloat().reduced(10);
+
+        auto radius = jmin(bounds.getWidth(), bounds.getHeight()) / 2.0f;
+        auto toAngle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
+        auto lineW = jmin(8.0f, radius * 0.5f);
+        auto arcRadius = radius - lineW * 0.5f;
+
+        Path backgroundArc;
+        backgroundArc.addCentredArc(bounds.getCentreX(),
+            bounds.getCentreY(),
+            arcRadius,
+            arcRadius,
+            0.0f,
+            rotaryStartAngle,
+            rotaryEndAngle,
+            true);
+
+        g.setColour(outline);
+        g.strokePath(backgroundArc, PathStrokeType(lineW, PathStrokeType::curved, PathStrokeType::rounded));
+
+        if (slider.isEnabled())
+        {
+            Path valueArc;
+            valueArc.addCentredArc(bounds.getCentreX(),
+                bounds.getCentreY(),
+                arcRadius,
+                arcRadius,
+                0.0f,
+                rotaryStartAngle,
+                toAngle,
+                true);
+
+            g.setColour(fill);
+            g.strokePath(valueArc, PathStrokeType(lineW, PathStrokeType::curved, PathStrokeType::rounded));
+        }
+
+        auto thumbWidth = lineW * 2.0f;
+        Point<float> thumbPoint(bounds.getCentreX() + arcRadius * std::cos(toAngle - MathConstants<float>::halfPi),
+            bounds.getCentreY() + arcRadius * std::sin(toAngle - MathConstants<float>::halfPi));
+        g.setColour(slider.findColour(Slider::thumbColourId));
+        g.fillEllipse(Rectangle<float>(thumbWidth, thumbWidth).withCentre(thumbPoint));
+    }
+};
+
+class CustomSlider : public juce::Slider {
+    public:
+        CustomSlider(juce::String name) {
+            setColour(juce::Slider::ColourIds::backgroundColourId, COMPONENT_COLOUR_OFF);
+            setName(name);
+            setLookAndFeel(&lnf);
+        };
+        CustomSlider(juce::String name, juce::String units, const juce::Colour mainColour, const juce::Colour secondaryColour) {
+            setColour(juce::Slider::ColourIds::textBoxOutlineColourId, mainColour);
+            setColour(juce::Slider::ColourIds::textBoxTextColourId, secondaryColour.brighter(0.5f));
+            setColour(juce::Slider::ColourIds::textBoxBackgroundColourId, mainColour.darker(0.5f));
+            setColour(juce::Slider::ColourIds::trackColourId, mainColour);
+            setColour(juce::Slider::ColourIds::thumbColourId, secondaryColour);
+            setColour(juce::Slider::ColourIds::backgroundColourId, COMPONENT_COLOUR_OFF);
+            setSliderStyle(juce::Slider::SliderStyle::Rotary);
+            hideTextBox(true);
+            setName(name);
+            setUnits(units);
+            setLookAndFeel(&lnf);
+
+        };
+        ~CustomSlider() {
+            setLookAndFeel(nullptr);
+        };
+
+        juce::String getUnits() { return units; }
+        void setUnits(juce::String _units){ units = _units; }
+
+        void paint(juce::Graphics& g) override {
+            auto startAngle = juce::degreesToRadians(180.f + 45.f);
+            auto endAngle = juce::degreesToRadians(180.f - 45.f) + MathConstants<float>::twoPi; 
+            auto range = getRange();
+            auto bounds = getLocalBounds();
+            auto height = bounds.getHeight();
+            auto width = bounds.getWidth();
+            auto x = bounds.getX();
+            auto y = bounds.getY();
+            getLookAndFeel().drawRotarySlider(g, x, y, width , height ,jmap(getValue(), range.getStart(), range.getEnd(), 0.0, 1.0), startAngle, endAngle, *this);
+
+            int fontHeight = height * 0.05f;
+            fontHeight = (fontHeight > 5) ? fontHeight : 5;
+            g.setFont(fontHeight);
+            g.drawText(getName(), x, y + fontHeight, width, fontHeight, juce::Justification::centredLeft);
+            g.drawText(units, x + getName().length() + units.length(), y + fontHeight, width, fontHeight, juce::Justification::centred); // temp value, figure out rest of layout first
+        };
+    private:
+        CustomLookAndFeel lnf;
+        juce::String units;
+};
+
+
+class CustomTextButton : public juce::TextButton {
+    public:
+        CustomTextButton() {
+            setLookAndFeel(&lnf);
+        };
+        CustomTextButton(const juce::String& name, const juce::Colour buttonColour) {
+            setLookAndFeel(&lnf);
+            setColour(juce::TextButton::ColourIds::buttonOnColourId, buttonColour);
+            setColour(juce::TextButton::ColourIds::buttonColourId, COMPONENT_COLOUR_OFF);
+            setButtonText(name);
+        };
+        ~CustomTextButton() {
+            setLookAndFeel(nullptr);
+        };
+        void paintButton(Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
+        {
+            lnf.drawButtonBackground(g, *this,
+                findColour(getToggleState() ? juce::TextButton::ColourIds::buttonOnColourId : juce::TextButton::ColourIds::buttonColourId),
+                shouldDrawButtonAsHighlighted, shouldDrawButtonAsDown);
+            lnf.drawButtonText(g, *this, shouldDrawButtonAsHighlighted, shouldDrawButtonAsDown);
+        }
+
+    private:
+        CustomLookAndFeel lnf;
+};
+
+
+
+
+class CustomComboBox : public juce::ComboBox {
+    public:
+        CustomComboBox() {  }
+        CustomComboBox(const juce::Colour mainColour, const juce::Colour secondaryColour) {
+            setColour(juce::ComboBox::ColourIds::outlineColourId, mainColour);
+            setColour(juce::ComboBox::ColourIds::textColourId, secondaryColour.brighter(0.5f));
+            setColour(juce::ComboBox::ColourIds::backgroundColourId, mainColour.darker(0.5f));
+            setColour(juce::ComboBox::ColourIds::arrowColourId, mainColour);
+            setColour(juce::ComboBox::ColourIds::focusedOutlineColourId, secondaryColour);
+            setColour(juce::ComboBox::ColourIds::buttonColourId, secondaryColour);
+            //setColour(juce::ComboBox::ColourIds::backgroundColourId, COMPONENT_COLOUR_OFF);
+            //setLookAndFeel(&lnf);
+        };
+        ~CustomComboBox() {}
+    private:
+        //CustomLookAndFeel lnf;
+};

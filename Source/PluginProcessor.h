@@ -10,9 +10,9 @@
 
 #include <JuceHeader.h>
 #include "Utilities.h"
-#include "GateProcessor.h"
-#include "DistortionProcessor.h"
-#include "FlangerProcessor.h"
+#include "Processors/GateProcessor.h"
+#include "Processors/DistortionProcessor.h"
+#include "Processors/FlangerProcessor.h"
 //==============================================================================
 /**
 */

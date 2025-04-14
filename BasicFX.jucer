@@ -4,31 +4,31 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="raWmpG" name="BasicFX">
     <GROUP id="{A1F0544F-3C73-4724-D918-5CDB1150ED99}" name="Source">
-      <GROUP id="{4EAE394E-7B95-4758-D6A3-9716E8827A8A}" name="Components">
-        <FILE id="krBVBr" name="DistortionComponent.cpp" compile="1" resource="0"
-              file="Source/DistortionComponent.cpp"/>
-        <FILE id="XTE6Ag" name="DistortionComponent.h" compile="0" resource="0"
-              file="Source/DistortionComponent.h"/>
-        <FILE id="pSRQSC" name="FlangerComponent.cpp" compile="1" resource="0"
-              file="Source/FlangerComponent.cpp"/>
-        <FILE id="aKCBkK" name="FlangerComponent.h" compile="0" resource="0"
-              file="Source/FlangerComponent.h"/>
-        <FILE id="idWPeE" name="GateComponent.cpp" compile="1" resource="0"
-              file="Source/GateComponent.cpp"/>
-        <FILE id="ccc2zw" name="GateComponent.h" compile="0" resource="0" file="Source/GateComponent.h"/>
+      <GROUP id="{033A6964-5620-C0D2-B02B-4FCBD9CA1D89}" name="Processors">
+        <FILE id="bB5YXP" name="DistortionProcessor.cpp" compile="1" resource="0"
+              file="Source/Processors/DistortionProcessor.cpp"/>
+        <FILE id="RrUGFr" name="DistortionProcessor.h" compile="0" resource="0"
+              file="Source/Processors/DistortionProcessor.h"/>
+        <FILE id="VZup3b" name="FlangerProcessor.cpp" compile="1" resource="0"
+              file="Source/Processors/FlangerProcessor.cpp"/>
+        <FILE id="ikpVZi" name="FlangerProcessor.h" compile="0" resource="0"
+              file="Source/Processors/FlangerProcessor.h"/>
+        <FILE id="ftk8N3" name="GateProcessor.cpp" compile="1" resource="0"
+              file="Source/Processors/GateProcessor.cpp"/>
+        <FILE id="YpNWTZ" name="GateProcessor.h" compile="0" resource="0" file="Source/Processors/GateProcessor.h"/>
       </GROUP>
-      <GROUP id="{01631E9B-1303-7E72-D05A-03F5C882A864}" name="Processors">
-        <FILE id="ypuPFA" name="DistortionProcessor.cpp" compile="1" resource="0"
-              file="Source/DistortionProcessor.cpp"/>
-        <FILE id="EdlpSU" name="DistortionProcessor.h" compile="0" resource="0"
-              file="Source/DistortionProcessor.h"/>
-        <FILE id="ipqwhK" name="GateProcessor.cpp" compile="1" resource="0"
-              file="Source/GateProcessor.cpp"/>
-        <FILE id="MqqB73" name="GateProcessor.h" compile="0" resource="0" file="Source/GateProcessor.h"/>
-        <FILE id="IFm8kU" name="FlangerProcessor.cpp" compile="1" resource="0"
-              file="Source/FlangerProcessor.cpp"/>
-        <FILE id="X1tppb" name="FlangerProcessor.h" compile="0" resource="0"
-              file="Source/FlangerProcessor.h"/>
+      <GROUP id="{D6AE0E26-765B-93DC-4CB9-7C1337A90FF2}" name="Components">
+        <FILE id="SroXRo" name="DistortionComponent.cpp" compile="1" resource="0"
+              file="Source/Components/DistortionComponent.cpp"/>
+        <FILE id="lGtR6M" name="DistortionComponent.h" compile="0" resource="0"
+              file="Source/Components/DistortionComponent.h"/>
+        <FILE id="hb213e" name="FlangerComponent.cpp" compile="1" resource="0"
+              file="Source/Components/FlangerComponent.cpp"/>
+        <FILE id="LIvVzG" name="FlangerComponent.h" compile="0" resource="0"
+              file="Source/Components/FlangerComponent.h"/>
+        <FILE id="Dd29Ko" name="GateComponent.cpp" compile="1" resource="0"
+              file="Source/Components/GateComponent.cpp"/>
+        <FILE id="zDGvw1" name="GateComponent.h" compile="0" resource="0" file="Source/Components/GateComponent.h"/>
       </GROUP>
       <FILE id="vKto44" name="Utilities.cpp" compile="1" resource="0" file="Source/Utilities.cpp"/>
       <FILE id="SBtSEe" name="Utilities.h" compile="0" resource="0" file="Source/Utilities.h"/>

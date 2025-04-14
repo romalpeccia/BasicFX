@@ -11,7 +11,6 @@
 #include "DistortionProcessor.h"
 
 
-
 DistortionProcessor::DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts) : apvts(_apvts) {
     onStateParam = apvts.getRawParameterValue(DISTORTION_ON_STRING);
     amountParam = apvts.getRawParameterValue(DISTORTION_AMOUNT_STRING);
