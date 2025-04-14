@@ -4,6 +4,32 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="raWmpG" name="BasicFX">
     <GROUP id="{A1F0544F-3C73-4724-D918-5CDB1150ED99}" name="Source">
+      <GROUP id="{4EAE394E-7B95-4758-D6A3-9716E8827A8A}" name="Components">
+        <FILE id="krBVBr" name="DistortionComponent.cpp" compile="1" resource="0"
+              file="Source/DistortionComponent.cpp"/>
+        <FILE id="XTE6Ag" name="DistortionComponent.h" compile="0" resource="0"
+              file="Source/DistortionComponent.h"/>
+        <FILE id="pSRQSC" name="FlangerComponent.cpp" compile="1" resource="0"
+              file="Source/FlangerComponent.cpp"/>
+        <FILE id="aKCBkK" name="FlangerComponent.h" compile="0" resource="0"
+              file="Source/FlangerComponent.h"/>
+        <FILE id="idWPeE" name="GateComponent.cpp" compile="1" resource="0"
+              file="Source/GateComponent.cpp"/>
+        <FILE id="ccc2zw" name="GateComponent.h" compile="0" resource="0" file="Source/GateComponent.h"/>
+      </GROUP>
+      <GROUP id="{01631E9B-1303-7E72-D05A-03F5C882A864}" name="Processors">
+        <FILE id="ypuPFA" name="DistortionProcessor.cpp" compile="1" resource="0"
+              file="Source/DistortionProcessor.cpp"/>
+        <FILE id="EdlpSU" name="DistortionProcessor.h" compile="0" resource="0"
+              file="Source/DistortionProcessor.h"/>
+        <FILE id="ipqwhK" name="GateProcessor.cpp" compile="1" resource="0"
+              file="Source/GateProcessor.cpp"/>
+        <FILE id="MqqB73" name="GateProcessor.h" compile="0" resource="0" file="Source/GateProcessor.h"/>
+        <FILE id="IFm8kU" name="FlangerProcessor.cpp" compile="1" resource="0"
+              file="Source/FlangerProcessor.cpp"/>
+        <FILE id="X1tppb" name="FlangerProcessor.h" compile="0" resource="0"
+              file="Source/FlangerProcessor.h"/>
+      </GROUP>
       <FILE id="vKto44" name="Utilities.cpp" compile="1" resource="0" file="Source/Utilities.cpp"/>
       <FILE id="SBtSEe" name="Utilities.h" compile="0" resource="0" file="Source/Utilities.h"/>
       <FILE id="DKlU4E" name="PluginProcessor.cpp" compile="1" resource="0"
