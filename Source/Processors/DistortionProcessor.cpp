@@ -118,9 +118,16 @@ void DistortionProcessor::processDistortionSlewLimiter(juce::AudioBuffer<float>&
 
             float delta = currSample - prevSample;
             if (fabs(delta) > maxDelta) {
-                currSample = prevSample + juce::jlimit(-maxDelta, maxDelta, maxDelta);
+                if (delta > 0) {
+                    //rising signal, limit rise
+                    currSample = prevSample + juce::jlimit(-maxDelta, maxDelta, maxDelta);
+                }
+                else {
+                    //falling signal, limit fall
+                    currSample = prevSample - juce::jlimit(-maxDelta, maxDelta, maxDelta);
+                }
+                
             }
-            //TODO: add fall case
             channelData[sampleNum] = currSample;
         }
         lastSampleFromPrevBuffer[channel] = channelData[numSamples - 1];
