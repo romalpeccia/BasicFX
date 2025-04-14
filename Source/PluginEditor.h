@@ -51,5 +51,12 @@ private:
     juce::Slider distortionSlider{ juce::Slider::SliderStyle::Rotary,  juce::Slider::TextEntryBoxPosition::TextBoxBelow };
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> distortionSliderAttachment;
 
+
+    juce::TextButton flangerButton{ "Flanger" };
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> flangerButtonAttachment;
+    juce::Slider flangerDelaySlider{ juce::Slider::SliderStyle::Rotary,  juce::Slider::TextEntryBoxPosition::TextBoxBelow };
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> flangerDelaySliderAttachment;
+    juce::Slider flangerMixSlider{ juce::Slider::SliderStyle::Rotary,  juce::Slider::TextEntryBoxPosition::TextBoxBelow };
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> flangerMixAttachment;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicFXAudioProcessorEditor)
 };

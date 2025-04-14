@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FILTERGRAPH>
+  <FILTER uid="3" x="0.5" y="0.9" useARA="0">
+    <PLUGIN name="Audio Output" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="724248cb"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="2"
+            numOutputs="0" isShell="0" hasARAExtension="0" uid="724248cb"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R C Lfe Ls Rs"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="6" x="0.4725" y="0.3850806451612903" useARA="0" uiLastX_Normal="556"
+          uiLastY_Normal="134" uiopen_Normal="1">
+    <PLUGIN name="BasicFX" format="VST3" category="Fx" manufacturer="yourcompany"
+            version="1.0.0" file="C:\Coding\JUCE_PROJECTS\BasicFX\BasicFX\Builds\VisualStudio2022\x64\Debug\VST3\BasicFX.vst3"
+            uniqueId="3a2ec2d" isInstrument="0" fileTime="1962185f7d5" infoUpdateTime="1962187330c"
+            numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
+            uid="e95b3d1b"/>
+    <STATE>675.VMjLgno....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9PiLx3BTEwlXmAiUYoWUrIVdA4hKAomKTETRUAUSAAkKBolQY4BQlETQhQETTUEQtDSQFEFLUYjKAolKA4hKt3hKt3hKt3hKt.UQpQUPvPjKAQDTZoVPP4BRTAETTEUUPMzbD4hKtTETRUDUS4BQP4xaQYjKAgETAgDNDMEQA4hKPUjZTEDLD4RPDAkVpEDTtjDUlQUQ2QUTA0TUQ4hKtPUPIUETMEDTtDjZFkkKDYmPEAUQRIUU5QER3PzTDEjKt.UQpQUPvPjKAQDTZoVPP4BST4RTI0TQU8TREUUR3n1Tt3hKTETRUAUSAAkKAolQY4BQ1MTQPQkTSEELSIUTUI0Szn2UOQCQt3hKUAkTEQ0TtPDTt7VTF4RPHEUPDsldTQENpQEUqo2TNgCLTQUQDUUQA4hKPUjZTEDLD4RPDAkVpEDTtjDU1EUPQUUTkgiZS4hKtPUPIUETMEDTtDjZFkkKD4xPEIFUPQUU5c0TQUETTUEQt3hKUAkTEQ0TtPDTt7VTF4RPHEUPFcGUP4zXTEkT3TTTEcGUPkENUM0TA4hKPUjZTEDLD4RPDAkVpEDTtzDUlEESEo1TGUkZTUFLTIEVA4hKPUjZTEDLD4RPDAkVpEDTtvDUlEESEo1TGUkZTUFNpMkKt3hKt3hKt3hKt3hKtQUUCUEQTg2ZrM1YQcUVDUjQicVPP4RPHQEY1UTLhkWPP4RPL4hKi4hKt3hKt3hKtXlTU0DUQAURWoULEYzXqEEUXoWQFwyKIMzasA2atUlaz4COuX0TTMCTrU2Yo41TzEFck4C.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="7" x="0.21625" y="0.1794354838709677" useARA="0" uiLastX_Normal="3"
+          uiLastY_Normal="60" uiopen_Normal="1">
+    <PLUGIN name="AudioFilePlayer" format="VST3" category="Fx" manufacturer="Matkat Music LLC"
+            version="1.0.0" file="C:\Program Files\Common Files\VST3\AudioFilePlayer.vst3"
+            uniqueId="79fe81c" isInstrument="0" fileTime="17d2a6f682c" infoUpdateTime="1962187330d"
+            numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
+            uid="e95d02c7"/>
+    <STATE>283.VMjLgHQ....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DiL33BTIISX1UEaho2ZVkUdAAkKAwDUigWRWkEcQ0VTucmUY4BQtnTQLolShUELhsVRxHlXIISXyUjQgIVT5ElLzXTX0UjQYk2cEkEdUcUXlYWLgUWPssjLEw1Xt3hKt3hKt3hKt3hKt3FUUMTUDQEdqw1XmE0UYQTQFM1YAAkKAgDUjYWQwHVdAAkKAwjKtLlKt3hKt3hKt3hYRUUSTEETIckVwTjQisVTTgkdEYDOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <CONNECTION srcFilter="6" srcChannel="0" dstFilter="3" dstChannel="0"/>
+  <CONNECTION srcFilter="6" srcChannel="1" dstFilter="3" dstChannel="1"/>
+  <CONNECTION srcFilter="7" srcChannel="0" dstFilter="6" dstChannel="0"/>
+  <CONNECTION srcFilter="7" srcChannel="1" dstFilter="6" dstChannel="1"/>
+</FILTERGRAPH>

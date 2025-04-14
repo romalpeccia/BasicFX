@@ -59,25 +59,40 @@ public:
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
+    //GATE members
     std::atomic<float>* thresholdParam;
     std::atomic<float>* gateStateParam; 
     std::atomic<float>* gateOnParam;
     std::atomic<float>* attackParam;
     std::atomic<float>* releaseParam;
     std::atomic<float>* holdParam;
-    int numSamplesFromPrevAttack = 0, numSamplesFromPrevRelease = 0, numSamplesFromPrevHold = 0;
-    bool attackActiveFromPrevBuffer = false, releaseActiveFromPrevBuffer = false, holdActiveFromPrevBuffer = false;
+
     void processGateSimple(juce::AudioBuffer<float>& buffer);
     void processGateMedium(juce::AudioBuffer<float>& buffer);
     void processGateAdvanced(juce::AudioBuffer<float>& buffer);
+    bool attackActive = false, holdActive = false, releaseActive = false;
+    int attackSampleCounter = 0, releaseSampleCounter = 0, holdSampleCounter = 0; 
+    int retriggerHoldSampleCounter = 0;
+    float attackStartRatio = 1.f; //for when an attack is triggered during a release phase
 
+    //DISTORTION members
     std::atomic<float>* distortionParam;
     std::atomic<float>* distortionOnParam; //TODO: why does this not work as a bool? why does it work as a float? weird
     std::atomic<float>* distortionStateParam;
+
     void processDistortionWaveRectifier(juce::AudioBuffer<float>& buffer);
     void processDistortionBitCrusher(juce::AudioBuffer<float>& buffer);
-    void processDistortionSoftClipper(juce::AudioBuffer<float>& buffer);
+    void processDistortionSoftClipperCubic(juce::AudioBuffer<float>& buffer);
+    void processDistortionSoftClipperArcTan(juce::AudioBuffer<float>& buffer);
     void processDistortionSlewLimiter(juce::AudioBuffer<float>& buffer);
+    float lastSampleFromPrevBuffer[16] = { 0 };
+
+    //FLANGER members
+    std::atomic<float>* flangerDelayParam;
+    std::atomic<float>* flangerOnParam;
+    std::atomic<float>* flangerMixParam;
+    void processFlanger(juce::AudioBuffer<float>& buffer);
+    float delayBuffer[MAX_INPUT_CHANNELS][MAX_BUFFER_SIZE] = { 0 };
 
 
 private:

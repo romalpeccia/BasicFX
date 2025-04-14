@@ -20,10 +20,10 @@
           uiLastY_Normal="134" uiopen_Normal="1">
     <PLUGIN name="BasicFX" format="VST3" category="Fx" manufacturer="yourcompany"
             version="1.0.0" file="C:\Coding\JUCE_PROJECTS\BasicFX\BasicFX\Builds\VisualStudio2022\x64\Debug\VST3\BasicFX.vst3"
-            uniqueId="3a2ec2d" isInstrument="0" fileTime="1961869445f" infoUpdateTime="19618699a15"
+            uniqueId="3a2ec2d" isInstrument="0" fileTime="1961ced62b6" infoUpdateTime="1961cee072a"
             numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
             uid="e95b3d1b"/>
-    <STATE>380.VMjLgLW....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9HCLw3BTEwlXmAiUYoWUrIVdA4hKAQkKTETRUAUSAAkKBolQY4BQlETQhQETTUEQtDSQFEFLUYjKAolKA4hKt3hKt3hKt3hKt.UQpQUPvPjKAQDTZoVPP4BRTAETTEUUPMzbD4hKtTETRUDUS4BQP4xaQYjKAgETAgDNDMEQA4hKPUjZTEDLD4RPDAkVpEDTtjDUlQUQ2QUTA0TUQ4hKtPUPIUETMEDTtDjZFkkKDYmPEAUQRIUU5QER3PzTDEjKt3hKt3hKt3hKt3hYRUUSTEETIckVwTjQisVTTgkdEYjKAQjYPQSPWgUdMcjKAQjct3hdA4hKt3hKt3hKtnTUv.UQAslXuk0UXoWUFE0YQcEV77RRC8Vav8lak4Fc9vyKVMEUy.Ea0cVZtMEcgQWY9..</STATE>
+    <STATE>562.VMjLgjh....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9LyL23BTEwlXmAiUYoWUrIVdA4hKA4lKTETRUAUSAAkKBolQY4BQlETQhQETTUEQtDSQFEFLUYjKAolKA4hKt3hKt3hKt3hKt.UQpQUPvPjKAQDTZoVPP4BRTAETTEUUPMzbD4hKtTETRUDUS4BQP4xaQYjKAgETAgDNDMEQA4hKPUjZTEDLD4RPDAkVpEDTtjDUlQUQ2QUTA0TUQ4hKtPUPIUETMEDTtDjZFkkKDYmPEAUQRIUU5QER3PzTDEjKt.UQpQUPvPjKAQDTZoVPP4BST4RTI0TQU8TREUUR3n1Tt3hKTETRUAUSAAkKAolQY4BQ1MTQPQkTSEELSIUTUI0Szn2UOQCQt3hKUAkTEQ0TtPDTt7VTF4RPHEUPDsldTQENpQEUqo2TNgCLTQUQDUUQA4hKPUjZTEDLD4RPDAkVpEDTtjDU1EUPQUUTkgiZS4hKtPUPIUETMEDTtDjZFkkKD4xPEIFUPQUU5c0TQUETTUEQt3hKt3hKt3hKt3hKtnTUv.UQAslXuk0UXoWUFE0YQcEVtPDTtHzZGI1YMIiXtPDTtLjKPcjKt3hKt3hKt3haTU0PUQDU3sFaicVTWkEQEYzXmEDOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
     <LAYOUT>
       <INPUTS>
         <BUS index="0" layout="L R"/>
@@ -37,7 +37,7 @@
           uiLastY_Normal="60" uiopen_Normal="1">
     <PLUGIN name="AudioFilePlayer" format="VST3" category="Fx" manufacturer="Matkat Music LLC"
             version="1.0.0" file="C:\Program Files\Common Files\VST3\AudioFilePlayer.vst3"
-            uniqueId="79fe81c" isInstrument="0" fileTime="17d2a6f682c" infoUpdateTime="19618699a16"
+            uniqueId="79fe81c" isInstrument="0" fileTime="17d2a6f682c" infoUpdateTime="1961cee072b"
             numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
             uid="e95d02c7"/>
     <STATE>283.VMjLgHQ....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DiL33BTIISX1UEaho2ZVkUdAAkKAwDUigWRWkEcQ0VTucmUY4BQtnTQLolShUELhsVRxHlXIISXyUjQgIVT5ElLzXTX0UjQYk2cEkEdUcUXlYWLgUWPssjLEw1Xt3hKt3hKt3hKt3hKt3FUUMTUDQEdqw1XmE0UYQTQFM1YAAkKAgDUjYWQwHVdAAkKAwjKtLlKt3hKt3hKt3hYRUUSTEETIckVwTjQisVTTgkdEYDOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
@@ -50,8 +50,63 @@
       </OUTPUTS>
     </LAYOUT>
   </FILTER>
-  <CONNECTION srcFilter="6" srcChannel="0" dstFilter="3" dstChannel="0"/>
-  <CONNECTION srcFilter="6" srcChannel="1" dstFilter="3" dstChannel="1"/>
+  <FILTER uid="8" x="0.47125" y="0.5" useARA="0">
+    <PLUGIN name="MAnalyzer" format="VST3" category="Fx|Tools" manufacturer="MeldaProduction"
+            version="17.04" file="C:\Program Files\Common Files\VST3\MeldaProduction\Tools\MAnalyzer.vst3"
+            uniqueId="1d0ac80b" isInstrument="0" fileTime="19580910ea8" infoUpdateTime="1961cee072b"
+            numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
+            uid="f9389086"/>
+    <STATE>1517.VMjLgPdA...O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9TSLx3xLuM1UPkSbRMDQDQjQkgFVosFMMAkcBEFQzIlYVE2TncEUmIVMQQGT2nkLpElX4IULxkFS1v1JXoDQkEzMAAUb2TkT1YTX27FT1I0ZKojT58lVyXiL1IyMMMjZwHmaHUzXJYSSKkzcSclY28FNtP2PDc0P1LEZxXmSXUFV4UiKrQVL201ZIImUTMkVMIEM5QEZS0jcRAESlsRTzslRPokULsTRug1ZTokPxoVXVIkY0cGYM4hbEYiPBE1bpMyJwbFdvcmTu4RR4Xkbv.GcwL0ZzDjTHQmRDkULuoUZwcTdwDjRzbkSDsRRrAmU58FNE0zb2X2cwI2SjEFSs0lRCcUQIIlQIoTSvblX0XGRtcycGAGbW8DQ1.GSzEzM2TlLh0zMRkVbp0lL1vVbIYWYvgGMtPzUXAmTBsjY0c2SEYVaHwFdqrjUp8zYzXGRGQCNIQWVtvlXjshbzkDMIgiYyzDZJgGQ0nTZMAEZ28VPLs1RIYWYNszTTYkaHkVSz4hYKYFd1PVXxbUL2PiLOQTXgUkVkMER4jiav31S3bmUGYlMWshav3VTEgkUC4xU1HDdHACVkU0T4fDY4.GSwbUVsIUUREUQtAkROQENxwzTLszazciXOQzUKUSL0QzZ24lTC4hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKtvyKIMzasA2atUlaz4COIUDYoQ2Pu4Fcx8FarUlb9TSLx3xLuM1UPkSbRMDQDQjQkgFVosFMMAkcBEFQzIlYVE2TncEUmIVMQQGT2nkLpElX4IULxkFS1v1JXoDQkEzMAAUb2TkT1YTX27FT1I0ZKojT58lVyXiL1IyMMMjZwHmaHUzXJYSSKkzcSclY28FNtP2PDc0P1LEZxXmSXUFV4UiKrQVL201ZIImUTMkVMIEM5QEZS0jcRAESlsRTzslRPokULsTRug1ZTokPxoVXVIkY0cGYM4hbEYiPBE1bpMyJwbFdvcmTu4RR4Xkbv.GcwL0ZzDjTHQmRDkULuoUZwcTdwDjRzbkSDsRRrAmU58FNE0zb2X2cwI2SjEFSs0lRCcUQIIlQIoTSvblX0XGRtcycGAGbW8DQ1.GSzEzM2TlLh0zMRkVbp0lL1vVbIYWYvgGMtPzUXAmTBsjY0c2SEYVaHwFdqrjUp8zYzXGRGQCNIQWVtvlXjshbzkDMIgiYyzDZJgGQ0nTZMAEZ28VPLs1RIYWYNszTTYkaHkVSz4hYKYFd1PVXxbUL2PiLOQTXgUkVkMER4jiav31S3bmUGYlMWshav3VTEgkUC4xU1HDdHACVkU0T4fDY4.GSwbUVsIUUREUQtAkROQENxwzTLszazciXOQzUKUSL0QzZ24lTC4hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKtvyKIUDYoQ2Pu4Fcx8FarUlb9vyKVMEUy.Ea0cVZtMEcgQWY9..</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="9" x="0.49125" y="0.6149193548387096" useARA="0" uiLastX_Normal="321"
+          uiLastY_Normal="417" uiopen_Normal="1">
+    <PLUGIN name="MLoudnessAnalyzer" format="VST3" category="Fx|Tools" manufacturer="MeldaProduction"
+            version="17.04" file="C:\Program Files\Common Files\VST3\MeldaProduction\Tools\MLoudnessAnalyzer.vst3"
+            uniqueId="1e6a498b" isInstrument="0" fileTime="19580942f70" infoUpdateTime="1961cee072b"
+            numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
+            uid="38f2fcbc"/>
+    <STATE>835.VMjLgny....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9HSM13xLuMVXOYzbRMzPDQTQiQzMGY2JtDTYUgzXwITMwEVZyAkYxgkYHgWN0DCa2M2RzkUa3I2TlEyMlsRMJcmPJE0MvjWVyPVcCgkUYMGaZokaKcFMx4DMn0lQQ4TZnQjT4vja0EDUW4VYEQiXlIkc3X2ZWEjVSAyTU0DSzj0UkQCYWgWZwMEcyEEQTYFYFQmdI4VayXGR3MEcvLVPmMSL1gjPzbzUtQGNmUjLAUiTJkDSEkFRs8TaRIiduYDUP4zURcma1.kQ1nUQpEkVZgTS2ETYHgiPQc2bNkyQO4VNTElXGEmL2bCbHMmM3TWbPM1bwPUbWITV1kiLsYiX0rTPwcVM2o1LyLkQ1EiTCciSDojRxMmMIYEQpYyJkoUc1LCSQUkTP8jMDIWXFQmZ2I2MKEkL1MSXm4lYhgDMAUDUTQ0M2ckc14lKzojKt3BTt3hKt3hKt3hKt3BOujzPu0Fbu4VYtQmO7jTQjkFcC8lazI2arwVYx4iL0XiKy71Xg8jQyI0PCQDQEMFQ2bjcq3RPkUERiEmP0DWXoMGTlIGVlgDd4TSLrc2bKQWVsgmbSYVL2X1J0nzcBoTT2.SdYMCY0MDVVk0brokVtszYzHmSzfVaFEkSogFQRkCStUWPTckakUDMhYlT1gicqcUPZMELSUUSLQSVWUFMjcEdoE2TzMWTDQkYjYDc5kjasMicHg2TzAyXAc1LwXGRBQyQW4Fc3bVQxDTMRoTRLUTZH01SsIkL58lQTAkSWI0ctYCTFYiVEoVTZoERMcWPkgDNBE0cy4TNG8ja4PUXhcTbxbyMvgzb1fScwA0XyECUwckPYYWNxzlMhUyRAE2Y0bmZyLyTFYWLRMzMNQjRJI2b1jjUDolMqTlV0YyLLEUURA0S1PjbgYDcpcmb2rTTxX2LgclalIFRzDTQTQEU2b2U1YmatPmRtnVPt3hKt3hKt3hKt3hK77RREQVZzMzatQmbuwFakImO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="10" x="0.475" y="0.7520161290322581" useARA="0">
+    <PLUGIN name="MOscilloscope" format="VST3" category="Fx|Tools" manufacturer="MeldaProduction"
+            version="17.04" file="C:\Program Files\Common Files\VST3\MeldaProduction\Tools\MOscilloscope.vst3"
+            uniqueId="1ecc862b" isInstrument="0" fileTime="1958094a888" infoUpdateTime="1961cee072e"
+            numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
+            uid="f4e07c68"/>
+    <STATE>493.VMjLgPd....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DiL33xLuM1QLcjbBIzPCMjKtzjP4LzLkYlYWgicJMySPECVjgGdDECTw.CczYGRX4VV5QUP2MTNwEmasUlcCcCLokVNNsDdn4lUTcURooTQNMGVtPlKhElcgQULX0TPsY1b13hbiw1RZQWakEkYUMlbBYmQMUEdvgDUwn0TmkzYrEzQlc0ZGsjXZAUUYojZgQUTBEWLOQyP0LzS0IFcwYkdyfyJKQGN0sBalMSbtzDOujzPu0Fbu4VYtQmO7jTQjkFcC8lazI2arwVYx4SLxfiKy71XGwzQxIjPCMzPt3RSBkyPyTlYlcEN1ozLOAULXQFd3QTLPECLzQmcHgkaYoGUAc2P4DWbt0VY1MzMvjVZ43zR3glaVQ0UIklRE4zbX4BYtHVX1EFUwfUSA0lYyYiKxMFaKoEcsUVTlU0XxIjcF0TU3AGRTEiVScVRmwVPGY1UqczRhoETUkkRpEFUQITbw7DMCUyPOUmXzEmU5MCNqrDc3T2JrY1Lw4RS77RREQVZzMzatQmbuwFakImO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <CONNECTION srcFilter="6" srcChannel="0" dstFilter="8" dstChannel="0"/>
+  <CONNECTION srcFilter="6" srcChannel="1" dstFilter="8" dstChannel="1"/>
   <CONNECTION srcFilter="7" srcChannel="0" dstFilter="6" dstChannel="0"/>
   <CONNECTION srcFilter="7" srcChannel="1" dstFilter="6" dstChannel="1"/>
+  <CONNECTION srcFilter="8" srcChannel="0" dstFilter="9" dstChannel="0"/>
+  <CONNECTION srcFilter="8" srcChannel="1" dstFilter="9" dstChannel="1"/>
+  <CONNECTION srcFilter="9" srcChannel="0" dstFilter="10" dstChannel="0"/>
+  <CONNECTION srcFilter="9" srcChannel="1" dstFilter="10" dstChannel="1"/>
+  <CONNECTION srcFilter="10" srcChannel="0" dstFilter="3" dstChannel="0"/>
+  <CONNECTION srcFilter="10" srcChannel="1" dstFilter="3" dstChannel="1"/>
 </FILTERGRAPH>
