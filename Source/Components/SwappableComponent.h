@@ -13,7 +13,7 @@
 
 class SwappableComponent : public juce::Component {
 public:
-    juce::ComponentDragger myDragger;
+    juce::ComponentDragger componentDragger;
     inline static std::vector<SwappableComponent*> swappableComponentList; // shared vector across all instances of swappable Components
     juce::Rectangle<int> oldBounds;
     juce::Rectangle<int> newBounds;
@@ -23,7 +23,7 @@ public:
         swappableComponentList.push_back(this);
     }
 
-    ~SwappableComponent() override {
+    ~SwappableComponent()  {
         swappableComponentList.erase(
             std::remove(swappableComponentList.begin(), swappableComponentList.end(), this),
             swappableComponentList.end()
@@ -46,19 +46,18 @@ public:
             std::iter_swap(itA, itB);
     }
 
-    void mouseDown(const juce::MouseEvent& e)
+    void mouseDown(const juce::MouseEvent& e) override
     {
         oldBounds = getBounds();
-        myDragger.startDraggingComponent(this, e);
+        componentDragger.startDraggingComponent(this, e);
     }
 
-    void mouseDrag(const juce::MouseEvent& e)
+    void mouseDrag(const juce::MouseEvent& e) override
     {
-
-        myDragger.dragComponent(this, e, nullptr);
+        componentDragger.dragComponent(this, e, nullptr);
         newBounds = getBounds();
     }
-    void mouseUp(const juce::MouseEvent& e) {
+    void mouseUp(const juce::MouseEvent& e) override {
 
         SwappableComponent* componentToSwap = nullptr;
         int largestIntersectionArea = 0;

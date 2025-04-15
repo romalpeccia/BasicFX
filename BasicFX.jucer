@@ -18,6 +18,9 @@
         <FILE id="YpNWTZ" name="GateProcessor.h" compile="0" resource="0" file="Source/Processors/GateProcessor.h"/>
       </GROUP>
       <GROUP id="{D6AE0E26-765B-93DC-4CB9-7C1337A90FF2}" name="Components">
+        <FILE id="e2Pdrv" name="CustomSlider.cpp" compile="1" resource="0"
+              file="Source/Components/CustomSlider.cpp"/>
+        <FILE id="ALPQeS" name="CustomSlider.h" compile="0" resource="0" file="Source/Components/CustomSlider.h"/>
         <FILE id="SroXRo" name="DistortionComponent.cpp" compile="1" resource="0"
               file="Source/Components/DistortionComponent.cpp"/>
         <FILE id="lGtR6M" name="DistortionComponent.h" compile="0" resource="0"

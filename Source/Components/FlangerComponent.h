@@ -10,7 +10,7 @@
 
 #pragma once
 #include "../Utilities.h"
-
+#include "CustomSlider.h"
 
 class FlangerComponent : public SwappableComponent {
 
