@@ -10,7 +10,9 @@
 
 #pragma once
 #include "../Utilities.h"
-class FlangerComponent : public juce::Component {
+
+
+class FlangerComponent : public SwappableComponent {
 
     public:
         FlangerComponent(juce::AudioProcessorValueTreeState& _apvts);

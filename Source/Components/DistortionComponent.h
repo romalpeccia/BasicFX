@@ -11,7 +11,7 @@
 #pragma once
 #include "../Utilities.h"
 
-class DistortionComponent : public juce::Component {
+class DistortionComponent : public SwappableComponent {
     public:
         DistortionComponent(juce::AudioProcessorValueTreeState& _apvts);
         std::vector<juce::Component*> getDistortionComps();

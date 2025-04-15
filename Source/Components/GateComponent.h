@@ -10,7 +10,7 @@
 
 #pragma once
 #include "../Utilities.h"
-class GateComponent : public juce::Component {
+class GateComponent : public SwappableComponent {
     public:
         GateComponent(juce::AudioProcessorValueTreeState& _apvts);
         std::vector<juce::Component*> getGateComps();

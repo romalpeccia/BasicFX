@@ -11,6 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Components/SwappableComponent.h"
 using namespace juce;
 
 
@@ -238,6 +239,3 @@ class CustomComboBox : public juce::ComboBox {
     private:
         //CustomLookAndFeel lnf;
 };
-
-
-
