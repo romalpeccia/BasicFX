@@ -29,8 +29,8 @@ void DBMeterComponent::timerCallback() {
 
 void DBMeterComponent::resized() {
     auto bounds = getLocalBounds();
-    auto labelBounds = bounds.withTrimmedRight(bounds.getWidth() * 0.333).withTrimmedLeft(bounds.getWidth() * 0.333);
-    dbLabel.setBounds(labelBounds.withTrimmedTop(bounds.getHeight() * 0.8));
+    auto labelBounds = bounds.withTrimmedTop(bounds.getHeight() * 0.8); 
+    dbLabel.setBounds(labelBounds);
     meterBar.setBounds(bounds.withTrimmedBottom(bounds.getHeight() * 0.2));
 }
 

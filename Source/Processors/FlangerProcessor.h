@@ -22,8 +22,8 @@ public:
     void prepareToPlay(double sampleRate, int _totalNumInputChannels) {
         totalNumInputChannels = totalNumInputChannels;
         sampleRate = static_cast<float>(sampleRate); 
-        int maxDelaySamples = static_cast<int>(sampleRate * DELAY_MAX);
-        sampleBuffer.prepare(totalNumInputChannels, maxDelaySamples);
+        int maxindex = static_cast<int>(sampleRate * DELAY_MAX);
+        sampleBuffer.prepare(totalNumInputChannels, maxindex);
     };
 private:
     juce::AudioProcessorValueTreeState& apvts;

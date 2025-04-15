@@ -81,3 +81,19 @@ float calculateRMSAcrossChannels(juce::AudioBuffer<float>& buffer) {
     float rms = std::sqrt(sum / (numSamples * numChannels));
     return rms;
 }
+
+float calculateAverageAcrossChannels(const juce::AudioBuffer<float>& buffer) {
+    int numSamples = buffer.getNumSamples();
+    int numChannels = buffer.getNumChannels();
+    float sum = 0.0f;
+
+    for (int channel = 0; channel < numChannels; ++channel) {
+        const float* channelData = buffer.getReadPointer(channel);
+        for (int i = 0; i < numSamples; ++i) {
+            sum += channelData[i];
+        }
+    }
+
+    float avg = sum / (numSamples * numChannels);
+    return avg;
+}

@@ -24,6 +24,10 @@
         <FILE id="ftk8N3" name="GateProcessor.cpp" compile="1" resource="0"
               file="Source/Processors/GateProcessor.cpp"/>
         <FILE id="YpNWTZ" name="GateProcessor.h" compile="0" resource="0" file="Source/Processors/GateProcessor.h"/>
+        <FILE id="DmVCL7" name="VisualizerProcessor.cpp" compile="1" resource="0"
+              file="Source/Processors/VisualizerProcessor.cpp"/>
+        <FILE id="xofenX" name="VisualizerProcessor.h" compile="0" resource="0"
+              file="Source/Processors/VisualizerProcessor.h"/>
       </GROUP>
       <GROUP id="{D6AE0E26-765B-93DC-4CB9-7C1337A90FF2}" name="Components">
         <FILE id="e2Pdrv" name="CustomSlider.cpp" compile="1" resource="0"
@@ -46,6 +50,10 @@
         <FILE id="zDGvw1" name="GateComponent.h" compile="0" resource="0" file="Source/Components/GateComponent.h"/>
         <FILE id="eE1QUD" name="SwappableComponent.h" compile="0" resource="0"
               file="Source/Components/SwappableComponent.h"/>
+        <FILE id="WvzdIV" name="VisualizerComponent.cpp" compile="1" resource="0"
+              file="Source/Components/VisualizerComponent.cpp"/>
+        <FILE id="FKJW72" name="VisualizerComponent.h" compile="0" resource="0"
+              file="Source/Components/VisualizerComponent.h"/>
       </GROUP>
       <FILE id="vKto44" name="Utilities.cpp" compile="1" resource="0" file="Source/Utilities.cpp"/>
       <FILE id="SBtSEe" name="Utilities.h" compile="0" resource="0" file="Source/Utilities.h"/>

@@ -14,6 +14,7 @@
 #include "Processors/DistortionProcessor.h"
 #include "Processors/FlangerProcessor.h"
 #include "Processors/DBMeterProcessor.h"
+#include "Processors/VisualizerProcessor.h"
 //==============================================================================
 /**
 */
@@ -67,9 +68,10 @@ public:
     GateProcessor gateProcessor{ apvts };
     DistortionProcessor distortionProcessor{ apvts };
     FlangerProcessor flangerProcessor{ apvts };
-    DBMeterProcessor incomingDBMeterProcessor;
-    DBMeterProcessor outgoingDBMeterProcessor;
-
+    DBMeterProcessor dbMeterIncomingProcessor;
+    DBMeterProcessor dbMeterOutgoingProcessor;
+    VisualizerProcessor visualizerIncomingProcessor;
+    VisualizerProcessor visualizerOutgoingProcessor;
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicFXAudioProcessor)

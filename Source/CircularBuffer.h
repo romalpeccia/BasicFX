@@ -41,18 +41,18 @@ public:
         writeIndices[channel] = (writeIndices[channel] + 1) % size;
     }
 
-    float read(int channel, int delaySamples) const
+    float read(int channel, int index) const
     {
-        int readIndex = writeIndices[channel] - delaySamples;
+        int readIndex = writeIndices[channel] - index;
         if (readIndex < 0)
             readIndex += size;
 
         return buffers[channel][readIndex];
     }
 
-    float readInterpolated(int channel, float delaySamples) const
+    float readInterpolated(int channel, float index) const
     {
-        float readIndex = static_cast<float>(writeIndices[channel]) - delaySamples;
+        float readIndex = static_cast<float>(writeIndices[channel]) - index;
 
         if (readIndex < 0.0f)
             readIndex += static_cast<float>(size);

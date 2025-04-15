@@ -14,6 +14,7 @@
 #include "Components/DistortionComponent.h"
 #include "Components/FlangerComponent.h"
 #include "Components/DBMeterComponent.h"
+#include "Components/VisualizerComponent.h"
 //==============================================================================
 /**
 */
@@ -34,11 +35,12 @@ private:
     BasicFXAudioProcessor& audioProcessor;
     juce::AudioProcessorValueTreeState& apvts;
 
-    DBMeterComponent incomingDBMeterComponent{ audioProcessor.incomingDBMeterProcessor };
+    DBMeterComponent incomingDBMeterComponent{ audioProcessor.dbMeterIncomingProcessor };
+    VisualizerComponent visualizerComponent{ audioProcessor.visualizerIncomingProcessor, audioProcessor.visualizerOutgoingProcessor };
     GateComponent gateComponent{ apvts };
     DistortionComponent distortionComponent{ apvts };
     FlangerComponent flangerComponent{ apvts };
-    DBMeterComponent outgoingDBMeterComponent{ audioProcessor.outgoingDBMeterProcessor };
+    DBMeterComponent outgoingDBMeterComponent{ audioProcessor.dbMeterOutgoingProcessor };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicFXAudioProcessorEditor)
 };

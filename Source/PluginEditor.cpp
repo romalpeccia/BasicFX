@@ -39,11 +39,13 @@ void BasicFXAudioProcessorEditor::resized()
     auto pluginBounds = getLocalBounds();
 
     auto FXBounds = pluginBounds.withTrimmedTop(pluginBounds.getHeight()*0.2);
-    auto visualizerBounds = pluginBounds.withTrimmedBottom(pluginBounds.getHeight() * 0.8);
+    auto monitoringAreaBounds  = pluginBounds.withTrimmedBottom(pluginBounds.getHeight() * 0.8);
 
-    auto incomingDBMeterBounds = visualizerBounds.withTrimmedRight(visualizerBounds.getWidth() * 0.8);
+    auto visualizerBounds = monitoringAreaBounds.withTrimmedRight(monitoringAreaBounds.getWidth() * 0.1).withTrimmedLeft(monitoringAreaBounds.getWidth() * 0.1);
+    auto incomingDBMeterBounds = monitoringAreaBounds .withTrimmedRight(monitoringAreaBounds .getWidth() * 0.9);
+    auto outgoingDBMeterBounds = monitoringAreaBounds.withTrimmedLeft(monitoringAreaBounds.getWidth() * 0.9);
+    visualizerComponent.setBounds(visualizerBounds);
     incomingDBMeterComponent.setBounds(incomingDBMeterBounds);
-    auto outgoingDBMeterBounds = visualizerBounds.withTrimmedLeft(visualizerBounds.getWidth() * 0.8);
     outgoingDBMeterComponent.setBounds(outgoingDBMeterBounds);
 
     auto gateBounds = FXBounds.withTrimmedRight(FXBounds.getWidth() * 0.75);
@@ -62,6 +64,7 @@ std::vector<juce::Component*> BasicFXAudioProcessorEditor::getVisibleComps() {
     comps.push_back(&gateComponent);
     comps.push_back(&distortionComponent);
     comps.push_back(&flangerComponent);
+    comps.push_back(&visualizerComponent);
     comps.push_back(&incomingDBMeterComponent);
     comps.push_back(&outgoingDBMeterComponent);
     return comps;

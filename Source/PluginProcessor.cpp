@@ -77,12 +77,13 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, numSamples);
 
-    incomingDBMeterProcessor.processBlock(buffer);
+    dbMeterIncomingProcessor.processBlock(buffer);
+    visualizerIncomingProcessor.processBlock(buffer);
     gateProcessor.processBlock(buffer);
     distortionProcessor.processBlock(buffer);
     flangerProcessor.processBlock(buffer);
-    outgoingDBMeterProcessor.processBlock(buffer);
-
+    dbMeterOutgoingProcessor.processBlock(buffer);
+    visualizerOutgoingProcessor.processBlock(buffer);
 }
 
 
