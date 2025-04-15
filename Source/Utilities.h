@@ -17,7 +17,7 @@ using namespace juce;
 
 
 const int MAX_INPUT_CHANNELS = 16;
-const int REFRESH_RATE_MS = 10;
+const int REFRESH_RATE_MS = 100;
 
 const juce::String GATE_STATE_STRING = "GATE_STATE";
 const juce::String GATE_ON_STRING = "GATE_ON";
