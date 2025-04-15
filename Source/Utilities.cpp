@@ -58,3 +58,26 @@ void CustomLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, i
     g.setColour(slider.findColour(Slider::thumbColourId));
     g.fillEllipse(Rectangle<float>(thumbWidth, thumbWidth).withCentre(thumbPoint));
 }
+
+float calculateRMS(const float* samples, int numSamples) {
+    float sum = 0;
+    for (int i = 0; i < numSamples; ++i) {
+        sum += samples[i] * samples[i];
+    }
+    return std::sqrt(sum / numSamples);
+}
+
+float calculateRMSAcrossChannels(juce::AudioBuffer<float>& buffer) {
+    int numChannels = buffer.getNumChannels();
+    int numSamples = buffer.getNumSamples();
+    float sum = 0;
+
+    for (int channel = 0; channel < numChannels; ++channel) {
+        auto* channelData = buffer.getWritePointer(channel);
+        for (int i = 0; i < numSamples; ++i) {
+            sum += channelData[i] * channelData[i];
+        }
+    }
+    float rms = std::sqrt(sum / (numSamples * numChannels));
+    return rms;
+}

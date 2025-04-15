@@ -37,11 +37,19 @@ void BasicFXAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
     auto pluginBounds = getLocalBounds();
-    auto gateBounds = pluginBounds.withTrimmedRight(pluginBounds.getWidth() * 0.75);
-    auto distortionBounds = pluginBounds.withTrimmedLeft(pluginBounds.getWidth() * 0.25).withTrimmedRight(pluginBounds.getWidth() * 0.5);
-    auto flangerBounds = pluginBounds.withTrimmedRight(pluginBounds.getWidth() * 0.25).withTrimmedLeft(pluginBounds.getWidth() * 0.5);
-    auto bounds4 = pluginBounds.withTrimmedLeft(pluginBounds.getWidth() * 0.75);
 
+    auto FXBounds = pluginBounds.withTrimmedTop(pluginBounds.getHeight()*0.2);
+    auto visualizerBounds = pluginBounds.withTrimmedBottom(pluginBounds.getHeight() * 0.8);
+
+    auto incomingDBMeterBounds = visualizerBounds.withTrimmedRight(visualizerBounds.getWidth() * 0.8);
+    incomingDBMeterComponent.setBounds(incomingDBMeterBounds);
+    auto outgoingDBMeterBounds = visualizerBounds.withTrimmedLeft(visualizerBounds.getWidth() * 0.8);
+    outgoingDBMeterComponent.setBounds(outgoingDBMeterBounds);
+
+    auto gateBounds = FXBounds.withTrimmedRight(FXBounds.getWidth() * 0.75);
+    auto distortionBounds = FXBounds.withTrimmedLeft(FXBounds.getWidth() * 0.25).withTrimmedRight(FXBounds.getWidth() * 0.5);
+    auto flangerBounds = FXBounds.withTrimmedRight(FXBounds.getWidth() * 0.25).withTrimmedLeft(FXBounds.getWidth() * 0.5);
+    auto bounds4 = FXBounds.withTrimmedLeft(FXBounds.getWidth() * 0.75);
 
     gateComponent.setBounds(gateBounds);
     distortionComponent.setBounds(distortionBounds);
@@ -54,5 +62,7 @@ std::vector<juce::Component*> BasicFXAudioProcessorEditor::getVisibleComps() {
     comps.push_back(&gateComponent);
     comps.push_back(&distortionComponent);
     comps.push_back(&flangerComponent);
+    comps.push_back(&incomingDBMeterComponent);
+    comps.push_back(&outgoingDBMeterComponent);
     return comps;
 }

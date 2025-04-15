@@ -17,6 +17,7 @@ using namespace juce;
 
 
 const int MAX_INPUT_CHANNELS = 16;
+const int REFRESH_RATE_MS = 100;
 
 const juce::String GATE_STATE_STRING = "GATE_STATE";
 const juce::String GATE_ON_STRING = "GATE_ON";
@@ -53,6 +54,10 @@ const juce::Colour DISTORTION_COLOUR_2 = juce::Colours::deepskyblue;
 const juce::Colour FLANGER_COLOUR_1 = juce::Colours::darkolivegreen;
 const juce::Colour FLANGER_COLOUR_2 = juce::Colours::yellow;
 const juce::Colour COMPONENT_COLOUR_OFF = juce::Colours::dimgrey;
+
+float calculateRMS(const float* samples, int numSamples);
+float calculateRMSAcrossChannels(juce::AudioBuffer<float>& buffer);
+
 
 class CustomLookAndFeel : public juce::LookAndFeel_V4 {
 public:
@@ -107,3 +112,4 @@ class CustomComboBox : public juce::ComboBox {
     private:
         //CustomLookAndFeel lnf;
 };
+

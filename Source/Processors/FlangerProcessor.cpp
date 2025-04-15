@@ -23,8 +23,8 @@ void FlangerProcessor::processBlock(juce::AudioBuffer<float>& buffer) {
             auto* channelData = buffer.getWritePointer(channel);
             for (int sampleNum = 0; sampleNum < numSamples; sampleNum++) {
 
-                delayBuffer.write(channel, channelData[sampleNum]);
-                float flangeSample = delayBuffer.readInterpolated(channel, delayInSamples);
+                sampleBuffer.write(channel, channelData[sampleNum]);
+                float flangeSample = sampleBuffer.readInterpolated(channel, delayInSamples);
                 float wetSample = ((*mixParam) / 100) * flangeSample;
                 float drySample = (1 - *mixParam / 100) * channelData[sampleNum];
                 channelData[sampleNum] = drySample + wetSample;

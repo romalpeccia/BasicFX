@@ -4,7 +4,15 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="raWmpG" name="BasicFX">
     <GROUP id="{A1F0544F-3C73-4724-D918-5CDB1150ED99}" name="Source">
+      <FILE id="IWS1wh" name="CircularBuffer.cpp" compile="1" resource="0"
+            file="Source/CircularBuffer.cpp"/>
+      <FILE id="xxsXjh" name="CircularBuffer.h" compile="0" resource="0"
+            file="Source/CircularBuffer.h"/>
       <GROUP id="{033A6964-5620-C0D2-B02B-4FCBD9CA1D89}" name="Processors">
+        <FILE id="WaO4rm" name="DBMeterProcessor.cpp" compile="1" resource="0"
+              file="Source/Processors/DBMeterProcessor.cpp"/>
+        <FILE id="zJrzVI" name="DBMeterProcessor.h" compile="0" resource="0"
+              file="Source/Processors/DBMeterProcessor.h"/>
         <FILE id="bB5YXP" name="DistortionProcessor.cpp" compile="1" resource="0"
               file="Source/Processors/DistortionProcessor.cpp"/>
         <FILE id="RrUGFr" name="DistortionProcessor.h" compile="0" resource="0"
@@ -21,6 +29,10 @@
         <FILE id="e2Pdrv" name="CustomSlider.cpp" compile="1" resource="0"
               file="Source/Components/CustomSlider.cpp"/>
         <FILE id="ALPQeS" name="CustomSlider.h" compile="0" resource="0" file="Source/Components/CustomSlider.h"/>
+        <FILE id="CD44zf" name="DBMeterComponent.cpp" compile="1" resource="0"
+              file="Source/Components/DBMeterComponent.cpp"/>
+        <FILE id="OXIYtq" name="DBMeterComponent.h" compile="0" resource="0"
+              file="Source/Components/DBMeterComponent.h"/>
         <FILE id="SroXRo" name="DistortionComponent.cpp" compile="1" resource="0"
               file="Source/Components/DistortionComponent.cpp"/>
         <FILE id="lGtR6M" name="DistortionComponent.h" compile="0" resource="0"

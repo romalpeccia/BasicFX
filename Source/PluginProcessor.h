@@ -13,6 +13,7 @@
 #include "Processors/GateProcessor.h"
 #include "Processors/DistortionProcessor.h"
 #include "Processors/FlangerProcessor.h"
+#include "Processors/DBMeterProcessor.h"
 //==============================================================================
 /**
 */
@@ -63,13 +64,11 @@ public:
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
-
-
-    //DISTORTION members
     GateProcessor gateProcessor{ apvts };
     DistortionProcessor distortionProcessor{ apvts };
     FlangerProcessor flangerProcessor{ apvts };
-
+    DBMeterProcessor incomingDBMeterProcessor;
+    DBMeterProcessor outgoingDBMeterProcessor;
 
 private:
     //==============================================================================
