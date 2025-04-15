@@ -165,7 +165,7 @@ void GateProcessor::processGateAdvanced(juce::AudioBuffer<float>& buffer) {
             }
             releaseSampleCounter--;
             if (releaseSampleCounter <= 0) {
-                gateState == GateState::Open;
+                gateState = GateState::Open;
             }
         }
         else {
