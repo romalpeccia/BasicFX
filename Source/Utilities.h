@@ -18,6 +18,7 @@ using namespace juce;
 
 const int MAX_INPUT_CHANNELS = 16;
 const int REFRESH_RATE_MS = 100;
+const int SAMPLE_RATE_FACTOR = 10; //TODO: think of something better for this
 
 const juce::String GATE_STATE_STRING = "GATE_STATE";
 const juce::String GATE_ON_STRING = "GATE_ON";

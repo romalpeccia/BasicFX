@@ -17,18 +17,15 @@ class VisualizerComponent : public juce::Component, public juce::Timer {
         VisualizerComponent(VisualizerProcessor& _processor1, VisualizerProcessor& _processor2)
             : processor1(_processor1), processor2(_processor2) {
             startTimer(REFRESH_RATE_MS);
-            processor1.setMaxSamples(getLocalBounds().getWidth());
-            processor2.setMaxSamples(getLocalBounds().getWidth());
+
         }
         ~VisualizerComponent() {  }
         void timerCallback() override {
-            processor1.sampleBuffer.write(0, processor1.getCurrentValue());
-            processor2.sampleBuffer.write(0, processor2.getCurrentValue());
+
             repaint();
         }
         void resized() override {
-            processor1.setMaxSamples(getLocalBounds().getWidth());
-            processor2.setMaxSamples(getLocalBounds().getWidth());
+
         };
         void paint(juce::Graphics& g) override {
             auto bounds = getLocalBounds();

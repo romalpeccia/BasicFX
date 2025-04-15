@@ -30,14 +30,14 @@ public:
     ~BasicFXAudioProcessor() override;
 
     //==============================================================================
-    void prepareToPlay (double sampleRate, int samplesPerBlock) override;
+
     void releaseResources() override;
 
    #ifndef JucePlugin_PreferredChannelConfigurations
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
    #endif
 
-    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+
 
     //==============================================================================
     juce::AudioProcessorEditor* createEditor() override;
@@ -62,6 +62,9 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+
+    void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+    void prepareToPlay(double sampleRate, int samplesPerBlock) override;
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
@@ -70,8 +73,8 @@ public:
     FlangerProcessor flangerProcessor{ apvts };
     DBMeterProcessor dbMeterIncomingProcessor;
     DBMeterProcessor dbMeterOutgoingProcessor;
-    VisualizerProcessor visualizerIncomingProcessor;
-    VisualizerProcessor visualizerOutgoingProcessor;
+    VisualizerProcessor visualizerIncomingProcessor{ 44100 * SAMPLE_RATE_FACTOR };
+    VisualizerProcessor visualizerOutgoingProcessor{ 44100 * SAMPLE_RATE_FACTOR };
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicFXAudioProcessor)

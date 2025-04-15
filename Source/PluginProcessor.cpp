@@ -62,6 +62,8 @@ void BasicFXAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock
     gateProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
     distortionProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
     flangerProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
+    visualizerIncomingProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
+    visualizerOutgoingProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
 }
 
 
