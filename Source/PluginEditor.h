@@ -30,8 +30,7 @@ public:
 
     std::vector<juce::Component*>  getVisibleComps();
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
+
     BasicFXAudioProcessor& audioProcessor;
     juce::AudioProcessorValueTreeState& apvts;
 

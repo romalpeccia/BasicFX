@@ -16,7 +16,7 @@ class CustomSlider : public juce::Slider {
 
 public:
     CustomSlider(juce::String name, juce::String units, const juce::Colour mainColour, const juce::Colour secondaryColour);
-    ~CustomSlider() { setLookAndFeel(nullptr); };
+    ~CustomSlider();
 
     juce::String getUnits() { return units; }
     void setUnits(juce::String _units) { units = _units; updateText(); }

@@ -12,47 +12,23 @@
 #include "../CircularBuffer.h"
 #include "../Utilities.h"
 
-
 class VisualizerProcessor {
-    public:
+public:
+    VisualizerProcessor(int _maxSamples);
+    VisualizerProcessor::~VisualizerProcessor() {}
 
-        VisualizerProcessor(int _maxSamples) : maxSamples(_maxSamples) {
-            sampleBuffer.prepare(1, maxSamples);
-        }
-        ~VisualizerProcessor() {};
+    void prepareToPlay(int sampleRate, int _totalNumInputChannels);
+    void processBlock(juce::AudioBuffer<float>& buffer);
 
-        void prepareToPlay(int sampleRate, int _totalNumInputChannels) {
-            sampleBuffer.prepare(1, maxSamples);
-        };
-        void processBlock(juce::AudioBuffer<float>& buffer) {
+    float getCurrentValue();
+    void setMaxSamples(int _maxSamples);
+    float readSample(int channel, int indexFromLatest) const;
 
-            int numChannels = buffer.getNumChannels();
-            int numSamples = buffer.getNumSamples();
-            
-            for (int sampleNum = 0; sampleNum < numSamples; ++sampleNum) {
-                if (sampleNum % 75 == 0) {
-                    float sample = 0.f;
-                    for (int channel = 0; channel < numChannels; ++channel) {
-                        sample += buffer.getSample(channel, sampleNum); //TODO: this seems easier than making a channelData pointer every time, maybe clean up my other stuff?
-                    }
-                    sample /= numChannels; //TODO: average across channels? better way to do this?
-
-                    sampleBuffer.write(0, sample);
-                }
-            }
-        }
-
-        float getCurrentValue() { return currentValue; }
-        void setMaxSamples(int _maxSamples) { 
-            maxSamples = _maxSamples; 
-            sampleBuffer.prepare(1, maxSamples);
-        }
-
-        CircularBuffer sampleBuffer;//TODO: make this private and return its member variables
-    private:
-        float currentValue = 0;
-        float sampleRate = 44100.0f;
-        int totalNumInputChannels = 1;
-        int maxSamples; 
-
+private:
+    CircularBuffer sampleBuffer; 
+    float currentValue = 0;
+    float sampleRate = 44100.0f;
+    int totalNumInputChannels = 2;
+    int maxSamples;
+    const int DOWNSAMPLE_FACTOR = 60;
 };

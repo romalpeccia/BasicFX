@@ -25,6 +25,8 @@ CustomSlider::CustomSlider(juce::String name, juce::String units, const juce::Co
 
 };
 
+CustomSlider::~CustomSlider() { setLookAndFeel(nullptr); };
+
 bool CustomSlider::hitTest(int x, int y) {
     //the slider is bound by the minimum of its width and height, overriding this function to make it so it only counts as a mouseclick if the actual slider drawing is clicked
     auto bounds = getLocalBounds().toFloat();

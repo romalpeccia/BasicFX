@@ -48,6 +48,8 @@
         <FILE id="Dd29Ko" name="GateComponent.cpp" compile="1" resource="0"
               file="Source/Components/GateComponent.cpp"/>
         <FILE id="zDGvw1" name="GateComponent.h" compile="0" resource="0" file="Source/Components/GateComponent.h"/>
+        <FILE id="lqfupO" name="SwappableComponent.cpp" compile="1" resource="0"
+              file="Source/Components/SwappableComponent.cpp"/>
         <FILE id="eE1QUD" name="SwappableComponent.h" compile="0" resource="0"
               file="Source/Components/SwappableComponent.h"/>
         <FILE id="WvzdIV" name="VisualizerComponent.cpp" compile="1" resource="0"

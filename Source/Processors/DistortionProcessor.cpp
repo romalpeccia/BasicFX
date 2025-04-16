@@ -106,6 +106,7 @@ void DistortionProcessor::processDistortionSlewLimiter(juce::AudioBuffer<float>&
         auto* channelData = buffer.getWritePointer(channel);
         float prevSample;
         for (int sampleNum = 0; sampleNum < numSamples; sampleNum++) {
+
             float currSample = channelData[sampleNum];
             if (sampleNum == 0) {
                 prevSample = lastSampleFromPrevBuffer[channel];

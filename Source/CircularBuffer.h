@@ -20,54 +20,14 @@
 class CircularBuffer
 {
 public:
-    CircularBuffer() = default;
+    CircularBuffer::CircularBuffer() {}
+    ~CircularBuffer() {};
 
-    void prepare(int numChannels, int maxSamples)
-    {
-        buffers.resize(numChannels);
-        writeIndices.resize(numChannels);
+    void prepare(int numChannels, int maxSamples);
+    void write(int channel, float sample);
+    float read(int channel, int index) const;
+    float readInterpolated(int channel, float index) const;
 
-        for (int ch = 0; ch < numChannels; ++ch)
-        {
-            buffers[ch].resize(maxSamples, 0.0f);
-            writeIndices[ch] = 0;
-        }
-        size = maxSamples;
-    }
-
-    void write(int channel, float sample)
-    {
-        buffers[channel][writeIndices[channel]] = sample;
-        writeIndices[channel] = (writeIndices[channel] + 1) % size;
-    }
-
-    float read(int channel, int index) const
-    {
-        int readIndex = writeIndices[channel] - index;
-        if (readIndex < 0)
-            readIndex += size;
-
-        return buffers[channel][readIndex];
-    }
-
-    float readInterpolated(int channel, float index) const
-    {
-        float readIndex = static_cast<float>(writeIndices[channel]) - index;
-
-        if (readIndex < 0.0f)
-            readIndex += static_cast<float>(size);
-
-        // Wrap using integer math
-        int indexA = static_cast<int>(std::floor(readIndex)) % size;
-        int indexB = (indexA + 1) % size;
-        float frac = readIndex - static_cast<float>(indexA);
-
-        float sampleA = buffers[channel][indexA];
-        float sampleB = buffers[channel][indexB];
-
-        // Linear interpolation
-        return (1.0f - frac) * sampleA + frac * sampleB;
-    }
 private:
     std::vector<std::vector<float>> buffers;
     std::vector<int> writeIndices;

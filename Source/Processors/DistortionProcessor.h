@@ -24,6 +24,7 @@ private:
     juce::AudioProcessorValueTreeState& apvts;
     int totalNumInputChannels = 2;
     float sampleRate = 44100.f;
+
     std::atomic<float>* amountParam;
     std::atomic<float>* onStateParam; //TODO: why does this not work as a bool? why does it work as a float? weird
     std::atomic<float>* distortionTypeParam;

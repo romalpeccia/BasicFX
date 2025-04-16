@@ -20,11 +20,13 @@ class FlangerComponent : public SwappableComponent {
         void resized() override;
 
     private:
+        const juce::Colour FLANGER_COLOUR_1 = juce::Colours::darkolivegreen;
+        const juce::Colour FLANGER_COLOUR_2 = juce::Colours::yellow;
         juce::AudioProcessorValueTreeState& apvts;
-        CustomTextButton flangerButton{ "Flanger" , FLANGER_COLOUR_1};
-        std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> flangerButtonAttachment;
-        CustomSlider flangerDelaySlider{"Delay", "ms", FLANGER_COLOUR_1, FLANGER_COLOUR_2};
-        std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> flangerDelaySliderAttachment;
-        CustomSlider flangerMixSlider{ "Mix", "%", FLANGER_COLOUR_1, FLANGER_COLOUR_2};
-        std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> flangerMixAttachment;
+        CustomTextButton button{ "Flanger" , FLANGER_COLOUR_1};
+        CustomSlider flangerSlider{"Delay", "ms", FLANGER_COLOUR_1, FLANGER_COLOUR_2};
+        CustomSlider mixSlider{ "Mix", "%", FLANGER_COLOUR_1, FLANGER_COLOUR_2};
+        std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> flangerSliderAttachment;
+        std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonAttachment;
+        std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mixSliderAttachment;
 };

@@ -12,74 +12,17 @@
 #include <JuceHeader.h>
 
 class SwappableComponent : public juce::Component {
-public:
-    juce::ComponentDragger componentDragger;
-    inline static std::vector<SwappableComponent*> swappableComponentList; // shared vector across all instances of swappable Components
-    juce::Rectangle<int> oldBounds;
-    juce::Rectangle<int> newBounds;
-    const int areaOverLapThreshold = 50;
-
-    SwappableComponent() {
-        swappableComponentList.push_back(this);
-    }
-
-    ~SwappableComponent()  {
-        swappableComponentList.erase(
-            std::remove(swappableComponentList.begin(), swappableComponentList.end(), this),
-            swappableComponentList.end()
-        ); //TODO: is this really the best way to do this? remove reorders the list to put the component at the end, and erase deletes that component
-    }
-
-    void swapComponents(SwappableComponent* otherComp)
-    {
-        //swap the bounds
-        auto otherCompBounds = getBounds();
-        setBounds(otherComp->getBounds());
-        otherComp->setBounds(otherCompBounds);
-
-        //swap the components in the list
-        auto& list = swappableComponentList;
-        auto itA = std::find(list.begin(), list.end(), this);
-        auto itB = std::find(list.begin(), list.end(), otherComp);
-
-        if (itA != list.end() && itB != list.end())
-            std::iter_swap(itA, itB);
-    }
-
-    void mouseDown(const juce::MouseEvent& e) override
-    {
-        oldBounds = getBounds();
-        componentDragger.startDraggingComponent(this, e);
-    }
-
-    void mouseDrag(const juce::MouseEvent& e) override
-    {
-        componentDragger.dragComponent(this, e, nullptr);
-        newBounds = getBounds();
-    }
-    void mouseUp(const juce::MouseEvent& e) override {
-
-        SwappableComponent* componentToSwap = nullptr;
-        int largestIntersectionArea = 0;
-        for (auto* comp : swappableComponentList) {
-            if (comp != nullptr && comp != this) {
-                auto intersection = newBounds.getIntersection(comp->getBounds());
-
-                int area = intersection.getWidth() * intersection.getHeight();
-                if (area > largestIntersectionArea && area > areaOverLapThreshold) {
-                    largestIntersectionArea = area;
-                    componentToSwap = comp;
-                }
-            }
-        }
-        if (componentToSwap != nullptr) {
-            setBounds(oldBounds);
-            swapComponents(componentToSwap);
-        }
-        else {
-            setBounds(oldBounds);
-        }
-    }
-
-
+    public:
+        SwappableComponent();
+        ~SwappableComponent();
+        void mouseDown(const juce::MouseEvent& e) override;
+        void mouseDrag(const juce::MouseEvent& e) override;
+        void mouseUp(const juce::MouseEvent& e) override;
+        void swapComponents(SwappableComponent* otherComp);
+    private:
+        juce::ComponentDragger componentDragger; //adding this member allows us to drag the component using the mouseEvent that triggered it
+        inline static std::vector<SwappableComponent*> swappableComponentList; // shared vector across all instances of swappable Components
+        juce::Rectangle<int> oldBounds;
+        juce::Rectangle<int> newBounds;
+        const int AREA_OVERLAP_THRESHOLD = 100;
 };

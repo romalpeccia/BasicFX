@@ -20,11 +20,13 @@ class DistortionComponent : public SwappableComponent {
     private:
         juce::AudioProcessorValueTreeState& apvts;
 
+        const juce::Colour DISTORTION_COLOUR_1 = juce::Colours::hotpink;
+        const juce::Colour DISTORTION_COLOUR_2 = juce::Colours::deepskyblue;
 
-        CustomTextButton distortionButton{ "Distortion", DISTORTION_COLOUR_1 };
-        std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> distortionButtonAttachment;
-        CustomComboBox distortionMenu{DISTORTION_COLOUR_1, DISTORTION_COLOUR_2};
-        std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> distortionMenuAttachment;
-        CustomSlider distortionSlider{ "Amount", "", DISTORTION_COLOUR_1,  DISTORTION_COLOUR_2};
-        std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> distortionSliderAttachment;
+        CustomTextButton button{ "Distortion", DISTORTION_COLOUR_1 };
+        CustomComboBox menu{ DISTORTION_COLOUR_1, DISTORTION_COLOUR_2 };
+        CustomSlider slider{ "Amount", "", DISTORTION_COLOUR_1,  DISTORTION_COLOUR_2 };
+        std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonAttachment;
+        std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> menuAttachment;
+        std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachment;
 };

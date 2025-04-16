@@ -57,8 +57,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout BasicFXAudioProcessor::creat
 }
 void BasicFXAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
     gateProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
     distortionProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
     flangerProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());

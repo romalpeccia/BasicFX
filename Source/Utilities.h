@@ -17,8 +17,8 @@ using namespace juce;
 
 
 const int MAX_INPUT_CHANNELS = 16;
-const int REFRESH_RATE_MS = 100;
-const int SAMPLE_RATE_FACTOR = 10; //TODO: think of something better for this
+const int REFRESH_RATE_MS = 60;
+const int SAMPLE_RATE_FACTOR = 1000; //TODO: think of something better for this // just gives room for the CircularBuffers
 
 const juce::String GATE_STATE_STRING = "GATE_STATE";
 const juce::String GATE_ON_STRING = "GATE_ON";
@@ -48,12 +48,6 @@ const juce::String FLANGER_MIX_STRING = "FLANGER_MIX";
 const juce::String FLANGER_ON_STRING = "FLANGER_ON";
 const float DELAY_MAX = 1; 
 
-const juce::Colour GATE_COLOUR_1 = juce::Colours::mediumpurple;
-const juce::Colour GATE_COLOUR_2 = juce::Colours::darkorange;
-const juce::Colour DISTORTION_COLOUR_1 = juce::Colours::hotpink;
-const juce::Colour DISTORTION_COLOUR_2 = juce::Colours::deepskyblue;
-const juce::Colour FLANGER_COLOUR_1 = juce::Colours::darkolivegreen;
-const juce::Colour FLANGER_COLOUR_2 = juce::Colours::yellow;
 const juce::Colour COMPONENT_COLOUR_OFF = juce::Colours::dimgrey;
 
 float calculateRMS(const float* samples, int numSamples);
@@ -106,11 +100,9 @@ class CustomComboBox : public juce::ComboBox {
             setColour(juce::ComboBox::ColourIds::arrowColourId, mainColour);
             setColour(juce::ComboBox::ColourIds::focusedOutlineColourId, secondaryColour);
             setColour(juce::ComboBox::ColourIds::buttonColourId, secondaryColour);
-            //setColour(juce::ComboBox::ColourIds::backgroundColourId, COMPONENT_COLOUR_OFF);
             //setLookAndFeel(&lnf);
         };
         ~CustomComboBox() {}
     private:
-        //CustomLookAndFeel lnf;
 };
 

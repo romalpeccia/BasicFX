@@ -11,10 +11,10 @@
 #include "FlangerComponent.h"
 
 FlangerComponent::FlangerComponent(juce::AudioProcessorValueTreeState& _apvts) : apvts(_apvts) {
-    flangerDelaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, FLANGER_DELAY_STRING, flangerDelaySlider);
-    flangerMixAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, FLANGER_MIX_STRING, flangerMixSlider);
-    flangerButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, FLANGER_ON_STRING, flangerButton);
-    flangerButton.setClickingTogglesState(true);
+    flangerSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, FLANGER_DELAY_STRING, flangerSlider);
+    mixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, FLANGER_MIX_STRING, mixSlider);
+    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, FLANGER_ON_STRING, button);
+    button.setClickingTogglesState(true);
 
     for (auto* comp : getFlangerComps()) {
         addAndMakeVisible(comp);
@@ -22,16 +22,16 @@ FlangerComponent::FlangerComponent(juce::AudioProcessorValueTreeState& _apvts) :
 };
 std::vector<juce::Component*> FlangerComponent::getFlangerComps() {
     std::vector<juce::Component*> comps;
-    comps.push_back(&flangerDelaySlider);
-    comps.push_back(&flangerMixSlider);
-    comps.push_back(&flangerButton);
+    comps.push_back(&flangerSlider);
+    comps.push_back(&mixSlider);
+    comps.push_back(&button);
     return comps;
 };
 void FlangerComponent::resized() {
     auto bounds = getLocalBounds();
     auto bottomBounds = bounds.withTrimmedTop(bounds.getHeight() * 0.6);
-    flangerDelaySlider.setBounds(bottomBounds.withTrimmedBottom(bottomBounds.getHeight() * 0.2));
-    flangerButton.setBounds(bottomBounds.withTrimmedTop(bottomBounds.getHeight() * 0.8));
+    flangerSlider.setBounds(bottomBounds.withTrimmedBottom(bottomBounds.getHeight() * 0.2));
+    button.setBounds(bottomBounds.withTrimmedTop(bottomBounds.getHeight() * 0.8));
     auto topBounds = bounds.withTrimmedBottom(bounds.getHeight() * 0.4);
-    flangerMixSlider.setBounds(topBounds.withTrimmedRight(topBounds.getWidth() * 0.66).withTrimmedBottom(topBounds.getHeight() * 0.1));
+    mixSlider.setBounds(topBounds.withTrimmedRight(topBounds.getWidth() * 0.66).withTrimmedBottom(topBounds.getHeight() * 0.1));
 };
