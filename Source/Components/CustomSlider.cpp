@@ -27,16 +27,26 @@ CustomSlider::CustomSlider(juce::String name, juce::String units, const juce::Co
 
 CustomSlider::~CustomSlider() { setLookAndFeel(nullptr); };
 
-bool CustomSlider::hitTest(int x, int y) {
-    //the slider is bound by the minimum of its width and height, overriding this function to make it so it only counts as a mouseclick if the actual slider drawing is clicked
+bool CustomSlider::hitTest(int x, int y)
+{
+    //x, y are the coordinates of the click that triggered this function
+    //the slider is bound by the minimum of its width and height, overriding this function to make it so the UI only counts as a mouseclick if the actual slider drawing is clicked instead of anywhere on the slider bounds
     auto bounds = getLocalBounds().toFloat();
     float side = juce::jmin(bounds.getWidth(), bounds.getHeight());
     auto center = bounds.getCentre();
     float radius = side / 2.0f;
 
+    float lineW = juce::jmin(8.0f, radius * 0.5f); // match drawRotarySlider //TODO make this a class member in LNF
+
     auto dx = x - center.x;
     auto dy = y - center.y;
-    return (dx * dx + dy * dy) <= (radius * radius);
+    float area = dx * dx + dy * dy;
+    float distanceFromCentre = std::sqrt(area);
+
+    float innerRadius = radius - lineW;
+    float outerRadius = radius;
+
+    return distanceFromCentre >= innerRadius && distanceFromCentre <= outerRadius;
 }
 
 void CustomSlider::paint(juce::Graphics& g) {
@@ -64,7 +74,7 @@ void CustomSlider::paint(juce::Graphics& g) {
         value = value * 1000;
         units = "ms";
     }
-    else if (units == "db") {
+    else if (units == "db") { //TODO: this assumes caller is supplying an amplitude instead of a dB value, seems bad practice to do so
         value = juce::Decibels::gainToDecibels(value);
     }
     g.drawText(juce::String(value), x, y + fontHeight, juce::Font(fontHeight).getStringWidth(juce::String(value)), fontHeight, juce::Justification::centred);
