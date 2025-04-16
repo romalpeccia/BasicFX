@@ -11,15 +11,17 @@
 #include "DistortionComponent.h"
 
 DistortionComponent::DistortionComponent(juce::AudioProcessorValueTreeState& _apvts) : apvts(_apvts) {
-    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, DISTORTION_ON_STRING, button);
-    button.setClickingTogglesState(true);
-    menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, DISTORTION_TYPE_STRING, menu);
+
     menu.addItem(WAVE_RECTIFIER_STRING, 1); //TODO what is up with these IDs? setting ID to 0 causes a bug, but it doesnt make sense that the indexes im putting are 1-4 when the param returns 0-3
     menu.addItem(BIT_CRUSHER_STRING, 2);
     menu.addItem(SOFT_CLIPPER_CUBIC_STRING, 3);
     menu.addItem(SOFT_CLIPPER_ARCTAN_STRING, 4);
     menu.addItem(SLEW_LIMITER_STRING, 5);
     menu.setSelectedId(1);
+
+    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, DISTORTION_ON_STRING, button);
+    button.setClickingTogglesState(true);
+    menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, DISTORTION_TYPE_STRING, menu);
     sliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, DISTORTION_AMOUNT_STRING, slider);
 
     for (auto* comp : getDistortionComps()) {

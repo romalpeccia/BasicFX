@@ -60,8 +60,9 @@ void CustomSlider::paint(juce::Graphics& g) {
     g.setFont(fontHeight);
     g.drawText(getName(), x, y, juce::Font(fontHeight).getStringWidth(getName()), fontHeight, juce::Justification::centred);
     float value = getValue();
-    if (units == "ms") {
+    if (units == "s") {
         value = value * 1000;
+        units = "ms";
     }
     else if (units == "db") {
         value = juce::Decibels::gainToDecibels(value);

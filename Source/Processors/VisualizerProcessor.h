@@ -25,10 +25,11 @@ public:
     float readSample(int channel, int indexFromLatest) const;
 
 private:
-    CircularBuffer sampleBuffer; 
+    CircularBuffer sampleBuffer;
     float currentValue = 0;
     float sampleRate = 44100.0f;
     int totalNumInputChannels = 2;
     int maxSamples;
-    const int DOWNSAMPLE_FACTOR = 60;
+    const int DOWNSAMPLE_FACTOR = 64;
+    //TODO figure out better value for this and REFRESH_RATE_MS in component. both contribute to how fast the signal scrolls, whether the buffer is getting polled more often or the buffer is getting filled more
 };

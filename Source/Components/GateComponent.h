@@ -24,9 +24,9 @@ class GateComponent : public SwappableComponent {
         CustomComboBox menu{ GATE_COLOUR_1, GATE_COLOUR_2 };
         CustomTextButton button{ "Gate" ,GATE_COLOUR_1};
         CustomSlider thresholdSlider{"Threshold", "db", GATE_COLOUR_1, GATE_COLOUR_2};
-        CustomSlider attackSlider{"Attack", "ms", GATE_COLOUR_1, GATE_COLOUR_2};
-        CustomSlider holdSlider{"Hold", "ms", GATE_COLOUR_1, GATE_COLOUR_2 };
-        CustomSlider releaseSlider{"Release", "ms", GATE_COLOUR_1, GATE_COLOUR_2 };
+        CustomSlider attackSlider{"Attack", "s", GATE_COLOUR_1, GATE_COLOUR_2};
+        CustomSlider holdSlider{"Hold", "s", GATE_COLOUR_1, GATE_COLOUR_2 };
+        CustomSlider releaseSlider{"Release", "s", GATE_COLOUR_1, GATE_COLOUR_2 };
         std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> menuAttachment;
         std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonAttachment;
         std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> thresholdAttachment, attackAttachment, holdAttachment, releaseAttachment;

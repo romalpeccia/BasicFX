@@ -17,8 +17,8 @@ using namespace juce;
 
 
 const int MAX_INPUT_CHANNELS = 16;
-const int REFRESH_RATE_MS = 60;
 const int SAMPLE_RATE_FACTOR = 1000; //TODO: think of something better for this // just gives room for the CircularBuffers
+const juce::String DB_METER_RATE_STRING = "DB_METER_AMOUNT";
 
 const juce::String GATE_STATE_STRING = "GATE_STATE";
 const juce::String GATE_ON_STRING = "GATE_ON";

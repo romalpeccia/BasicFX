@@ -23,6 +23,8 @@ class VisualizerComponent : public juce::Component, public juce::Timer {
 
 
     private:
+        const int REFRESH_RATE_MS = 16; 
+        //TODO figure out better value for this and DOWNSAMPLE_FACTOR in processor. both contribute to how fast the signal scrolls, whether the buffer is getting polled more often or the buffer is getting filled more
         VisualizerProcessor& processor1;
         VisualizerProcessor& processor2;
 };

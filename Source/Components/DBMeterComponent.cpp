@@ -10,11 +10,18 @@
 
 #include "DBMeterComponent.h"
 
-DBMeterComponent::DBMeterComponent(DBMeterProcessor& _processor) : processor(_processor) {
-    startTimer(REFRESH_RATE_MS);
+DBMeterComponent::DBMeterComponent(juce::AudioProcessorValueTreeState& _apvts, DBMeterProcessor& _processor) : apvts(_apvts), processor(_processor) {
+
+    rateSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, DB_METER_RATE_STRING, rateSlider);
     addAndMakeVisible(dbLabel);
     addAndMakeVisible(meterBar);
     addAndMakeVisible(rateSlider);
+    startTimer(rateSlider.getValue());
+    rateSlider.onValueChange = [this]() {
+        stopTimer();
+        startTimer(rateSlider.getValue());
+    };
+        
 }
 
 void DBMeterComponent::timerCallback() {
@@ -38,7 +45,7 @@ void DBMeterComponent::resized() {
     rateSlider.setBounds(bounds.withTrimmedBottom(height * 0.6).withTrimmedRight(width * 0.6));
 }
 
-void DBMeterComponent::MeterBar::paint(juce::Graphics& g)  {
+void MeterBar::paint(juce::Graphics& g)  {
     auto bounds = getLocalBounds();
     float centreX = bounds.getCentreX();
     float height = bounds.getHeight();

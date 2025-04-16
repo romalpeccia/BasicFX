@@ -26,7 +26,7 @@ void VisualizerComponent::paint(juce::Graphics& g) {
     int centreY = bounds.getCentreY();
 
     //draw the axes
-    g.setColour(juce::Colours::black);
+    g.setColour(juce::Colours::grey.withAlpha(0.5f));
     g.drawLine(0, bounds.getY(), 0, bounds.getBottom());
     g.drawLine(0, centreY, bounds.getRight(), centreY);
 

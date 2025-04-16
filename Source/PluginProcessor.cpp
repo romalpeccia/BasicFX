@@ -51,6 +51,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout BasicFXAudioProcessor::creat
     layout.add(std::make_unique<juce::AudioParameterBool>(FLANGER_ON_STRING, FLANGER_ON_STRING.toLowerCase(), false));
     layout.add(std::make_unique<juce::AudioParameterFloat>(FLANGER_DELAY_STRING, FLANGER_DELAY_STRING.toLowerCase(), juce::NormalisableRange<float>(0, DELAY_MAX, 0.01f, 1), 0));
     layout.add(std::make_unique<juce::AudioParameterFloat>(FLANGER_MIX_STRING, FLANGER_MIX_STRING.toLowerCase(), juce::NormalisableRange<float>(0, 100, 0.01f, 1), 0));
+    layout.add(std::make_unique<juce::AudioParameterInt>(DB_METER_RATE_STRING, DB_METER_RATE_STRING.toLowerCase(), 1, 1000, 33));
+    //layout.add(std::make_unique<juce::AudioParameterFloat>(FLANGER_MIX_STRING, FLANGER_MIX_STRING.toLowerCase(), juce::NormalisableRange<float>(0, 100, 0.01f, 1), 0));
 
     return layout;
 
