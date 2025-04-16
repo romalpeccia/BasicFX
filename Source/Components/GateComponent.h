@@ -11,6 +11,7 @@
 #pragma once
 #include "../Utilities.h"
 #include "CustomSlider.h"
+#include "SwappableComponent.h"
 class GateComponent : public SwappableComponent {
     public:
         GateComponent(juce::AudioProcessorValueTreeState& _apvts);

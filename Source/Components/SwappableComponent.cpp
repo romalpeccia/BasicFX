@@ -9,10 +9,9 @@
 */
 
 #include "SwappableComponent.h"
+#include "../PluginEditor.h"
 
-SwappableComponent::SwappableComponent() {
-    swappableComponentList.push_back(this);
-}
+
 SwappableComponent::~SwappableComponent() {
     swappableComponentList.erase(
         std::remove(swappableComponentList.begin(), swappableComponentList.end(), this),
@@ -50,6 +49,7 @@ void SwappableComponent::mouseUp(const juce::MouseEvent& e)  {
     if (componentToSwap != nullptr) {
         setBounds(oldBounds);
         swapComponents(componentToSwap);
+        SwappableComponent::notifyOrderChanged();
     }
     else {
         setBounds(oldBounds);
@@ -72,3 +72,8 @@ void SwappableComponent::swapComponents(SwappableComponent* otherComp)
         std::iter_swap(itA, itB);
 }
 
+void SwappableComponent::notifyOrderChanged() {
+    if (SwappableComponent::editorInstance != nullptr) {
+        SwappableComponent::editorInstance->updateProcessorChainFromUI();
+    }
+}

@@ -11,7 +11,8 @@
 #pragma once
 #include "../Utilities.h"
 #include "../CircularBuffer.h"
-class FlangerProcessor {
+#include "SwappableProcessor.h"
+class FlangerProcessor : public SwappableProcessor {
 public:
     FlangerProcessor(juce::AudioProcessorValueTreeState& _apvts);
     ~FlangerProcessor() {}

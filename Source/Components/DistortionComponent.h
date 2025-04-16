@@ -11,6 +11,7 @@
 #pragma once
 #include "../Utilities.h"
 #include "CustomSlider.h"
+#include "SwappableComponent.h"
 class DistortionComponent : public SwappableComponent {
     public:
         DistortionComponent(juce::AudioProcessorValueTreeState& _apvts);

@@ -24,6 +24,10 @@
         <FILE id="ftk8N3" name="GateProcessor.cpp" compile="1" resource="0"
               file="Source/Processors/GateProcessor.cpp"/>
         <FILE id="YpNWTZ" name="GateProcessor.h" compile="0" resource="0" file="Source/Processors/GateProcessor.h"/>
+        <FILE id="U6thHS" name="SwappableProcessor.cpp" compile="1" resource="0"
+              file="Source/Processors/SwappableProcessor.cpp"/>
+        <FILE id="fJvhIo" name="SwappableProcessor.h" compile="0" resource="0"
+              file="Source/Processors/SwappableProcessor.h"/>
         <FILE id="DmVCL7" name="VisualizerProcessor.cpp" compile="1" resource="0"
               file="Source/Processors/VisualizerProcessor.cpp"/>
         <FILE id="xofenX" name="VisualizerProcessor.h" compile="0" resource="0"

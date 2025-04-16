@@ -29,6 +29,7 @@ public:
     void resized() override;
 
     std::vector<juce::Component*>  getVisibleComps();
+    void updateProcessorChainFromUI();
 private:
 
     BasicFXAudioProcessor& audioProcessor;

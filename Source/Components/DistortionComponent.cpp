@@ -10,7 +10,7 @@
 
 #include "DistortionComponent.h"
 
-DistortionComponent::DistortionComponent(juce::AudioProcessorValueTreeState& _apvts) : apvts(_apvts) {
+DistortionComponent::DistortionComponent(juce::AudioProcessorValueTreeState& _apvts) : SwappableComponent(ProcessorType::Distortion), apvts(_apvts) {
 
     menu.addItem(WAVE_RECTIFIER_STRING, 1); //TODO what is up with these IDs? setting ID to 0 causes a bug, but it doesnt make sense that the indexes im putting are 1-4 when the param returns 0-3
     menu.addItem(BIT_CRUSHER_STRING, 2);

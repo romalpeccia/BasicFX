@@ -15,6 +15,7 @@
 #include "Processors/FlangerProcessor.h"
 #include "Processors/DBMeterProcessor.h"
 #include "Processors/VisualizerProcessor.h"
+
 //==============================================================================
 /**
 */
@@ -68,6 +69,9 @@ public:
 
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
+
+    void updateSignalChainOrder(const std::vector<ProcessorType>& order);
+    std::vector<SwappableProcessor*> signalChain;
 
     GateProcessor gateProcessor{ apvts };
     DistortionProcessor distortionProcessor{ apvts };

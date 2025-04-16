@@ -13,7 +13,8 @@
 BasicFXAudioProcessorEditor::BasicFXAudioProcessorEditor (BasicFXAudioProcessor& p, juce::AudioProcessorValueTreeState & _apvts)
     : AudioProcessorEditor (&p), audioProcessor (p), apvts(_apvts)
 {
-
+    SwappableComponent::setEditorReference(this);
+    updateProcessorChainFromUI();
     for (auto* comp : getVisibleComps())
     {
         addAndMakeVisible(comp);
@@ -23,6 +24,15 @@ BasicFXAudioProcessorEditor::BasicFXAudioProcessorEditor (BasicFXAudioProcessor&
 
 BasicFXAudioProcessorEditor::~BasicFXAudioProcessorEditor()
 {
+}
+
+void BasicFXAudioProcessorEditor::updateProcessorChainFromUI() {
+    std::vector<ProcessorType> newOrder;
+    for (auto* comp : SwappableComponent::getSwappableComponents()) {
+        newOrder.push_back(comp->getProcessorType());
+    }
+    DBG("SwappableComponent count: " << SwappableComponent::getSwappableComponents().size());
+    audioProcessor.updateSignalChainOrder(newOrder);
 }
 
 //==============================================================================

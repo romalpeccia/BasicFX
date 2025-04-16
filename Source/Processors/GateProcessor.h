@@ -10,8 +10,8 @@
 
 #pragma once
 #include "../Utilities.h"
-
-class GateProcessor {
+#include "SwappableProcessor.h"
+class GateProcessor : public SwappableProcessor {
 public:
     GateProcessor(juce::AudioProcessorValueTreeState& _apvts);
     ~GateProcessor() {}

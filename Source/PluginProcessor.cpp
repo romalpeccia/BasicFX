@@ -81,13 +81,34 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
     dbMeterIncomingProcessor.processBlock(buffer);
     visualizerIncomingProcessor.processBlock(buffer);
+    /*
     gateProcessor.processBlock(buffer);
     distortionProcessor.processBlock(buffer);
     flangerProcessor.processBlock(buffer);
+    */
+
+    for (auto* processor : signalChain)
+    {
+        processor->processBlock(buffer);
+    }
     dbMeterOutgoingProcessor.processBlock(buffer);
     visualizerOutgoingProcessor.processBlock(buffer);
 }
 
+void BasicFXAudioProcessor::updateSignalChainOrder(const std::vector<ProcessorType>& order)
+{
+    signalChain.clear();
+
+    for (auto type : order)
+    {
+        switch (type)
+        {
+        case ProcessorType::Gate:       signalChain.push_back(&gateProcessor); break;
+        case ProcessorType::Flanger:    signalChain.push_back(&flangerProcessor); break;
+        case ProcessorType::Distortion: signalChain.push_back(&distortionProcessor); break;
+        }
+    }
+}
 
 //==============================================================================
 const juce::String BasicFXAudioProcessor::getName() const

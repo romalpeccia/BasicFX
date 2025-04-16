@@ -10,8 +10,8 @@
 
 #pragma once
 #include "../Utilities.h"
-
-class DistortionProcessor {
+#include "SwappableProcessor.h"
+class DistortionProcessor : public SwappableProcessor {
 public:
     DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts);
     ~DistortionProcessor() {}

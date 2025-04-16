@@ -12,10 +12,10 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "Components/SwappableComponent.h"
+
 using namespace juce;
 
-
+enum class ProcessorType { Gate, Flanger, Distortion };
 const int MAX_INPUT_CHANNELS = 16;
 const int SAMPLE_RATE_FACTOR = 1000; //TODO: think of something better for this // just gives room for the CircularBuffers
 const juce::String DB_METER_RATE_STRING = "DB_METER_AMOUNT";
