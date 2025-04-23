@@ -40,7 +40,7 @@ void SwappableComponent::mouseUp(const juce::MouseEvent& e)  {
             auto intersection = newBounds.getIntersection(comp->getBounds());
 
             int area = intersection.getWidth() * intersection.getHeight();
-            if (area > largestIntersectionArea && area > AREA_OVERLAP_THRESHOLD) {
+            if (area > largestIntersectionArea && area > area_overlap_threshold) {
                 largestIntersectionArea = area;
                 componentToSwap = comp;
             }
@@ -49,7 +49,7 @@ void SwappableComponent::mouseUp(const juce::MouseEvent& e)  {
     if (componentToSwap != nullptr) {
         setBounds(oldBounds);
         swapComponents(componentToSwap);
-        SwappableComponent::notifyOrderChanged();
+        sendChangeMessage();
     }
     else {
         setBounds(oldBounds);
@@ -72,8 +72,16 @@ void SwappableComponent::swapComponents(SwappableComponent* otherComp)
         std::iter_swap(itA, itB);
 }
 
-void SwappableComponent::notifyOrderChanged() {
-    if (SwappableComponent::editorInstance != nullptr) {
-        SwappableComponent::editorInstance->updateProcessorChainFromUI();
-    }
+void SwappableComponent::setBounds(juce::Rectangle<int> bounds)
+{
+    juce::Component::setBounds(bounds);
+    setAreaOverLapThreshold();
+}
+void SwappableComponent::setBounds(int x, int y, int width, int height)
+{
+    juce::Component::setBounds(x, y, width, height);
+    setAreaOverLapThreshold();
+}
+void SwappableComponent::setAreaOverLapThreshold() {
+    area_overlap_threshold = (getLocalBounds().getWidth() * getLocalBounds().getHeight()) / 2;
 }

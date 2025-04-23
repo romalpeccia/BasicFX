@@ -11,32 +11,27 @@
 #pragma once
 #include <JuceHeader.h>
 #include "../Utilities.h"
-class BasicFXAudioProcessorEditor;
 
-class SwappableComponent : public juce::Component {
+class SwappableComponent : public juce::Component, public juce::ChangeBroadcaster {
     public:
         SwappableComponent() = delete;
         SwappableComponent(ProcessorType type) : processorType(type) {
             swappableComponentList.push_back(this);
-            DBG("SwappableComponent added: " << static_cast<int>(type));
         }
         ~SwappableComponent();
-
-
-
 
 
         void mouseDown(const juce::MouseEvent& e) override;
         void mouseDrag(const juce::MouseEvent& e) override;
         void mouseUp(const juce::MouseEvent& e) override;
         void swapComponents(SwappableComponent* otherComp);
+        
+        void setBounds(juce::Rectangle<int> bounds);
+        void setBounds(int x, int y, int width, int height);
+        void setAreaOverLapThreshold();
 
         ProcessorType getProcessorType() const { return processorType; }
-        static void setEditorReference(BasicFXAudioProcessorEditor* editor) {
-            SwappableComponent::editorInstance = editor;
-        };
-        static void notifyOrderChanged();
-        static std::vector<SwappableComponent*>& getSwappableComponents() {return swappableComponentList;}
+        static std::vector<SwappableComponent*>& getSwappableComponents() { return swappableComponentList; }
 
     private:
         inline static std::vector<SwappableComponent*> swappableComponentList; //shared vector across all instances of swappable Components
@@ -44,9 +39,8 @@ class SwappableComponent : public juce::Component {
         juce::ComponentDragger componentDragger; //adding this member allows us to drag the component using the mouseEvent that triggered it
         juce::Rectangle<int> oldBounds; //bounds of the component before it was dragged
         juce::Rectangle<int> newBounds; //bounds of the component while it is being dragged
-        const int AREA_OVERLAP_THRESHOLD = 100;
+        int area_overlap_threshold = 0; //how much area the component has to share with the other component to trigger swapping them in void swapComponents(SwappableComponent* otherComp);
 
         ProcessorType processorType;
-        inline static BasicFXAudioProcessorEditor* editorInstance = nullptr;
 
 };

@@ -29,7 +29,11 @@ public:
     void resized() override;
 
     std::vector<juce::Component*>  getVisibleComps();
-    void updateProcessorChainFromUI();
+    std::vector<SwappableComponent*>  getSwappableComps();
+
+
+    void resizeSwappableComponentVector(juce::Rectangle<int> bounds);
+
 private:
 
     BasicFXAudioProcessor& audioProcessor;

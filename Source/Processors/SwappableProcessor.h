@@ -12,8 +12,8 @@
 #include <JuceHeader.h>
 
 class SwappableProcessor {
-public: 
-    ~SwappableProcessor() {};
-      virtual void processBlock(juce::AudioBuffer<float>& buffer) = 0; 
-      virtual void prepareToPlay(double sampleRate, int _totalNumInputChannels) = 0; 
+    public: 
+        ~SwappableProcessor() {};
+        virtual void processBlock(juce::AudioBuffer<float>& buffer) = 0; 
+        virtual void prepareToPlay(double sampleRate, int _totalNumInputChannels) = 0; 
 };

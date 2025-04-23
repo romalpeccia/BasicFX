@@ -22,9 +22,9 @@ BasicFXAudioProcessor::BasicFXAudioProcessor()
                        )
 #endif
 {
-
-
-
+    signalChain.push_back(&gateProcessor);
+    signalChain.push_back(&distortionProcessor);
+    signalChain.push_back(&flangerProcessor);
 }
 
 BasicFXAudioProcessor::~BasicFXAudioProcessor()
@@ -81,11 +81,6 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
     dbMeterIncomingProcessor.processBlock(buffer);
     visualizerIncomingProcessor.processBlock(buffer);
-    /*
-    gateProcessor.processBlock(buffer);
-    distortionProcessor.processBlock(buffer);
-    flangerProcessor.processBlock(buffer);
-    */
 
     for (auto* processor : signalChain)
     {
@@ -95,20 +90,25 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     visualizerOutgoingProcessor.processBlock(buffer);
 }
 
-void BasicFXAudioProcessor::updateSignalChainOrder(const std::vector<ProcessorType>& order)
-{
-    signalChain.clear();
+void BasicFXAudioProcessor::changeListenerCallback(juce::ChangeBroadcaster* source) {
 
-    for (auto type : order)
+    auto componentList = SwappableComponent::getSwappableComponents();
+    signalChain.clear();
+    for (auto* comp : componentList)
     {
-        switch (type)
-        {
-        case ProcessorType::Gate:       signalChain.push_back(&gateProcessor); break;
-        case ProcessorType::Flanger:    signalChain.push_back(&flangerProcessor); break;
-        case ProcessorType::Distortion: signalChain.push_back(&distortionProcessor); break;
+        ProcessorType type = comp->getProcessorType();
+        if (type == ProcessorType::Gate) {
+            signalChain.push_back(&gateProcessor);
+        }
+        else if (type == ProcessorType::Distortion) {
+            signalChain.push_back(&distortionProcessor);
+        }
+        else if (type == ProcessorType::Flanger) {
+            signalChain.push_back(&flangerProcessor);
         }
     }
 }
+
 
 //==============================================================================
 const juce::String BasicFXAudioProcessor::getName() const

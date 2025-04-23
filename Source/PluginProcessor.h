@@ -15,12 +15,12 @@
 #include "Processors/FlangerProcessor.h"
 #include "Processors/DBMeterProcessor.h"
 #include "Processors/VisualizerProcessor.h"
-
+#include "Components/SwappableComponent.h"
 //==============================================================================
 /**
 */
 
-class BasicFXAudioProcessor  : public juce::AudioProcessor
+class BasicFXAudioProcessor  : public juce::AudioProcessor, public juce::ChangeListener
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -70,8 +70,9 @@ public:
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
-    void updateSignalChainOrder(const std::vector<ProcessorType>& order);
     std::vector<SwappableProcessor*> signalChain;
+
+    void changeListenerCallback(juce::ChangeBroadcaster* source) override;
 
     GateProcessor gateProcessor{ apvts };
     DistortionProcessor distortionProcessor{ apvts };
