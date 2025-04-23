@@ -24,7 +24,7 @@ class GateComponent : public SwappableComponent {
         juce::AudioProcessorValueTreeState& apvts;
         CustomComboBox menu{ GATE_COLOUR_1, GATE_COLOUR_2 };
         CustomTextButton button{ "Gate" ,GATE_COLOUR_1};
-        CustomSlider thresholdSlider{"Threshold", "db", GATE_COLOUR_1, GATE_COLOUR_2};
+        CustomSlider thresholdSlider{"Threshold", "amplitude", GATE_COLOUR_1, GATE_COLOUR_2};
         CustomSlider attackSlider{"Attack", "s", GATE_COLOUR_1, GATE_COLOUR_2};
         CustomSlider holdSlider{"Hold", "s", GATE_COLOUR_1, GATE_COLOUR_2 };
         CustomSlider releaseSlider{"Release", "s", GATE_COLOUR_1, GATE_COLOUR_2 };

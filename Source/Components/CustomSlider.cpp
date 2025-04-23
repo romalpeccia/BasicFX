@@ -30,53 +30,64 @@ CustomSlider::~CustomSlider() { setLookAndFeel(nullptr); };
 bool CustomSlider::hitTest(int x, int y)
 {
     //x, y are the coordinates of the click that triggered this function
-    //the slider is bound by the minimum of its width and height, overriding this function to make it so the UI only counts as a mouseclick if the actual slider drawing is clicked instead of anywhere on the slider bounds
+    //the slider is bound by the minimum of its width and height, overriding this function to make it so the UI only counts as a mouseclick if the actual slider drawing is clicked instead of anywhere on the component bounds
     auto bounds = getLocalBounds().toFloat();
     float side = juce::jmin(bounds.getWidth(), bounds.getHeight());
     auto center = bounds.getCentre();
     float radius = side / 2.0f;
 
-    float lineW = juce::jmin(8.0f, radius * 0.5f); // match drawRotarySlider //TODO make this a class member in LNF
+    float lineW = juce::jmin(8.0f, radius * 0.5f); // match drawRotarySlider //TODO make this a class member in LNF so that we can reference it throughout the slider implementation
 
     auto dx = x - center.x;
     auto dy = y - center.y;
-    float area = dx * dx + dy * dy;
-    float distanceFromCentre = std::sqrt(area);
+    float distanceFromCentre = std::sqrt(dx * dx + dy * dy);
 
-    float innerRadius = radius - lineW;
-    float outerRadius = radius;
+    int margin = bounds.getWidth() / 10;
+    float innerRadius = radius - lineW - margin;
+    float outerRadius = radius + margin;
 
     return distanceFromCentre >= innerRadius && distanceFromCentre <= outerRadius;
 }
 
 void CustomSlider::paint(juce::Graphics& g) {
+
+    auto bounds = getLocalBounds();
+    //Draw the slider
+    auto range = getRange();
+
     auto startAngle = juce::degreesToRadians(180.f + 45.f);
     auto endAngle = juce::degreesToRadians(180.f - 45.f) + MathConstants<float>::twoPi;
-    auto range = getRange();
-    auto bounds = getLocalBounds();
-    auto height = bounds.getHeight();
-    auto width = bounds.getWidth();
-    auto x = bounds.getX();
-    auto y = bounds.getY();
-    getLookAndFeel().drawRotarySlider(g, x, y, width, height, jmap(getValue(), range.getStart(), range.getEnd(), 0.0, 1.0), startAngle, endAngle, *this);
+    auto rotaryPos = juce::jmap(getValue(), range.getStart(), range.getEnd(), 0.0, 1.0);
+    
+    getLookAndFeel().drawRotarySlider(g, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), rotaryPos, startAngle, endAngle, *this);
 
-    //TODO: make this less hacky / nonpriority -  make text editable?
-    int textAreaWidth = bounds.getWidth() / 2;
-    int textAreaHeight = (bounds.getHeight() > textAreaWidth) ? textAreaWidth / 2 : bounds.getHeight() / 2;
-    x = bounds.getCentre().getX() - textAreaWidth / 2 - textAreaWidth / 10;
-    y = bounds.getCentre().getY() - textAreaHeight / 2;
-    int fontHeight = textAreaHeight / 2;
-    fontHeight = (fontHeight > minFontHeight) ? fontHeight : minFontHeight;
-    g.setFont(fontHeight);
-    g.drawText(getName(), x, y, juce::Font(fontHeight).getStringWidth(getName()), fontHeight, juce::Justification::centred);
+    //Set up the value, label, and units
     float value = getValue();
+
+    //scale the text bounds to be within the slider
+    int size = juce::jmin(bounds.getHeight(), bounds.getWidth());
+    auto sliderBounds = juce::Rectangle<float>(bounds.getCentreX() - size / 2, bounds.getCentreY() - size / 2, size, size);
+    auto textBounds = sliderBounds.toFloat().getProportion(juce::Rectangle<float>(0.3, 0.3, 0.5, 0.5));
+    auto x = textBounds.getX();
+    auto y = textBounds.getY();
+    
+    int fontHeight = size / 8;
+    fontHeight = juce::jmax(fontHeight, minFontHeight);
+    auto font = juce::Font(fontHeight);
+    g.setFont(font);
+
     if (units == "s") {
         value = value * 1000;
         units = "ms";
     }
-    else if (units == "db") { //TODO: this assumes caller is supplying an amplitude instead of a dB value, seems bad practice to do so
+    else if (units == "amplitude") {
         value = juce::Decibels::gainToDecibels(value);
+        units = "db";
     }
-    g.drawText(juce::String(value), x, y + fontHeight, juce::Font(fontHeight).getStringWidth(juce::String(value)), fontHeight, juce::Justification::centred);
-    g.drawText(units, x + juce::Font(fontHeight).getStringWidth("0.000000"), y + fontHeight, juce::Font(fontHeight).getStringWidth(units), fontHeight, juce::Justification::centredRight);
+
+    //Draw the label, value, and units      TODO: non-priority make text editable?
+    g.drawText(getName(), x, y, font.getStringWidth(getName()), fontHeight, juce::Justification::centred);
+    g.drawText(juce::String(value), x, y + fontHeight, font.getStringWidth(juce::String(value)), fontHeight, juce::Justification::centred);
+    g.drawText(units, x + font.getStringWidth("0.000000"), y + fontHeight, font.getStringWidth(units), fontHeight, juce::Justification::centredRight);
 };
+

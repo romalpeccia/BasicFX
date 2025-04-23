@@ -52,7 +52,7 @@ void CustomLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, i
         g.strokePath(valueArc, PathStrokeType(lineW, PathStrokeType::curved, PathStrokeType::rounded));
     }
 
-    auto thumbWidth = lineW * 2.0f;
+    auto thumbWidth = width/20;
     Point<float> thumbPoint(bounds.getCentreX() + arcRadius * std::cos(toAngle - MathConstants<float>::halfPi),
         bounds.getCentreY() + arcRadius * std::sin(toAngle - MathConstants<float>::halfPi));
     g.setColour(slider.findColour(Slider::thumbColourId));

@@ -28,5 +28,5 @@ public:
 private:
     CustomLookAndFeel lnf;
     juce::String units;
-    int minFontHeight = 5;
+    int minFontHeight = 10;
 };
