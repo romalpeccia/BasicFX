@@ -39,12 +39,12 @@ private:
     BasicFXAudioProcessor& audioProcessor;
     juce::AudioProcessorValueTreeState& apvts;
 
-    DBMeterComponent incomingDBMeterComponent{apvts, audioProcessor.dbMeterIncomingProcessor };
-    VisualizerComponent visualizerComponent{ audioProcessor.visualizerIncomingProcessor, audioProcessor.visualizerOutgoingProcessor };
-    GateComponent gateComponent{ apvts };
-    DistortionComponent distortionComponent{ apvts };
-    FlangerComponent flangerComponent{ apvts };
-    DBMeterComponent outgoingDBMeterComponent{apvts, audioProcessor.dbMeterOutgoingProcessor };
+    DBMeterComponent incomingDBMeterComponent{apvts, &audioProcessor.dbMeterIncomingProcessor };
+    VisualizerComponent visualizerComponent{ &audioProcessor.visualizerIncomingProcessor, &audioProcessor.visualizerOutgoingProcessor };
+    GateComponent gateComponent{ apvts,  &audioProcessor.gateProcessor };
+    DistortionComponent distortionComponent{ apvts, &audioProcessor.distortionProcessor };
+    FlangerComponent flangerComponent{ apvts, &audioProcessor.flangerProcessor };
+    DBMeterComponent outgoingDBMeterComponent{apvts, &audioProcessor.dbMeterOutgoingProcessor };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicFXAudioProcessorEditor)
 };

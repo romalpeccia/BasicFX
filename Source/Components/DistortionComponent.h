@@ -12,9 +12,10 @@
 #include "../Utilities.h"
 #include "CustomSlider.h"
 #include "SwappableComponent.h"
+#include "../Processors/DistortionProcessor.h"
 class DistortionComponent : public SwappableComponent {
     public:
-        DistortionComponent(juce::AudioProcessorValueTreeState& _apvts);
+        DistortionComponent(juce::AudioProcessorValueTreeState& _apvts, DistortionProcessor* distortionProcessor);
         std::vector<juce::Component*> getDistortionComps();
         void resized() override;
 

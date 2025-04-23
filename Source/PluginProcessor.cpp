@@ -94,18 +94,11 @@ void BasicFXAudioProcessor::changeListenerCallback(juce::ChangeBroadcaster* sour
 
     auto componentList = SwappableComponent::getSwappableComponents();
     signalChain.clear();
+
     for (auto* comp : componentList)
     {
-        ProcessorType type = comp->getProcessorType();
-        if (type == ProcessorType::Gate) {
-            signalChain.push_back(&gateProcessor);
-        }
-        else if (type == ProcessorType::Distortion) {
-            signalChain.push_back(&distortionProcessor);
-        }
-        else if (type == ProcessorType::Flanger) {
-            signalChain.push_back(&flangerProcessor);
-        }
+        if (comp->getProcessor() != nullptr)
+            signalChain.push_back(comp->getProcessor());
     }
 }
 

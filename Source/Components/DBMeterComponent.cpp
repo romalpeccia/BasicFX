@@ -10,7 +10,7 @@
 
 #include "DBMeterComponent.h"
 
-DBMeterComponent::DBMeterComponent(juce::AudioProcessorValueTreeState& _apvts, DBMeterProcessor& _processor) : apvts(_apvts), processor(_processor) {
+DBMeterComponent::DBMeterComponent(juce::AudioProcessorValueTreeState& _apvts, DBMeterProcessor* _processor) : apvts(_apvts), processor(_processor) {
 
     rateSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, DB_METER_RATE_STRING, rateSlider);
     addAndMakeVisible(dbLabel);
@@ -25,7 +25,7 @@ DBMeterComponent::DBMeterComponent(juce::AudioProcessorValueTreeState& _apvts, D
 }
 
 void DBMeterComponent::timerCallback() {
-    dbValue = processor.getDB();
+    dbValue = processor->getDB();
     auto dbString = juce::String(dbValue);
     if (dbString == "-100") {
         dbString = "-inf";

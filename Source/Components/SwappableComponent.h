@@ -11,11 +11,12 @@
 #pragma once
 #include <JuceHeader.h>
 #include "../Utilities.h"
-
+#include "../Processors/SwappableProcessor.h"
 class SwappableComponent : public juce::Component, public juce::ChangeBroadcaster {
     public:
         SwappableComponent() = delete;
-        SwappableComponent(ProcessorType type) : processorType(type) {
+        SwappableComponent(SwappableProcessor* processorPtr): processor(processorPtr)
+        {
             swappableComponentList.push_back(this);
         }
         ~SwappableComponent();
@@ -29,9 +30,8 @@ class SwappableComponent : public juce::Component, public juce::ChangeBroadcaste
         void setBounds(juce::Rectangle<int> bounds);
         void setBounds(int x, int y, int width, int height);
         void setAreaOverLapThreshold();
-
-        ProcessorType getProcessorType() const { return processorType; }
         static std::vector<SwappableComponent*>& getSwappableComponents() { return swappableComponentList; }
+        SwappableProcessor* getProcessor() const { return processor; }
 
     private:
         inline static std::vector<SwappableComponent*> swappableComponentList; //shared vector across all instances of swappable Components
@@ -41,6 +41,8 @@ class SwappableComponent : public juce::Component, public juce::ChangeBroadcaste
         juce::Rectangle<int> newBounds; //bounds of the component while it is being dragged
         int area_overlap_threshold = 0; //how much area the component has to share with the other component to trigger swapping them in void swapComponents(SwappableComponent* otherComp);
 
-        ProcessorType processorType;
+
+    protected: //accessible by derived classes but not external code
+        SwappableProcessor* processor = nullptr;
 
 };

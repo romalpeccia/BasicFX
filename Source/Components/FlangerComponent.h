@@ -12,10 +12,11 @@
 #include "../Utilities.h"
 #include "CustomSlider.h"
 #include "SwappableComponent.h"
+#include "../Processors/FlangerProcessor.h"
 class FlangerComponent : public SwappableComponent {
 
     public:
-        FlangerComponent(juce::AudioProcessorValueTreeState& _apvts);
+        FlangerComponent(juce::AudioProcessorValueTreeState& _apvts, FlangerProcessor* flangerProc);
         std::vector<juce::Component*> getFlangerComps();
         void resized() override;
 

@@ -11,7 +11,7 @@
 #include "GateComponent.h"
 
 
-GateComponent::GateComponent(juce::AudioProcessorValueTreeState& _apvts) : SwappableComponent(ProcessorType::Gate), apvts(_apvts) {
+GateComponent::GateComponent(juce::AudioProcessorValueTreeState& _apvts, GateProcessor* gateProcessor) : SwappableComponent(gateProcessor), apvts(_apvts) {
     buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, GATE_ON_STRING, button);
     button.setClickingTogglesState(true);
     menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, GATE_STATE_STRING, menu);

@@ -10,7 +10,7 @@
 
 #include "VisualizerComponent.h"
 
-VisualizerComponent::VisualizerComponent(VisualizerProcessor& _processor1, VisualizerProcessor& _processor2)
+VisualizerComponent::VisualizerComponent(VisualizerProcessor* _processor1, VisualizerProcessor* _processor2)
     : processor1(_processor1), processor2(_processor2) {
     startTimer(REFRESH_RATE_MS);
 
@@ -30,8 +30,8 @@ void VisualizerComponent::paint(juce::Graphics& g) {
     g.drawLine(0, bounds.getY(), 0, bounds.getBottom());
     g.drawLine(0, centreY, bounds.getRight(), centreY);
 
-    paintSignal(g, processor1, juce::Colours::black, juce::Colours::grey );
-    paintSignal(g, processor2, juce::Colours::red, juce::Colours::blue );
+    paintSignal(g, *processor1, juce::Colours::black, juce::Colours::grey );
+    paintSignal(g, *processor2, juce::Colours::red, juce::Colours::blue );
 };
 
 void VisualizerComponent::paintSignal(juce::Graphics& g, VisualizerProcessor& processor, juce::Colour peakColour, juce::Colour bodyColour) {

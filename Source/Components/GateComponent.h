@@ -11,10 +11,11 @@
 #pragma once
 #include "../Utilities.h"
 #include "CustomSlider.h"
+#include "../Processors/GateProcessor.h"
 #include "SwappableComponent.h"
 class GateComponent : public SwappableComponent {
     public:
-        GateComponent(juce::AudioProcessorValueTreeState& _apvts);
+        GateComponent(juce::AudioProcessorValueTreeState& _apvts, GateProcessor* gateProcessor);
         std::vector<juce::Component*> getGateComps();
         void resized() override;
     private:

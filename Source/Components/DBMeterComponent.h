@@ -31,7 +31,7 @@ private:
 class DBMeterComponent : public juce::Component, public juce::Timer {
 
     public:
-        DBMeterComponent(juce::AudioProcessorValueTreeState& _apvts, DBMeterProcessor& _processor);
+        DBMeterComponent(juce::AudioProcessorValueTreeState& _apvts, DBMeterProcessor* _processor);
         ~DBMeterComponent() {  }
 
         void timerCallback() override;
@@ -41,7 +41,7 @@ class DBMeterComponent : public juce::Component, public juce::Timer {
         
     private:
         juce::AudioProcessorValueTreeState& apvts;
-        DBMeterProcessor& processor; 
+        DBMeterProcessor* processor; 
         MeterBar meterBar;
         juce::Label dbLabel;
         const juce::Colour MAIN_COLOUR = juce::Colours::lawngreen;
