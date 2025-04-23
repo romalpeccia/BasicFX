@@ -13,7 +13,7 @@
 #include "SwappableProcessor.h"
 class DistortionProcessor : public SwappableProcessor {
 public:
-    DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts);
+    DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts, int index);
     ~DistortionProcessor() {}
     float getAmount() { return *amountParam; }
     bool getOnState() { return bool(*onStateParam); }

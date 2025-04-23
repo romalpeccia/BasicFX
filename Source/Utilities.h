@@ -16,10 +16,22 @@
 using namespace juce;
 
 enum class ProcessorType { Gate, Flanger, Distortion };
+const int MAX_COMPONENTS = 16;
 const int MAX_INPUT_CHANNELS = 16;
 const int SAMPLE_RATE_FACTOR = 1000; //TODO: think of something better for this // just gives room for the CircularBuffers
+
+
+/// IDs for APVTS, with helper functions to add suffixes to keep track of multiple components
+inline auto makeID(const juce::String& base, int i) {
+    return base + "_" + juce::String(i);
+}
+
+inline auto makeName(const juce::String& base, int i) {
+    return base.toLowerCase() + "_" + juce::String(i);
+}
 const juce::String DB_METER_RATE_STRING = "DB_METER_AMOUNT";
 
+const juce::String SWAPPABLE_COMPONENT_TYPE_STRING = "SWAPPABLE_COMPONENT_TYPE";
 const juce::String GATE_STATE_STRING = "GATE_STATE";
 const juce::String GATE_ON_STRING = "GATE_ON";
 const juce::String THRESHOLD_STRING = "THRESHOLD";
@@ -32,7 +44,6 @@ const juce::String ATTACK_HOLD_RELEASE_GATE_STRING = "ATTACK/HOLD/RELEASE";
 const float ATTACK_MIN = 0.0001;
 const float RELEASE_MIN = 0.0001;
 const float HOLD_MIN = 0.0001;
-
 
 const juce::String DISTORTION_AMOUNT_STRING = "DISTORTION_AMOUNT";
 const juce::String DISTORTION_ON_STRING = "DISTORTION_ON";
@@ -50,10 +61,13 @@ const float DELAY_MAX = 1;
 
 const juce::Colour COMPONENT_COLOUR_OFF = juce::Colours::dimgrey;
 
+//math functions
 float calculateRMS(const float* samples, int numSamples);
 float calculateRMSAcrossChannels(juce::AudioBuffer<float>& buffer);
 float calculateAverageAcrossChannels(const juce::AudioBuffer<float>& buffer); 
 
+
+//Custom LNF and components that were small enough to not warrant their own file
 class CustomLookAndFeel : public juce::LookAndFeel_V4 {
 public:
 

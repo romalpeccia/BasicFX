@@ -11,9 +11,12 @@
 #include "FlangerComponent.h"
 #include "../Processors/FlangerProcessor.h"
 FlangerComponent::FlangerComponent(juce::AudioProcessorValueTreeState& _apvts, FlangerProcessor* flangerProcessor): SwappableComponent(flangerProcessor), apvts(_apvts) {
-    flangerSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, FLANGER_DELAY_STRING, flangerSlider);
-    mixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, FLANGER_MIX_STRING, mixSlider);
-    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, FLANGER_ON_STRING, button);
+
+    int index = getIndexInComponentList();
+    DBG(index);
+    flangerSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(FLANGER_DELAY_STRING, index), flangerSlider);
+    mixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(FLANGER_MIX_STRING, index), mixSlider);
+    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeID(FLANGER_ON_STRING, index), button);
     button.setClickingTogglesState(true);
 
     for (auto* comp : getFlangerComps()) {

@@ -20,10 +20,10 @@
 /**
 */
 
-class BasicFXAudioProcessor  : public juce::AudioProcessor, public juce::ChangeListener
-                            #if JucePlugin_Enable_ARA
-                             , public juce::AudioProcessorARAExtension
-                            #endif
+class BasicFXAudioProcessor : public juce::AudioProcessor, public juce::ActionListener
+#if JucePlugin_Enable_ARA
+    , public juce::AudioProcessorARAExtension
+#endif
 {
 public:
     //==============================================================================
@@ -34,9 +34,9 @@ public:
 
     void releaseResources() override;
 
-   #ifndef JucePlugin_PreferredChannelConfigurations
-    bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
-   #endif
+#ifndef JucePlugin_PreferredChannelConfigurations
+    bool isBusesLayoutSupported(const BusesLayout& layouts) const override;
+#endif
 
 
 
@@ -55,29 +55,34 @@ public:
     //==============================================================================
     int getNumPrograms() override;
     int getCurrentProgram() override;
-    void setCurrentProgram (int index) override;
-    const juce::String getProgramName (int index) override;
-    void changeProgramName (int index, const juce::String& newName) override;
+    void setCurrentProgram(int index) override;
+    const juce::String getProgramName(int index) override;
+    void changeProgramName(int index, const juce::String& newName) override;
 
     //==============================================================================
-    void getStateInformation (juce::MemoryBlock& destData) override;
-    void setStateInformation (const void* data, int sizeInBytes) override;
+    void getStateInformation(juce::MemoryBlock& destData) override;
+    void setStateInformation(const void* data, int sizeInBytes) override;
 
 
     void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     void prepareToPlay(double sampleRate, int samplesPerBlock) override;
 
+    //C++ note: static member belongs to the class and not the object of the class, meaning the member can be used before the object is constructed
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    static void addGateParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int i);
+    static void addDistortionParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int i);
+    static void addFlangerParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int i);
+
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
     std::vector<SwappableProcessor*> signalChain;
 
-    void changeListenerCallback(juce::ChangeBroadcaster* source) override;
+    void actionListenerCallback(const juce::String& message) override;
 
-    GateProcessor gateProcessor{ apvts };
-    DistortionProcessor distortionProcessor{ apvts };
-    DistortionProcessor distortionProcessor2{ apvts };
-    FlangerProcessor flangerProcessor{ apvts };
+
+    std::array<std::unique_ptr<GateProcessor>, MAX_COMPONENTS> gateProcessors;
+    std::array<std::unique_ptr<DistortionProcessor>, MAX_COMPONENTS> distortionProcessors;
+    std::array<std::unique_ptr<FlangerProcessor>, MAX_COMPONENTS> flangerProcessors;
 
     DBMeterProcessor dbMeterIncomingProcessor;
     DBMeterProcessor dbMeterOutgoingProcessor;

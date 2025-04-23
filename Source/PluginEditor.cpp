@@ -18,9 +18,22 @@ BasicFXAudioProcessorEditor::BasicFXAudioProcessorEditor (BasicFXAudioProcessor&
     {
         addAndMakeVisible(comp);
     }
-    for (auto* comp : getSwappableComps())
+    for (int i = 0; i < MAX_COMPONENTS; ++i)
     {
-        comp->addChangeListener(&p);
+        if (i % 3 == 0)
+        {
+            swappableComponents.push_back(std::make_unique<GateComponent>(apvts, audioProcessor.gateProcessors[i].get()));
+        }
+        else if (i % 3 == 1)
+        {
+            swappableComponents.push_back(std::make_unique<DistortionComponent>(apvts, audioProcessor.distortionProcessors[i].get()));
+        }
+        else
+        {
+            swappableComponents.push_back(std::make_unique<FlangerComponent>(apvts, audioProcessor.flangerProcessors[i].get()));
+        }
+
+        addAndMakeVisible(swappableComponents.back().get());
     }
     setSize (1200, 800);
     setResizable(true, true);
@@ -74,22 +87,8 @@ void BasicFXAudioProcessorEditor::resizeSwappableComponentVector(juce::Rectangle
 std::vector<juce::Component*> BasicFXAudioProcessorEditor::getVisibleComps() {
     std::vector<juce::Component*> comps;
 
-    comps.push_back(&gateComponent);
-    comps.push_back(&distortionComponent);
-    comps.push_back(&distortionComponent2);
-    comps.push_back(&flangerComponent);
     comps.push_back(&visualizerComponent);
     comps.push_back(&incomingDBMeterComponent);
     comps.push_back(&outgoingDBMeterComponent);
-    return comps;
-}
-
-std::vector<SwappableComponent*> BasicFXAudioProcessorEditor::getSwappableComps() {
-    std::vector<SwappableComponent*> comps;
-
-    comps.push_back(&gateComponent);
-    comps.push_back(&distortionComponent);
-    comps.push_back(&distortionComponent2);
-    comps.push_back(&flangerComponent);
     return comps;
 }

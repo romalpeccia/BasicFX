@@ -20,56 +20,72 @@ SwappableComponent::~SwappableComponent() {
 }
 
 void SwappableComponent::mouseDown(const juce::MouseEvent& e)
-{
-    oldBounds = getBounds();
+{   //called when the component is clicked on
+    initialBounds = getBounds();
     componentDragger.startDraggingComponent(this, e);
 }
 
 void SwappableComponent::mouseDrag(const juce::MouseEvent& e)
-{
+{   //called while the component is being dragged
     componentDragger.dragComponent(this, e, nullptr);
-    newBounds = getBounds();
+    draggedBounds = getBounds();
 }
 
 void SwappableComponent::mouseUp(const juce::MouseEvent& e)  {
+    //called while the component has stopped being dragged
 
     SwappableComponent* componentToSwap = nullptr;
     int largestIntersectionArea = 0;
+
     for (auto* comp : swappableComponentList) {
         if (comp != nullptr && comp != this) {
-            auto intersection = newBounds.getIntersection(comp->getBounds());
-
+            //compare overlap in area of other components with this component
+            auto intersection = draggedBounds.getIntersection(comp->getBounds());
             int area = intersection.getWidth() * intersection.getHeight();
+
             if (area > largestIntersectionArea && area > area_overlap_threshold) {
                 largestIntersectionArea = area;
                 componentToSwap = comp;
             }
         }
     }
+
+    setBounds(initialBounds);
     if (componentToSwap != nullptr) {
-        setBounds(oldBounds);
         swapComponents(componentToSwap);
-        sendChangeMessage();
     }
-    else {
-        setBounds(oldBounds);
-    }
+
 }
 
 void SwappableComponent::swapComponents(SwappableComponent* otherComp)
 {
-    //swap the bounds
-    auto otherCompBounds = getBounds();
-    setBounds(otherComp->getBounds());
-    otherComp->setBounds(otherCompBounds);
 
-    //swap the components in the list
     auto& list = swappableComponentList;
     auto itA = std::find(list.begin(), list.end(), this);
     auto itB = std::find(list.begin(), list.end(), otherComp);
-
-    if (itA != list.end() && itB != list.end())
+    //if iterators found both components before reaching the end
+    if (itA != list.end() && itB != list.end()) {
+        DBG("THIS BEFORE" << String(this->getIndexInComponentList()));
+        DBG("OTHER BEFORE" << String(otherComp->getIndexInComponentList()));
+        //swap the components in the list
         std::iter_swap(itA, itB);
+        //swap the bounds
+        auto otherCompBounds = getBounds();
+        setBounds(otherComp->getBounds());
+        otherComp->setBounds(otherCompBounds);
+        DBG("THIS AFTER" << String( this->getIndexInComponentList()));
+        DBG("OTHER AFTER" << String(otherComp->getIndexInComponentList()));
+
+        sendActionMessage("SWAPPED_" + String(this->getIndexInComponentList()) + "_" +  String(otherComp->getIndexInComponentList()));
+    }
+
+}
+int SwappableComponent::getIndexInComponentList()  {
+    const auto& list = getSwappableComponents();
+    for (int i = 0; i < list.size(); ++i)
+        if (list[i] == this)
+            return i;
+    return -1;
 }
 
 void SwappableComponent::setBounds(juce::Rectangle<int> bounds)
