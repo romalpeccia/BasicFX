@@ -43,6 +43,7 @@ private:
     VisualizerComponent visualizerComponent{ &audioProcessor.visualizerIncomingProcessor, &audioProcessor.visualizerOutgoingProcessor };
     GateComponent gateComponent{ apvts,  &audioProcessor.gateProcessor };
     DistortionComponent distortionComponent{ apvts, &audioProcessor.distortionProcessor };
+    DistortionComponent distortionComponent2{ apvts, &audioProcessor.distortionProcessor2 };
     FlangerComponent flangerComponent{ apvts, &audioProcessor.flangerProcessor };
     DBMeterComponent outgoingDBMeterComponent{apvts, &audioProcessor.dbMeterOutgoingProcessor };
 

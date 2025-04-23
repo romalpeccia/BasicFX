@@ -76,7 +76,9 @@ public:
 
     GateProcessor gateProcessor{ apvts };
     DistortionProcessor distortionProcessor{ apvts };
+    DistortionProcessor distortionProcessor2{ apvts };
     FlangerProcessor flangerProcessor{ apvts };
+
     DBMeterProcessor dbMeterIncomingProcessor;
     DBMeterProcessor dbMeterOutgoingProcessor;
     VisualizerProcessor visualizerIncomingProcessor{ 44100 * SAMPLE_RATE_FACTOR };

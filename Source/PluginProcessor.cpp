@@ -22,8 +22,10 @@ BasicFXAudioProcessor::BasicFXAudioProcessor()
                        )
 #endif
 {
+    //this order should coorespond with the component order declared in PluginEditor: TODO: make this enforcable?
     signalChain.push_back(&gateProcessor);
     signalChain.push_back(&distortionProcessor);
+    signalChain.push_back(&distortionProcessor2);
     signalChain.push_back(&flangerProcessor);
 }
 
@@ -51,8 +53,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout BasicFXAudioProcessor::creat
     layout.add(std::make_unique<juce::AudioParameterBool>(FLANGER_ON_STRING, FLANGER_ON_STRING.toLowerCase(), false));
     layout.add(std::make_unique<juce::AudioParameterFloat>(FLANGER_DELAY_STRING, FLANGER_DELAY_STRING.toLowerCase(), juce::NormalisableRange<float>(0, DELAY_MAX, 0.01f, 1), 0));
     layout.add(std::make_unique<juce::AudioParameterFloat>(FLANGER_MIX_STRING, FLANGER_MIX_STRING.toLowerCase(), juce::NormalisableRange<float>(0, 100, 0.01f, 1), 0));
-    layout.add(std::make_unique<juce::AudioParameterInt>(DB_METER_RATE_STRING, DB_METER_RATE_STRING.toLowerCase(), 1, 1000, 33));
-    //layout.add(std::make_unique<juce::AudioParameterFloat>(FLANGER_MIX_STRING, FLANGER_MIX_STRING.toLowerCase(), juce::NormalisableRange<float>(0, 100, 0.01f, 1), 0));
+   
+    layout.add(std::make_unique<juce::AudioParameterInt>(DB_METER_RATE_STRING, DB_METER_RATE_STRING.toLowerCase(), 1, 500, 33));
 
     return layout;
 
@@ -61,6 +63,7 @@ void BasicFXAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock
 {
     gateProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
     distortionProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
+    distortionProcessor2.prepareToPlay(sampleRate, getTotalNumInputChannels());
     flangerProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
     visualizerIncomingProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
     visualizerOutgoingProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());

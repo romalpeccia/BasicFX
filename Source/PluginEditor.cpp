@@ -76,6 +76,7 @@ std::vector<juce::Component*> BasicFXAudioProcessorEditor::getVisibleComps() {
 
     comps.push_back(&gateComponent);
     comps.push_back(&distortionComponent);
+    comps.push_back(&distortionComponent2);
     comps.push_back(&flangerComponent);
     comps.push_back(&visualizerComponent);
     comps.push_back(&incomingDBMeterComponent);
@@ -88,6 +89,7 @@ std::vector<SwappableComponent*> BasicFXAudioProcessorEditor::getSwappableComps(
 
     comps.push_back(&gateComponent);
     comps.push_back(&distortionComponent);
+    comps.push_back(&distortionComponent2);
     comps.push_back(&flangerComponent);
     return comps;
 }
