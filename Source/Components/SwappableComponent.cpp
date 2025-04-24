@@ -65,16 +65,12 @@ void SwappableComponent::swapComponents(SwappableComponent* otherComp)
     auto itB = std::find(list.begin(), list.end(), otherComp);
     //if iterators found both components before reaching the end
     if (itA != list.end() && itB != list.end()) {
-        DBG("THIS BEFORE" << String(this->getIndexInComponentList()));
-        DBG("OTHER BEFORE" << String(otherComp->getIndexInComponentList()));
         //swap the components in the list
         std::iter_swap(itA, itB);
         //swap the bounds
         auto otherCompBounds = getBounds();
         setBounds(otherComp->getBounds());
         otherComp->setBounds(otherCompBounds);
-        DBG("THIS AFTER" << String( this->getIndexInComponentList()));
-        DBG("OTHER AFTER" << String(otherComp->getIndexInComponentList()));
 
         sendActionMessage("SWAPPED_" + String(this->getIndexInComponentList()) + "_" +  String(otherComp->getIndexInComponentList()));
     }

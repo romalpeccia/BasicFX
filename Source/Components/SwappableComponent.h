@@ -52,6 +52,32 @@ class SwappableComponent : public juce::Component, public juce::ActionBroadcaste
         void setProcessor(SwappableProcessor* _processor) { processor = _processor; }
         int getIndexInComponentList();
 
+        static void printComponentList()
+        {
+            DBG("=== SwappableComponent List ===");
+            const auto& list = getSwappableComponents();
+
+            for (size_t i = 0; i < list.size(); ++i)
+            {
+                auto* comp = list[i];
+
+                if (comp == nullptr)
+                {
+                    DBG("[" << i << "] nullptr");
+                    continue;
+                }
+
+                juce::String className = typeid(*comp).name();
+                juce::String procName = "none";
+
+                if (auto* proc = comp->getProcessor())
+                    procName = typeid(*proc).name();
+
+                DBG("[" << i << "] Component: " << className << " | Processor: " << procName);
+            }
+            DBG("===============================");
+        }
+
     private:
         inline static std::vector<SwappableComponent*> swappableComponentList; //static vector shared across all instances of swappable Components
 

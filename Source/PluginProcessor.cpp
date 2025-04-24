@@ -134,7 +134,7 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
 void BasicFXAudioProcessor::actionListenerCallback(const juce::String& message) {
 
-
+    DBG("ACTIONCALLBACK");
     auto componentList = SwappableComponent::getSwappableComponents();
     if (message.startsWith("SWAPPED_"))
     {   //called by SwappableComponent::swapComponents
@@ -167,11 +167,15 @@ void BasicFXAudioProcessor::actionListenerCallback(const juce::String& message) 
         }
     }
     else if (message.startsWith("CREATECOMPONENT")) {
+        DBG("UPDATING CHAIN");
+        SwappableComponent::printComponentList();
         signalChain.clear();
         for (auto* comp : componentList)
         {
             if (comp->getProcessor() != nullptr)
                 signalChain.push_back(comp->getProcessor());
+            else
+                DBG("CHAIN UPDATE ERROR");
         }
     }
 }

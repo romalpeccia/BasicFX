@@ -33,9 +33,7 @@ public:
 
             };
     }
-    ~EmptyComponent() {
-        DBG("EmptyComponent destroyed");
-    }
+    ~EmptyComponent() {}
     void resized() override {
         menu.setBounds(getLocalBounds().withTrimmedBottom(getLocalBounds().getHeight() * 0.9));
     }
