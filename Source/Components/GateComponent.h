@@ -16,6 +16,7 @@
 class GateComponent : public SwappableComponent {
     public:
         GateComponent(juce::AudioProcessorValueTreeState& _apvts, GateProcessor* gateProcessor);
+        GateComponent(juce::AudioProcessorValueTreeState& _apvts, GateProcessor* gateProcessor, int index);
         std::vector<juce::Component*> getGateComps();
         void resized() override;
     private:

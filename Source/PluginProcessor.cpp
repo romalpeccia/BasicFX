@@ -154,7 +154,7 @@ void BasicFXAudioProcessor::actionListenerCallback(const juce::String& message) 
             auto swappedProcessorB = componentList[indexB]->getProcessor();
             componentList[indexA]->setProcessor(swappedProcessorB);
             componentList[indexA]->setProcessor(swappedProcessorA);
-            //swap their parameters ?
+            //swap their parameters ? or is that not necessary
 
 
             //rebuild the signal chain
@@ -166,8 +166,14 @@ void BasicFXAudioProcessor::actionListenerCallback(const juce::String& message) 
             }
         }
     }
-
-
+    else if (message.startsWith("CREATECOMPONENT")) {
+        signalChain.clear();
+        for (auto* comp : componentList)
+        {
+            if (comp->getProcessor() != nullptr)
+                signalChain.push_back(comp->getProcessor());
+        }
+    }
 }
 
 

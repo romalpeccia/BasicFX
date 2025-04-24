@@ -16,6 +16,7 @@
 class DistortionComponent : public SwappableComponent {
     public:
         DistortionComponent(juce::AudioProcessorValueTreeState& _apvts, DistortionProcessor* distortionProcessor);
+        DistortionComponent(juce::AudioProcessorValueTreeState& _apvts, DistortionProcessor* distortionProcessor, int index);
         std::vector<juce::Component*> getDistortionComps();
         void resized() override;
 

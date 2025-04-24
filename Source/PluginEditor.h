@@ -19,7 +19,7 @@
 //==============================================================================
 /**
 */
-class BasicFXAudioProcessorEditor  : public juce::AudioProcessorEditor
+class BasicFXAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::ActionListener
 {
 public:
     BasicFXAudioProcessorEditor (BasicFXAudioProcessor&, juce::AudioProcessorValueTreeState& _apvts);
@@ -37,17 +37,12 @@ private:
 
     BasicFXAudioProcessor& audioProcessor;
     juce::AudioProcessorValueTreeState& apvts;
+    void actionListenerCallback(const juce::String& message) override;
 
-    std::vector<std::unique_ptr<SwappableComponent>> swappableComponents;
+    std::vector<std::unique_ptr<SwappableComponent>> swappableComponents; // contains all of our components
 
     DBMeterComponent incomingDBMeterComponent{apvts, &audioProcessor.dbMeterIncomingProcessor };
     VisualizerComponent visualizerComponent{ &audioProcessor.visualizerIncomingProcessor, &audioProcessor.visualizerOutgoingProcessor };
-    /*
-    GateComponent gateComponent{ apvts,  audioProcessor.gateProcessors[0].get()}; //note: why am i not passing the processor reference? because of the unique pointer?
-    DistortionComponent distortionComponent{ apvts, audioProcessor.distortionProcessors[0].get() };
-    DistortionComponent distortionComponent2{ apvts, audioProcessor.distortionProcessors[1].get() };
-    FlangerComponent flangerComponent{ apvts, audioProcessor.flangerProcessors[0].get() };
-    */
 
     DBMeterComponent outgoingDBMeterComponent{apvts, &audioProcessor.dbMeterOutgoingProcessor };
 

@@ -34,8 +34,8 @@ BasicFXAudioProcessorEditor::BasicFXAudioProcessorEditor (BasicFXAudioProcessor&
         }
         else {
             swappableComponents.push_back(std::make_unique<EmptyComponent>(audioProcessor.emptyProcessor.get()));
+            swappableComponents[i]->addActionListener(this);
         }
-
         addAndMakeVisible(swappableComponents.back().get());
     }
     setSize (1200, 800);
@@ -94,4 +94,38 @@ std::vector<juce::Component*> BasicFXAudioProcessorEditor::getVisibleComps() {
     comps.push_back(&incomingDBMeterComponent);
     comps.push_back(&outgoingDBMeterComponent);
     return comps;
+}
+
+void BasicFXAudioProcessorEditor::actionListenerCallback(const juce::String& message) {
+
+    if (message.startsWith("CREATECOMPONENT")) {
+        juce::StringArray tokens;
+        tokens.addTokens(message, "_", "");
+        DBG("MESSAGE FROM COMPONENT " <<message);
+        if (tokens.size() >= 3)
+        {
+            int index = tokens[1].getIntValue();
+            DBG("EMPTY COMPONENT triggered " << index);
+            if (index < 0 || index >= swappableComponents.size())
+                return;
+            if (tokens[2] != "EMPTY"){
+                //delete the EmptyComponent (by changing its pointer, it automatically deletes due to unique_ptr logic), and create a new one
+                if (tokens[2] == "GATE") {
+                    swappableComponents[index] = std::make_unique<GateComponent>(apvts, audioProcessor.gateProcessors[index].get(), index); 
+                    addAndMakeVisible(swappableComponents[index].get());
+                    resized();
+                }
+                else if (tokens[2] == "DISTORTION") {
+                    swappableComponents[index] = std::make_unique<DistortionComponent>(apvts, audioProcessor.distortionProcessors[index].get(), index);
+                    addAndMakeVisible(swappableComponents[index].get());
+                    resized();
+                }
+                else if (tokens[2] == "FLANGER") {
+                    swappableComponents[index] = std::make_unique<FlangerComponent>(apvts, audioProcessor.flangerProcessors[index].get(), index);
+                    addAndMakeVisible(swappableComponents[index].get());
+                    resized();
+                }
+            }
+        }
+    }
 }

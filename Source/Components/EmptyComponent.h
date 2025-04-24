@@ -15,11 +15,33 @@
 class EmptyComponent : public SwappableComponent {
 
 public:
-    EmptyComponent(EmptyProcessor* emptyProcessor) : SwappableComponent(emptyProcessor) {};
-    void resized() override {};
+    EmptyComponent(EmptyProcessor* emptyProcessor) : SwappableComponent(emptyProcessor) {
+        menu.addItem("EMPTY", 1);
+        menu.addItem("GATE", 2);
+        menu.addItem("DISTORTION", 3);
+        menu.addItem("FLANGER", 4);
+        menu.setSelectedId(1);
+        addAndMakeVisible(menu);
+
+        menu.onChange = [this]() {
+            int selectedId = menu.getSelectedId();
+            juce::String selectedText = menu.getText();
+            //signal the UI to do something
+            int index = getIndexInComponentList();
+            sendActionMessage("CREATECOMPONENT_" + String(index) + "_" + selectedText);
+            //signal the processor to do something
+
+            };
+    }
+    ~EmptyComponent() {
+        DBG("EmptyComponent destroyed");
+    }
+    void resized() override {
+        menu.setBounds(getLocalBounds().withTrimmedBottom(getLocalBounds().getHeight() * 0.9));
+    }
 
 private:
 
-    //CustomTextButton button{ "X"};
+    CustomComboBox menu;
 };
 

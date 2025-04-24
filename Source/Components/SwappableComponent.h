@@ -18,9 +18,26 @@ class SwappableComponent : public juce::Component, public juce::ActionBroadcaste
         SwappableComponent(SwappableProcessor* processorPtr): processor(processorPtr)
         {
             swappableComponentList.push_back(this);
+            int index = getIndexInComponentList();
+            DBG("CREATED COMPONENT AT INDEX " << index);
         }
-        ~SwappableComponent();
+        SwappableComponent(SwappableProcessor* processorPtr, int index)
+            : processor(processorPtr)
+        {
 
+            auto& list = getSwappableComponents();
+            if (index >= 0 && index < list.size())
+            {
+                list[index] = this;
+                DBG("CREATING COMPONENT AT INDEX " << index);
+            }
+            else {
+                DBG("CREATED COMPONENT AT WRONG INDEX");
+                list.push_back(this);
+            }
+
+        }
+        SwappableComponent::~SwappableComponent();
 
         void mouseDown(const juce::MouseEvent& e) override;
         void mouseDrag(const juce::MouseEvent& e) override;

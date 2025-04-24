@@ -13,10 +13,7 @@
 
 DistortionComponent::DistortionComponent(juce::AudioProcessorValueTreeState& _apvts, DistortionProcessor* distortionProcessor) : SwappableComponent(distortionProcessor), apvts(_apvts) {
 
-
-
     int index = getIndexInComponentList();
-    DBG(index);
     sliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(DISTORTION_AMOUNT_STRING, index), slider);
     buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeID(DISTORTION_ON_STRING, index), button);
     menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, makeID(DISTORTION_TYPE_STRING, index), menu);
@@ -33,6 +30,26 @@ DistortionComponent::DistortionComponent(juce::AudioProcessorValueTreeState& _ap
         addAndMakeVisible(comp);
     }
 }
+
+DistortionComponent::DistortionComponent(juce::AudioProcessorValueTreeState& _apvts, DistortionProcessor* distortionProcessor, int index) : SwappableComponent(distortionProcessor, index), apvts(_apvts) {
+
+    sliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(DISTORTION_AMOUNT_STRING, index), slider);
+    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeID(DISTORTION_ON_STRING, index), button);
+    menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, makeID(DISTORTION_TYPE_STRING, index), menu);
+
+    button.setClickingTogglesState(true);
+    menu.addItem(WAVE_RECTIFIER_STRING, 1);
+    menu.addItem(BIT_CRUSHER_STRING, 2);
+    menu.addItem(SOFT_CLIPPER_CUBIC_STRING, 3);
+    menu.addItem(SOFT_CLIPPER_ARCTAN_STRING, 4);
+    menu.addItem(SLEW_LIMITER_STRING, 5);
+    menu.setSelectedId(1);
+
+    for (auto* comp : getDistortionComps()) {
+        addAndMakeVisible(comp);
+    }
+}
+
 std::vector<juce::Component*> DistortionComponent::getDistortionComps() {
     std::vector<juce::Component*> comps;
     comps.push_back(&button);

@@ -16,7 +16,8 @@
 class FlangerComponent : public SwappableComponent {
 
     public:
-        FlangerComponent(juce::AudioProcessorValueTreeState& _apvts, FlangerProcessor* flangerProc);
+        FlangerComponent(juce::AudioProcessorValueTreeState& _apvts, FlangerProcessor* flangerProcessor);
+        FlangerComponent(juce::AudioProcessorValueTreeState& _apvts, FlangerProcessor* flangerProcessor, int index);
         std::vector<juce::Component*> getFlangerComps();
         void resized() override;
 
