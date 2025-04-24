@@ -19,3 +19,12 @@ class SwappableProcessor {
         int processorIndex;
 
 };
+
+class EmptyProcessor : public SwappableProcessor{
+    //A processor that does nothing. For use in creating uninitialized Components
+    public:
+        EmptyProcessor() {}
+        ~EmptyProcessor() {}
+        void processBlock(juce::AudioBuffer<float>& buffer) {}
+        void prepareToPlay(double sampleRate, int _totalNumInputChannels) {}
+};

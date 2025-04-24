@@ -15,6 +15,7 @@
 #include "Components/FlangerComponent.h"
 #include "Components/DBMeterComponent.h"
 #include "Components/VisualizerComponent.h"
+#include "Components/EmptyComponent.h"
 //==============================================================================
 /**
 */

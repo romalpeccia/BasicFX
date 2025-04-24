@@ -28,20 +28,25 @@ BasicFXAudioProcessor::BasicFXAudioProcessor()
         distortionProcessors[i] = std::make_unique<DistortionProcessor>(apvts, i);;
         flangerProcessors[i] = std::make_unique<FlangerProcessor>(apvts, i);;
     }
-        
-    for (int i = 0; i < MAX_COMPONENTS; ++i) //duplicated logic from pluginEditor
+    emptyProcessor = std::make_unique<EmptyProcessor>();
+    
+    //initialize the signal chain with processors cooresponding to the SwappableComponent processors (set in the pluginEditor constructor)
+    for (int i = 0; i < MAX_COMPONENTS; ++i) 
     {
-        if (i % 3 == 0)
+        if (i % 4 == 0)
         {
             signalChain.push_back(gateProcessors[i].get());
         }
-        else if (i % 3 == 1)
+        else if (i % 4 == 1)
         {
             signalChain.push_back(distortionProcessors[i].get());
         }
-        else
+        else  if (i % 4 == 2)
         {
             signalChain.push_back(flangerProcessors[i].get());
+        }
+        else {
+            signalChain.push_back(emptyProcessor.get());
         }
     }
 
@@ -61,7 +66,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout BasicFXAudioProcessor::creat
         addDistortionParametersToLayout(layout, i);
         addFlangerParametersToLayout(layout, i);
         layout.add(std::make_unique<juce::AudioParameterChoice>(makeID(SWAPPABLE_COMPONENT_TYPE_STRING, i), makeName(SWAPPABLE_COMPONENT_TYPE_STRING, i),
-            juce::StringArray{ "EMPTY", "GATE", "DISTORTION", "FLANGER"}, 0));
+            juce::StringArray{ "EMPTY", "GATE", "DISTORTION", "FLANGER"}, 0)); //TODO: this doesnt do anything yet but will be important when loading/saving component states
     }
 
     layout.add(std::make_unique<juce::AudioParameterInt>(DB_METER_RATE_STRING, DB_METER_RATE_STRING.toLowerCase(), 1, 500, 33));

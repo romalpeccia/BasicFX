@@ -18,19 +18,22 @@ BasicFXAudioProcessorEditor::BasicFXAudioProcessorEditor (BasicFXAudioProcessor&
     {
         addAndMakeVisible(comp);
     }
-    for (int i = 0; i < MAX_COMPONENTS; ++i)
+    for (int i = 0; i < MAX_COMPONENTS; i++)
     {
-        if (i % 3 == 0)
+        if (i % 4 == 0)
         {
             swappableComponents.push_back(std::make_unique<GateComponent>(apvts, audioProcessor.gateProcessors[i].get()));
         }
-        else if (i % 3 == 1)
+        else if (i % 4 == 1)
         {
             swappableComponents.push_back(std::make_unique<DistortionComponent>(apvts, audioProcessor.distortionProcessors[i].get()));
         }
-        else
+        else if (i % 4 == 2)
         {
             swappableComponents.push_back(std::make_unique<FlangerComponent>(apvts, audioProcessor.flangerProcessors[i].get()));
+        }
+        else {
+            swappableComponents.push_back(std::make_unique<EmptyComponent>(audioProcessor.emptyProcessor.get()));
         }
 
         addAndMakeVisible(swappableComponents.back().get());

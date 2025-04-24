@@ -83,6 +83,7 @@ public:
     std::array<std::unique_ptr<GateProcessor>, MAX_COMPONENTS> gateProcessors;
     std::array<std::unique_ptr<DistortionProcessor>, MAX_COMPONENTS> distortionProcessors;
     std::array<std::unique_ptr<FlangerProcessor>, MAX_COMPONENTS> flangerProcessors;
+    std::unique_ptr<EmptyProcessor> emptyProcessor;
 
     DBMeterProcessor dbMeterIncomingProcessor;
     DBMeterProcessor dbMeterOutgoingProcessor;

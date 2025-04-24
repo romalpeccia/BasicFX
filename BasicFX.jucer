@@ -45,6 +45,10 @@
               file="Source/Components/DistortionComponent.cpp"/>
         <FILE id="lGtR6M" name="DistortionComponent.h" compile="0" resource="0"
               file="Source/Components/DistortionComponent.h"/>
+        <FILE id="mcSYTK" name="EmptyComponent.cpp" compile="1" resource="0"
+              file="Source/Components/EmptyComponent.cpp"/>
+        <FILE id="P5Gdz7" name="EmptyComponent.h" compile="0" resource="0"
+              file="Source/Components/EmptyComponent.h"/>
         <FILE id="hb213e" name="FlangerComponent.cpp" compile="1" resource="0"
               file="Source/Components/FlangerComponent.cpp"/>
         <FILE id="LIvVzG" name="FlangerComponent.h" compile="0" resource="0"
