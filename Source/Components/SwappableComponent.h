@@ -57,9 +57,10 @@ public:
         juce::Rectangle<int> initialBounds; //bounds of the component before it was dragged
         juce::Rectangle<int> draggedBounds; //bounds of the component while it is being dragged
         int areaOverlapThreshold = 0; //how much area the component has to share with the other component to trigger swapping them in void swapComponents(SwappableComponent* otherComp);
-        SwappableComponentManager* swappableComponentManager = nullptr; 
+        
+        
 
     protected: //accessible by derived classes but not external code
         SwappableProcessor* processor = nullptr;
-
+        SwappableComponentManager* swappableComponentManager = nullptr;
 };

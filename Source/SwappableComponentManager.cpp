@@ -113,8 +113,6 @@ void SwappableComponentManager::handleDraggedComponent(SwappableComponent& dragg
             }
         }
     }
-
-
     if (componentToSwap != nullptr) {
         swapComponents(draggedComp, *componentToSwap);
     }
