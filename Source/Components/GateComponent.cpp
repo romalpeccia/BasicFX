@@ -13,7 +13,7 @@
 
 GateComponent::GateComponent(juce::AudioProcessorValueTreeState& _apvts, GateProcessor* gateProcessor) : SwappableComponent(gateProcessor), apvts(_apvts) {
 
-    int index = getIndexInComponentList();
+    int index = 1;
     thresholdAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(THRESHOLD_STRING, index), thresholdSlider);
     attackAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(ATTACK_STRING, index), attackSlider);
     releaseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(RELEASE_STRING, index), releaseSlider);

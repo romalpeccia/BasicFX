@@ -12,80 +12,52 @@
 #include <JuceHeader.h>
 #include "../Utilities.h"
 #include "../Processors/SwappableProcessor.h"
+
+class SwappableComponentManager; //forward declaration of SwappableComponentManager to avoid circular dependencies
+
 class SwappableComponent : public juce::Component, public juce::ActionBroadcaster {
-    public:
-        SwappableComponent() = delete;
-        SwappableComponent(SwappableProcessor* processorPtr): processor(processorPtr)
-        {
-            swappableComponentList.push_back(this);
-            int index = getIndexInComponentList();
-            DBG("CREATED COMPONENT AT INDEX " << index);
-        }
-        SwappableComponent(SwappableProcessor* processorPtr, int index)
-            : processor(processorPtr)
-        {
+public:
+    SwappableComponent() = delete;
+    SwappableComponent(SwappableProcessor* processorPtr) : processor(processorPtr)
+    {
 
-            auto& list = getSwappableComponents();
-            if (index >= 0 && index < list.size())
-            {
-                list[index] = this;
-                DBG("CREATING COMPONENT AT INDEX " << index);
-            }
-            else {
-                DBG("CREATED COMPONENT AT WRONG INDEX");
-                list.push_back(this);
-            }
+    }
+    SwappableComponent(SwappableProcessor* processorPtr, int index)
+        : processor(processorPtr)
+    {
 
-        }
-        SwappableComponent::~SwappableComponent();
+    }
+    SwappableComponent::~SwappableComponent();
 
-        void mouseDown(const juce::MouseEvent& e) override;
-        void mouseDrag(const juce::MouseEvent& e) override;
-        void mouseUp(const juce::MouseEvent& e) override;
-        void swapComponents(SwappableComponent* otherComp);
-        
-        void setBounds(juce::Rectangle<int> bounds);
-        void setBounds(int x, int y, int width, int height);
-        void setAreaOverLapThreshold();
-        static std::vector<SwappableComponent*>& getSwappableComponents() { return swappableComponentList; }
-        SwappableProcessor* getProcessor() const { return processor; }
-        void setProcessor(SwappableProcessor* _processor) { processor = _processor; }
-        int getIndexInComponentList();
+    void mouseDown(const juce::MouseEvent& e) override;
+    void mouseDrag(const juce::MouseEvent& e) override;
+    void mouseUp(const juce::MouseEvent& e) override;
 
-        static void printComponentList()
-        {
-            DBG("=== SwappableComponent List ===");
-            const auto& list = getSwappableComponents();
 
-            for (size_t i = 0; i < list.size(); ++i)
-            {
-                auto* comp = list[i];
+    void setBounds(juce::Rectangle<int> bounds);
+    void setBounds(int x, int y, int width, int height);
 
-                if (comp == nullptr)
-                {
-                    DBG("[" << i << "] nullptr");
-                    continue;
-                }
+    SwappableProcessor* getProcessor() const { return processor; }
+    void setProcessor(SwappableProcessor* _processor) { processor = _processor; }
 
-                juce::String className = typeid(*comp).name();
-                juce::String procName = "none";
+    //    void swapComponents(SwappableComponent* otherComp);
+    //int getIndexInComponentList();
+    // std::vector<SwappableComponent*>& getSwappableComponents() { return swappableComponentList; }
 
-                if (auto* proc = comp->getProcessor())
-                    procName = typeid(*proc).name();
+    void setManager(SwappableComponentManager* _swappableComponentManager);
+    SwappableComponentManager* getManager() const;
 
-                DBG("[" << i << "] Component: " << className << " | Processor: " << procName);
-            }
-            DBG("===============================");
-        }
-
+    int getAreaOverLapThreshold() { return areaOverlapThreshold; }
+    juce::Rectangle<int> getInitialBounds() { return initialBounds; }
+    juce::Rectangle<int> getDraggedBounds() { return draggedBounds; }
     private:
-        inline static std::vector<SwappableComponent*> swappableComponentList; //static vector shared across all instances of swappable Components
+        void setAreaOverLapThreshold();
 
         juce::ComponentDragger componentDragger; //adding this member allows us to drag the component using the mouseEvent that triggered it
         juce::Rectangle<int> initialBounds; //bounds of the component before it was dragged
         juce::Rectangle<int> draggedBounds; //bounds of the component while it is being dragged
-        int area_overlap_threshold = 0; //how much area the component has to share with the other component to trigger swapping them in void swapComponents(SwappableComponent* otherComp);
-
+        int areaOverlapThreshold = 0; //how much area the component has to share with the other component to trigger swapping them in void swapComponents(SwappableComponent* otherComp);
+        SwappableComponentManager* swappableComponentManager = nullptr; 
 
     protected: //accessible by derived classes but not external code
         SwappableProcessor* processor = nullptr;

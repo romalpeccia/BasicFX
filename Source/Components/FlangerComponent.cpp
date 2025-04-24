@@ -12,7 +12,7 @@
 #include "../Processors/FlangerProcessor.h"
 FlangerComponent::FlangerComponent(juce::AudioProcessorValueTreeState& _apvts, FlangerProcessor* flangerProcessor): SwappableComponent(flangerProcessor), apvts(_apvts) {
 
-    int index = getIndexInComponentList();
+    int index = 1;
 
     flangerSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(FLANGER_DELAY_STRING, index), flangerSlider);
     mixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(FLANGER_MIX_STRING, index), mixSlider);

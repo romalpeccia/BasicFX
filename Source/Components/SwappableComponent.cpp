@@ -13,10 +13,7 @@
 
 
 SwappableComponent::~SwappableComponent() {
-    swappableComponentList.erase(
-        std::remove(swappableComponentList.begin(), swappableComponentList.end(), this),
-        swappableComponentList.end()
-    );
+
 }
 
 void SwappableComponent::mouseDown(const juce::MouseEvent& e)
@@ -34,54 +31,11 @@ void SwappableComponent::mouseDrag(const juce::MouseEvent& e)
 void SwappableComponent::mouseUp(const juce::MouseEvent& e)  {
     //called while the component has stopped being dragged
 
-    SwappableComponent* componentToSwap = nullptr;
-    int largestIntersectionArea = 0;
-
-    for (auto* comp : swappableComponentList) {
-        if (comp != nullptr && comp != this) {
-            //compare overlap in area of other components with this component
-            auto intersection = draggedBounds.getIntersection(comp->getBounds());
-            int area = intersection.getWidth() * intersection.getHeight();
-
-            if (area > largestIntersectionArea && area > area_overlap_threshold) {
-                largestIntersectionArea = area;
-                componentToSwap = comp;
-            }
-        }
-    }
-
     setBounds(initialBounds);
-    if (componentToSwap != nullptr) {
-        swapComponents(componentToSwap);
+    if (swappableComponentManager != nullptr) {
+        swappableComponentManager->handleDraggedComponent(*this);
     }
 
-}
-
-void SwappableComponent::swapComponents(SwappableComponent* otherComp)
-{
-
-    auto& list = swappableComponentList;
-    auto itA = std::find(list.begin(), list.end(), this);
-    auto itB = std::find(list.begin(), list.end(), otherComp);
-    //if iterators found both components before reaching the end
-    if (itA != list.end() && itB != list.end()) {
-        //swap the components in the list
-        std::iter_swap(itA, itB);
-        //swap the bounds
-        auto otherCompBounds = getBounds();
-        setBounds(otherComp->getBounds());
-        otherComp->setBounds(otherCompBounds);
-
-        sendActionMessage("SWAPPED_" + String(this->getIndexInComponentList()) + "_" +  String(otherComp->getIndexInComponentList()));
-    }
-
-}
-int SwappableComponent::getIndexInComponentList()  {
-    const auto& list = getSwappableComponents();
-    for (int i = 0; i < list.size(); ++i)
-        if (list[i] == this)
-            return i;
-    return -1;
 }
 
 void SwappableComponent::setBounds(juce::Rectangle<int> bounds)
@@ -95,5 +49,14 @@ void SwappableComponent::setBounds(int x, int y, int width, int height)
     setAreaOverLapThreshold();
 }
 void SwappableComponent::setAreaOverLapThreshold() {
-    area_overlap_threshold = (getLocalBounds().getWidth() * getLocalBounds().getHeight()) / 2;
+    areaOverlapThreshold = (getLocalBounds().getWidth() * getLocalBounds().getHeight()) / 2;
+}
+
+
+void SwappableComponent::setManager(SwappableComponentManager* _swappableComponentManager) {
+    swappableComponentManager = _swappableComponentManager;
+}
+
+SwappableComponentManager* SwappableComponent::getManager() const {
+    return swappableComponentManager;
 }

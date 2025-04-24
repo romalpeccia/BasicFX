@@ -10,16 +10,13 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "Components/GateComponent.h"
-#include "Components/DistortionComponent.h"
-#include "Components/FlangerComponent.h"
+#include "SwappableComponentManager.h"
 #include "Components/DBMeterComponent.h"
 #include "Components/VisualizerComponent.h"
-#include "Components/EmptyComponent.h"
 //==============================================================================
 /**
 */
-class BasicFXAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::ActionListener
+class BasicFXAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
     BasicFXAudioProcessorEditor (BasicFXAudioProcessor&, juce::AudioProcessorValueTreeState& _apvts);
@@ -31,20 +28,15 @@ public:
 
     std::vector<juce::Component*>  getVisibleComps();
 
-    void resizeSwappableComponentVector(juce::Rectangle<int> bounds);
-
 private:
 
     BasicFXAudioProcessor& audioProcessor;
     juce::AudioProcessorValueTreeState& apvts;
-    void actionListenerCallback(const juce::String& message) override;
-
-    std::vector<std::unique_ptr<SwappableComponent>> swappableComponents; // contains all of our components
 
     DBMeterComponent incomingDBMeterComponent{apvts, &audioProcessor.dbMeterIncomingProcessor };
     VisualizerComponent visualizerComponent{ &audioProcessor.visualizerIncomingProcessor, &audioProcessor.visualizerOutgoingProcessor };
-
     DBMeterComponent outgoingDBMeterComponent{apvts, &audioProcessor.dbMeterOutgoingProcessor };
+    SwappableComponentManager swappableComponentManager{ audioProcessor, apvts };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicFXAudioProcessorEditor)
 };

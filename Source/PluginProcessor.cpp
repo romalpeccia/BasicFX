@@ -8,6 +8,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+
 using namespace std;
 //==============================================================================
 BasicFXAudioProcessor::BasicFXAudioProcessor()
@@ -133,7 +134,7 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 }
 
 void BasicFXAudioProcessor::actionListenerCallback(const juce::String& message) {
-
+    /*
     DBG("ACTIONCALLBACK");
     auto componentList = SwappableComponent::getSwappableComponents();
     if (message.startsWith("SWAPPED_"))
@@ -144,19 +145,21 @@ void BasicFXAudioProcessor::actionListenerCallback(const juce::String& message) 
         tokens.addTokens(message, "_", "");
         if (tokens.size() >= 3)
         {
+            
             int indexA = tokens[1].getIntValue();
             int indexB = tokens[2].getIntValue();
 
             DBG("Component A: " << indexA << ", Component B: " << indexB);
 
             //swap the processors
-            auto swappedProcessorA = componentList[indexA]->getProcessor();
-            auto swappedProcessorB = componentList[indexB]->getProcessor();
-            componentList[indexA]->setProcessor(swappedProcessorB);
-            componentList[indexA]->setProcessor(swappedProcessorA);
-            //swap their parameters ? or is that not necessary
+            
+            //auto swappedProcessorA = componentList[indexA]->getProcessor();
+            //auto swappedProcessorB = componentList[indexB]->getProcessor();
+            //componentList[indexA]->setProcessor(swappedProcessorB);
+            //componentList[indexB]->setProcessor(swappedProcessorA);
+            
 
-
+            SwappableComponent::printComponentList();
             //rebuild the signal chain
             signalChain.clear();
             for (auto* comp : componentList)
@@ -167,17 +170,14 @@ void BasicFXAudioProcessor::actionListenerCallback(const juce::String& message) 
         }
     }
     else if (message.startsWith("CREATECOMPONENT")) {
-        DBG("UPDATING CHAIN");
-        SwappableComponent::printComponentList();
         signalChain.clear();
         for (auto* comp : componentList)
         {
             if (comp->getProcessor() != nullptr)
                 signalChain.push_back(comp->getProcessor());
-            else
-                DBG("CHAIN UPDATE ERROR");
         }
     }
+    */
 }
 
 

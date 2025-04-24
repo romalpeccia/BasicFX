@@ -18,27 +18,7 @@ BasicFXAudioProcessorEditor::BasicFXAudioProcessorEditor (BasicFXAudioProcessor&
     {
         addAndMakeVisible(comp);
     }
-    for (int i = 0; i < MAX_COMPONENTS; i++)
-    {
-        if (i % 4 == 0)
-        {
-            swappableComponents.push_back(std::make_unique<GateComponent>(apvts, audioProcessor.gateProcessors[i].get()));
-        }
-        else if (i % 4 == 1)
-        {
-            swappableComponents.push_back(std::make_unique<DistortionComponent>(apvts, audioProcessor.distortionProcessors[i].get()));
-        }
-        else if (i % 4 == 2)
-        {
-            swappableComponents.push_back(std::make_unique<FlangerComponent>(apvts, audioProcessor.flangerProcessors[i].get()));
-        }
-        else {
-            swappableComponents.push_back(std::make_unique<EmptyComponent>(audioProcessor.emptyProcessor.get()));
-        }
-        swappableComponents[i]->addActionListener(this);
-        swappableComponents[i]->addActionListener(&p);
-        addAndMakeVisible(swappableComponents.back().get());
-    }
+
     setSize (1200, 800);
     setResizable(true, true);
 }
@@ -69,24 +49,10 @@ void BasicFXAudioProcessorEditor::resized()
     incomingDBMeterComponent.setBounds(incomingDBMeterBounds);
     outgoingDBMeterComponent.setBounds(outgoingDBMeterBounds);
     
-    resizeSwappableComponentVector(FXBounds);
+    swappableComponentManager.setBounds(FXBounds);
 }
 
-void BasicFXAudioProcessorEditor::resizeSwappableComponentVector(juce::Rectangle<int> bounds) {
-    auto componentList = SwappableComponent::getSwappableComponents();
-    if (!componentList.empty()) {
 
-        float x = bounds.getX();
-        float y = bounds.getY();
-        float width = bounds.getWidth() / componentList.size();
-        float height = bounds.getHeight();
-        //start at the corner of bounds and iterate. 
-        for (auto* comp : componentList) {
-            comp->setBounds(x, y, width, height);
-            x += width;
-        }
-    }
-}
 
 std::vector<juce::Component*> BasicFXAudioProcessorEditor::getVisibleComps() {
     std::vector<juce::Component*> comps;
@@ -94,43 +60,7 @@ std::vector<juce::Component*> BasicFXAudioProcessorEditor::getVisibleComps() {
     comps.push_back(&visualizerComponent);
     comps.push_back(&incomingDBMeterComponent);
     comps.push_back(&outgoingDBMeterComponent);
+    comps.push_back(&swappableComponentManager);
     return comps;
 }
 
-void BasicFXAudioProcessorEditor::actionListenerCallback(const juce::String& message) {
-
-    if (message.startsWith("CREATECOMPONENT")) { //called by EmptyComponent.menu.onClick()
-
-        juce::StringArray tokens;
-        tokens.addTokens(message, "_", "");
-        if (tokens.size() >= 3)
-        {
-            int index = tokens[1].getIntValue();
-            juce::String componentType = tokens[2];
-
-
-            if (index < 0 || index >= swappableComponents.size())
-                return;
-            if (componentType != "EMPTY" && (componentType == "GATE" || componentType == "DISTORTION" || componentType == "FLANGER")){
-
- 
-                //delete the EmptyComponent (by changing its pointer, it automatically deletes due to unique_ptr logic), and create a new one
-                if (componentType == "GATE") {
-                    swappableComponents[index] = std::make_unique<GateComponent>(apvts, audioProcessor.gateProcessors[index].get(), index); 
-                }
-                else if (componentType == "DISTORTION") {
-                    swappableComponents[index] = std::make_unique<DistortionComponent>(apvts, audioProcessor.distortionProcessors[index].get(), index);
-                }
-                else if (componentType == "FLANGER") {
-                    swappableComponents[index] = std::make_unique<FlangerComponent>(apvts, audioProcessor.flangerProcessors[index].get(), index);
-
-                }
-                swappableComponents[index]->addActionListener(this);
-                swappableComponents[index]->addActionListener(&audioProcessor);
-                addAndMakeVisible(swappableComponents[index].get());
-                resized();
-                audioProcessor.actionListenerCallback(message);//notify the processor that the UI has changed
-            }
-        }
-    }
-}
