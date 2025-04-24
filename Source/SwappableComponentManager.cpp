@@ -28,7 +28,7 @@ SwappableComponentManager::SwappableComponentManager(BasicFXAudioProcessor& p, j
             swappableComponents.push_back(std::make_unique<FlangerComponent>(apvts, audioProcessor.flangerProcessors[i].get(), i));
         }
         else {
-            swappableComponents.push_back(std::make_unique<EmptyComponent>(audioProcessor.emptyProcessor.get(), i));
+            swappableComponents.push_back(std::make_unique<EmptyComponent>(audioProcessor.emptyProcessor.get()));
         }
         swappableComponents[i]->addActionListener(this);
         swappableComponents[i]->addActionListener(&p);
@@ -139,6 +139,16 @@ void SwappableComponentManager::swapComponents(SwappableComponent& draggedCompon
 
     // Notify processor of the swap
     sendActionMessage("SWAPPED_" + String(indexA) + "_" + String(indexB));
+}
+
+
+
+std::vector<SwappableComponent*> SwappableComponentManager::getComponentList()
+{
+    std::vector<SwappableComponent*> list;
+    for (auto& compPtr : swappableComponents)
+        list.push_back(compPtr.get());
+    return list;
 }
 
 int SwappableComponentManager::findComponentIndex(const SwappableComponent& component)

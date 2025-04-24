@@ -11,7 +11,7 @@
 #include "EmptyComponent.h"
 #include "../SwappableComponentManager.h" 
 
-EmptyComponent::EmptyComponent(EmptyProcessor* emptyProcessor, int index) : SwappableComponent(emptyProcessor, index) {
+EmptyComponent::EmptyComponent(EmptyProcessor* emptyProcessor) : SwappableComponent(emptyProcessor) {
     menu.addItem("EMPTY", 1);
     menu.addItem("GATE", 2);
     menu.addItem("DISTORTION", 3);

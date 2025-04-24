@@ -14,6 +14,7 @@ BasicFXAudioProcessorEditor::BasicFXAudioProcessorEditor (BasicFXAudioProcessor&
     : AudioProcessorEditor (&p), audioProcessor (p), apvts(_apvts)
 {
 
+    audioProcessor.swappableComponentManager = &swappableComponentManager;
     for (auto* comp : getVisibleComps())
     {
         addAndMakeVisible(comp);

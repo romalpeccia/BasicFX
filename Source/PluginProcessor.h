@@ -15,7 +15,8 @@
 #include "Processors/FlangerProcessor.h"
 #include "Processors/DBMeterProcessor.h"
 #include "Processors/VisualizerProcessor.h"
-#include "Components/SwappableComponent.h"
+class SwappableComponentManager;
+
 //==============================================================================
 /**
 */
@@ -75,8 +76,9 @@ public:
 
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
-    std::vector<SwappableProcessor*> signalChain;
 
+    SwappableComponentManager* swappableComponentManager = nullptr; //used to update the signal chain
+    std::vector<SwappableProcessor*> signalChain;
     void actionListenerCallback(const juce::String& message) override;
 
 

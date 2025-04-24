@@ -37,7 +37,7 @@ public:
             };
     }*/
 
-    EmptyComponent(EmptyProcessor* emptyProcessor, int index);
+    EmptyComponent(EmptyProcessor* emptyProcessor);
     ~EmptyComponent() {}
     void resized() override {
         menu.setBounds(getLocalBounds().withTrimmedBottom(getLocalBounds().getHeight() * 0.9));
