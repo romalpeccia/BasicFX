@@ -11,13 +11,13 @@
 #pragma once
 #include "../Utilities.h"
 #include "CustomSlider.h"
-#include "SwappableComponent.h"
+#include "../SwappableComponentManager.h"
 #include "../Processors/DistortionProcessor.h"
 class DistortionComponent : public SwappableComponent {
     public:
-        DistortionComponent(juce::AudioProcessorValueTreeState& _apvts, DistortionProcessor* distortionProcessor);
-        DistortionComponent(juce::AudioProcessorValueTreeState& _apvts, DistortionProcessor* distortionProcessor, int index);
+        DistortionComponent(juce::AudioProcessorValueTreeState& _apvts, int index);
         std::vector<juce::Component*> getDistortionComps();
+        void setComponentAttachments() override;
         void resized() override;
 
     private:

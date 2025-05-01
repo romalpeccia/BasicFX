@@ -11,7 +11,8 @@
 #include "EmptyComponent.h"
 #include "../SwappableComponentManager.h" 
 
-EmptyComponent::EmptyComponent(EmptyProcessor* emptyProcessor) : SwappableComponent(emptyProcessor) {
+EmptyComponent::EmptyComponent( int index) : SwappableComponent(std::make_unique<EmptyProcessor>(index)) {
+
     menu.addItem("EMPTY", 1);
     menu.addItem("GATE", 2);
     menu.addItem("DISTORTION", 3);
@@ -23,9 +24,12 @@ EmptyComponent::EmptyComponent(EmptyProcessor* emptyProcessor) : SwappableCompon
         int index = swappableComponentManager->findComponentIndex(*this);
         int selectedId = menu.getSelectedId();
         juce::String selectedText = menu.getText();
-        //signal the UI to do something
+        //signal the ComponentManager to do something
         sendActionMessage("CREATECOMPONENT_" + String(index) + "_" + selectedText);
-        //signal the processor to do something
 
         };
+}
+
+void EmptyComponent::setComponentAttachments() {
+
 }

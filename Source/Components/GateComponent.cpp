@@ -11,35 +11,9 @@
 #include "GateComponent.h"
 
 
-GateComponent::GateComponent(juce::AudioProcessorValueTreeState& _apvts, GateProcessor* gateProcessor) : SwappableComponent(gateProcessor), apvts(_apvts) {
 
-    int index = 1;
-    thresholdAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(THRESHOLD_STRING, index), thresholdSlider);
-    attackAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(ATTACK_STRING, index), attackSlider);
-    releaseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(RELEASE_STRING, index), releaseSlider);
-    holdAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(HOLD_STRING, index), holdSlider);
-    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeID(GATE_ON_STRING, index), button);
-    menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, makeID(GATE_STATE_STRING, index), menu);
-    
-    button.setClickingTogglesState(true);
-    menu.addItem(BASIC_GATE_STRING, 1); 
-    menu.addItem(RMS_GATE_STRING, 2);
-    menu.addItem(ATTACK_HOLD_RELEASE_GATE_STRING, 3);
-    menu.setSelectedId(3);
+GateComponent::GateComponent(juce::AudioProcessorValueTreeState& apvts, int index) : SwappableComponent(std::make_unique<GateProcessor>(apvts, index)), apvts(apvts) {
 
-    for (auto* comp : getGateComps()) {
-        addAndMakeVisible(comp);
-    }
-}
-
-GateComponent::GateComponent(juce::AudioProcessorValueTreeState& _apvts, GateProcessor* gateProcessor, int index) : SwappableComponent(gateProcessor, index), apvts(_apvts) {
-
-    thresholdAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(THRESHOLD_STRING, index), thresholdSlider);
-    attackAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(ATTACK_STRING, index), attackSlider);
-    releaseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(RELEASE_STRING, index), releaseSlider);
-    holdAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(HOLD_STRING, index), holdSlider);
-    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeID(GATE_ON_STRING, index), button);
-    menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, makeID(GATE_STATE_STRING, index), menu);
 
     button.setClickingTogglesState(true);
     menu.addItem(BASIC_GATE_STRING, 1);
@@ -50,6 +24,16 @@ GateComponent::GateComponent(juce::AudioProcessorValueTreeState& _apvts, GatePro
     for (auto* comp : getGateComps()) {
         addAndMakeVisible(comp);
     }
+}
+
+void GateComponent::setComponentAttachments() {
+    int index = getManager()->findComponentIndex(*this);
+    thresholdAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(THRESHOLD_STRING, index), thresholdSlider);
+    attackAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(ATTACK_STRING, index), attackSlider);
+    releaseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(RELEASE_STRING, index), releaseSlider);
+    holdAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(HOLD_STRING, index), holdSlider);
+    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeID(GATE_ON_STRING, index), button);
+    menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, makeID(GATE_STATE_STRING, index), menu);
 }
 
 void GateComponent::resized() {

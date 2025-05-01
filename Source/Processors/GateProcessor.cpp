@@ -11,13 +11,18 @@
 #include "GateProcessor.h"
 
 
-GateProcessor::GateProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) : apvts(_apvts) {
+GateProcessor::GateProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) : SwappableProcessor(index), apvts(_apvts) {
+    assignParamPointers(index);
+}
+
+void GateProcessor::assignParamPointers(int index){
     onStateParam = apvts.getRawParameterValue(makeID(GATE_ON_STRING, index));
     thresholdParam = apvts.getRawParameterValue(makeID(THRESHOLD_STRING, index));
     gateTypeParam = apvts.getRawParameterValue(makeID(GATE_STATE_STRING, index));
     attackParam = apvts.getRawParameterValue(makeID(ATTACK_STRING, index));
     releaseParam = apvts.getRawParameterValue(makeID(RELEASE_STRING, index));
     holdParam = apvts.getRawParameterValue(makeID(HOLD_STRING, index));
+
 }
 
 void GateProcessor::processBlock(juce::AudioBuffer <float>& buffer) {

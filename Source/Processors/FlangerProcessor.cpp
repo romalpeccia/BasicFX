@@ -10,11 +10,15 @@
 
 #include "FlangerProcessor.h"
 
-FlangerProcessor::FlangerProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) : apvts(_apvts) {
+FlangerProcessor::FlangerProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) : SwappableProcessor(index), apvts(_apvts) {
+    assignParamPointers(index);
+}
+void FlangerProcessor::assignParamPointers(int index) {
     delayParam = apvts.getRawParameterValue(makeID(FLANGER_DELAY_STRING, index));
     onStateParam = apvts.getRawParameterValue(makeID(FLANGER_ON_STRING, index));
     mixParam = apvts.getRawParameterValue(makeID(FLANGER_MIX_STRING, index));
 }
+
 void FlangerProcessor::processBlock(juce::AudioBuffer<float>& buffer) {
     if (*onStateParam) {
         int numSamples = buffer.getNumSamples();

@@ -11,11 +11,14 @@
 #include "DistortionProcessor.h"
 
 
-DistortionProcessor::DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) : apvts(_apvts) {
+DistortionProcessor::DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) : SwappableProcessor(index), apvts(_apvts) {
+    assignParamPointers(index);
+}
+
+void DistortionProcessor::assignParamPointers(int index) {
     onStateParam = apvts.getRawParameterValue(makeID(DISTORTION_ON_STRING, index));
     amountParam = apvts.getRawParameterValue(makeID(DISTORTION_AMOUNT_STRING, index));
     distortionTypeParam = apvts.getRawParameterValue(makeID(DISTORTION_TYPE_STRING, index));
-
 }
 
 void DistortionProcessor::processBlock(juce::AudioBuffer <float>& buffer) {

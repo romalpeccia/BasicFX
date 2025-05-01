@@ -26,6 +26,7 @@ public:
         int maxindex = static_cast<int>(sampleRate * DELAY_MAX);
         sampleBuffer.prepare(totalNumInputChannels, maxindex);
     };
+    void assignParamPointers(int index) override;
 private:
     juce::AudioProcessorValueTreeState& apvts;
 

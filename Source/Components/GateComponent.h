@@ -12,12 +12,16 @@
 #include "../Utilities.h"
 #include "CustomSlider.h"
 #include "../Processors/GateProcessor.h"
-#include "SwappableComponent.h"
+#include "../SwappableComponentManager.h"
 class GateComponent : public SwappableComponent {
     public:
-        GateComponent(juce::AudioProcessorValueTreeState& _apvts, GateProcessor* gateProcessor);
-        GateComponent(juce::AudioProcessorValueTreeState& _apvts, GateProcessor* gateProcessor, int index);
+        GateComponent(juce::AudioProcessorValueTreeState& apvts, int index);
+        ~GateComponent() {}
+
+        //initialization helpers
         std::vector<juce::Component*> getGateComps();
+        void setComponentAttachments() override;
+
         void resized() override;
     private:
         const juce::Colour GATE_COLOUR_1 = juce::Colours::mediumpurple;

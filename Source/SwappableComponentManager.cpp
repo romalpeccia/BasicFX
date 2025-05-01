@@ -13,30 +13,36 @@
 
 
 SwappableComponentManager::SwappableComponentManager(BasicFXAudioProcessor& p, juce::AudioProcessorValueTreeState& _apvts) : audioProcessor(p), apvts(_apvts) {
+    initializeComponents();
+}
+
+void SwappableComponentManager::initializeComponents() {
     for (int i = 0; i < MAX_COMPONENTS; i++)
     {
+        /*
         if (i % 4 == 0)
         {
-            swappableComponents.push_back(std::make_unique<GateComponent>(apvts, audioProcessor.gateProcessors[i].get(), i));
+            swappableComponents.push_back(std::make_unique<GateComponent>(apvts, i));
         }
         else if (i % 4 == 1)
         {
-            swappableComponents.push_back(std::make_unique<DistortionComponent>(apvts, audioProcessor.distortionProcessors[i].get(), i));
+            swappableComponents.push_back(std::make_unique<DistortionComponent>(apvts, i));
         }
         else if (i % 4 == 2)
         {
-            swappableComponents.push_back(std::make_unique<FlangerComponent>(apvts, audioProcessor.flangerProcessors[i].get(), i));
+            swappableComponents.push_back(std::make_unique<FlangerComponent>(apvts, i));
         }
-        else {
-            swappableComponents.push_back(std::make_unique<EmptyComponent>(audioProcessor.emptyProcessor.get()));
-        }
+        else {*/
+            swappableComponents.push_back(std::make_unique<EmptyComponent>(i));
+        //}
         swappableComponents[i]->addActionListener(this);
-        swappableComponents[i]->addActionListener(&p);
+        swappableComponents[i]->addActionListener(&audioProcessor);
         swappableComponents[i]->setManager(this);
+        swappableComponents[i]->getProcessor()->assignParamPointers(i);
+        swappableComponents[i]->setComponentAttachments();
         addAndMakeVisible(swappableComponents.back().get());
     }
 }
-
 
 void SwappableComponentManager::actionListenerCallback(const juce::String& message) {
     
@@ -57,18 +63,20 @@ void SwappableComponentManager::actionListenerCallback(const juce::String& messa
 
                 //delete the EmptyComponent (by changing its pointer, it automatically deletes due to unique_ptr logic), and create a new one
                 if (componentType == "GATE") {
-                    swappableComponents[index] = std::make_unique<GateComponent>(apvts, audioProcessor.gateProcessors[index].get(), index);
+                    swappableComponents[index] = std::make_unique<GateComponent>(apvts,  index);
                 }
                 else if (componentType == "DISTORTION") {
-                    swappableComponents[index] = std::make_unique<DistortionComponent>(apvts, audioProcessor.distortionProcessors[index].get(), index);
+                    swappableComponents[index] = std::make_unique<DistortionComponent>(apvts, index);
                 }
                 else if (componentType == "FLANGER") {
-                    swappableComponents[index] = std::make_unique<FlangerComponent>(apvts, audioProcessor.flangerProcessors[index].get(), index);
+                    swappableComponents[index] = std::make_unique<FlangerComponent>(apvts, index);
 
                 }
                 swappableComponents[index]->addActionListener(this);
                 swappableComponents[index]->addActionListener(&audioProcessor);
                 swappableComponents[index]->setManager(this);
+                swappableComponents[index]->getProcessor()->assignParamPointers(index); //TODO unecessary?  already in constructor
+                swappableComponents[index]->setComponentAttachments();
                 addAndMakeVisible(swappableComponents[index].get());
                 resized();
                 audioProcessor.actionListenerCallback(message);//notify the processor that the UI has changed
@@ -78,7 +86,6 @@ void SwappableComponentManager::actionListenerCallback(const juce::String& messa
 }
 
 void SwappableComponentManager::resized() {
-
     auto bounds = getLocalBounds();
     if (!swappableComponents.empty()) {
 
@@ -122,23 +129,25 @@ void SwappableComponentManager::swapComponents(SwappableComponent& draggedCompon
 {
     auto& components = swappableComponents;
 
-    // Find indices of the two components
-    const auto indexA = findComponentIndex(draggedComponent);
-    const auto indexB = findComponentIndex(otherComponent);
+    const auto draggedIndex = findComponentIndex(draggedComponent);
+    const auto otherIndex = findComponentIndex(otherComponent);
 
-    if (indexA == -1 || indexB == -1)
-        return;
+    if (!(draggedIndex == -1 || otherIndex == -1))
+    {
+        // Swap components in the list
+        std::swap(components[draggedIndex], components[otherIndex]);
 
-    // Swap components in the list
-    std::swap(components[indexA], components[indexB]);
+        //swap processor indices
+        draggedComponent.getProcessor()->setParamIndex(otherIndex);
+        otherComponent.getProcessor()->setParamIndex(draggedIndex);
+        // Swap their positions visually
+        const auto boundsA = draggedComponent.getBounds();
+        draggedComponent.setBounds(otherComponent.getBounds());
+        otherComponent.setBounds(boundsA);
 
-    // Swap their positions visually
-    const auto boundsA = draggedComponent.getBounds();
-    draggedComponent.setBounds(otherComponent.getBounds());
-    otherComponent.setBounds(boundsA);
-
-    // Notify processor of the swap
-    sendActionMessage("SWAPPED_" + String(indexA) + "_" + String(indexB));
+        // Notify processor of the swap
+        sendActionMessage("SWAPPED_" + String(draggedIndex) + "_" + String(otherIndex));
+    }
 }
 
 

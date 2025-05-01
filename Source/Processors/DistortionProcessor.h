@@ -20,6 +20,7 @@ public:
     float getGateType() { return *distortionTypeParam; }
     void processBlock(juce::AudioBuffer<float>& buffer);
     void prepareToPlay(double _sampleRate, int _totalNumInputChannels) { sampleRate = _sampleRate, totalNumInputChannels = _totalNumInputChannels; }
+    void assignParamPointers(int index) override;
 private:
     juce::AudioProcessorValueTreeState& apvts;
     int totalNumInputChannels = 2;

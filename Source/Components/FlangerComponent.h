@@ -11,14 +11,14 @@
 #pragma once
 #include "../Utilities.h"
 #include "CustomSlider.h"
-#include "SwappableComponent.h"
+#include "../SwappableComponentManager.h"
 #include "../Processors/FlangerProcessor.h"
 class FlangerComponent : public SwappableComponent {
 
     public:
-        FlangerComponent(juce::AudioProcessorValueTreeState& _apvts, FlangerProcessor* flangerProcessor);
-        FlangerComponent(juce::AudioProcessorValueTreeState& _apvts, FlangerProcessor* flangerProcessor, int index);
+        FlangerComponent(juce::AudioProcessorValueTreeState& _apvts, int index);
         std::vector<juce::Component*> getFlangerComps();
+        void setComponentAttachments() override;
         void resized() override;
 
     private:

@@ -16,42 +16,34 @@
 class SwappableComponentManager; //forward declaration of SwappableComponentManager to avoid circular dependencies
 
 class SwappableComponent : public juce::Component, public juce::ActionBroadcaster {
-public:
-    SwappableComponent() = delete;
-    SwappableComponent(SwappableProcessor* processorPtr) : processor(processorPtr)
-    {
+    public:
+        SwappableComponent() = delete;
+        SwappableComponent(std::unique_ptr<SwappableProcessor> processorPtr)
+            : processor(std::move(processorPtr)) {}
 
-    }
-    SwappableComponent(SwappableProcessor* processorPtr, int index)
-        : processor(processorPtr)
-    {
+        SwappableComponent::~SwappableComponent();
 
-    }
-    SwappableComponent::~SwappableComponent();
+        virtual void setComponentAttachments() = 0;
 
-    void mouseDown(const juce::MouseEvent& e) override;
-    void mouseDrag(const juce::MouseEvent& e) override;
-    void mouseUp(const juce::MouseEvent& e) override;
-
-
-    void setBounds(juce::Rectangle<int> bounds);
-    void setBounds(int x, int y, int width, int height);
-
-    SwappableProcessor* getProcessor() const { return processor; }
-    void setProcessor(SwappableProcessor* _processor) { processor = _processor; }
-
-    //    void swapComponents(SwappableComponent* otherComp);
-    //int getIndexInComponentList();
-    // std::vector<SwappableComponent*>& getSwappableComponents() { return swappableComponentList; }
-
-    void setManager(SwappableComponentManager* _swappableComponentManager);
-    SwappableComponentManager* getManager() const;
-
-    int getAreaOverLapThreshold() { return areaOverlapThreshold; }
-    juce::Rectangle<int> getInitialBounds() { return initialBounds; }
-    juce::Rectangle<int> getDraggedBounds() { return draggedBounds; }
-    private:
+        void mouseDown(const juce::MouseEvent& e) override;
+        void mouseDrag(const juce::MouseEvent& e) override;
+        void mouseUp(const juce::MouseEvent& e) override;
+        juce::Rectangle<int> getInitialBounds() { return initialBounds; }
+        juce::Rectangle<int> getDraggedBounds() { return draggedBounds; }
+        int getAreaOverLapThreshold() { return areaOverlapThreshold; }
         void setAreaOverLapThreshold();
+
+        void setBounds(juce::Rectangle<int> bounds);
+        void setBounds(int x, int y, int width, int height);
+
+        SwappableProcessor* getProcessor() const { return processor.get(); }
+        void setProcessor(std::unique_ptr<SwappableProcessor> _processor) { processor = std::move(_processor); }
+
+
+        SwappableComponentManager* getManager() const;
+        void setManager(SwappableComponentManager* _swappableComponentManager);
+
+    private:
 
         juce::ComponentDragger componentDragger; //adding this member allows us to drag the component using the mouseEvent that triggered it
         juce::Rectangle<int> initialBounds; //bounds of the component before it was dragged
@@ -61,6 +53,6 @@ public:
         
 
     protected: //accessible by derived classes but not external code
-        SwappableProcessor* processor = nullptr;
+        std::unique_ptr<SwappableProcessor> processor;
         SwappableComponentManager* swappableComponentManager = nullptr;
 };
