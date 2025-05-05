@@ -35,11 +35,12 @@ void SwappableComponentManager::initializeComponents() {
         else {*/
             swappableComponents.push_back(std::make_unique<EmptyComponent>(i));
         //}
+        //TODO: some of these calls should be in the swappableComponent constructor
         swappableComponents[i]->addActionListener(this);
         swappableComponents[i]->addActionListener(&audioProcessor);
         swappableComponents[i]->setManager(this);
-        swappableComponents[i]->getProcessor()->assignParamPointers(i);
-        swappableComponents[i]->setComponentAttachments();
+        //swappableComponents[i]->getProcessor()->assignParamPointers(i);
+        swappableComponents[i]->setComponentAttachments(i);
         addAndMakeVisible(swappableComponents.back().get());
     }
 }
@@ -55,13 +56,12 @@ void SwappableComponentManager::actionListenerCallback(const juce::String& messa
             int index = tokens[1].getIntValue();
             juce::String componentType = tokens[2];
 
-
+            //DBG("index of new component" << index);
             if (index < 0 || index >= swappableComponents.size())
                 return;
             if (componentType != "EMPTY" && (componentType == "GATE" || componentType == "DISTORTION" || componentType == "FLANGER")) {
 
-
-                //delete the EmptyComponent (by changing its pointer, it automatically deletes due to unique_ptr logic), and create a new one
+                //delete the EmptyComponent (by changing its pointer, it automatically deletes due to unique_ptr logic), and creates a new one
                 if (componentType == "GATE") {
                     swappableComponents[index] = std::make_unique<GateComponent>(apvts,  index);
                 }
@@ -72,11 +72,12 @@ void SwappableComponentManager::actionListenerCallback(const juce::String& messa
                     swappableComponents[index] = std::make_unique<FlangerComponent>(apvts, index);
 
                 }
+                //TODO: maybe all of these calls should be in the swappableComponent constructor
                 swappableComponents[index]->addActionListener(this);
                 swappableComponents[index]->addActionListener(&audioProcessor);
                 swappableComponents[index]->setManager(this);
-                swappableComponents[index]->getProcessor()->assignParamPointers(index); //TODO unecessary?  already in constructor
-                swappableComponents[index]->setComponentAttachments();
+                //swappableComponents[index]->getProcessor()->assignParamPointers(index); //TODO unecessary?  already in constructor
+                swappableComponents[index]->setComponentAttachments(index); //TODO: why doesnt this work in the constructor?
                 addAndMakeVisible(swappableComponents[index].get());
                 resized();
                 audioProcessor.actionListenerCallback(message);//notify the processor that the UI has changed
@@ -129,21 +130,39 @@ void SwappableComponentManager::swapComponents(SwappableComponent& draggedCompon
 {
     auto& components = swappableComponents;
 
-    const auto draggedIndex = findComponentIndex(draggedComponent);
-    const auto otherIndex = findComponentIndex(otherComponent);
+    const auto draggedIndex = getComponentIndex(draggedComponent);
+    const auto otherIndex = getComponentIndex(otherComponent);
 
     if (!(draggedIndex == -1 || otherIndex == -1))
     {
-        // Swap components in the list
+        // Swap components in the component list
         std::swap(components[draggedIndex], components[otherIndex]);
+        
 
-        //swap processor indices
-        draggedComponent.getProcessor()->setParamIndex(otherIndex);
-        otherComponent.getProcessor()->setParamIndex(draggedIndex);
-        // Swap their positions visually
-        const auto boundsA = draggedComponent.getBounds();
+        // swap the values from the old pointers
+        swapProcessorParamsIfSameType(draggedComponent.getProcessor(), otherComponent.getProcessor(), otherIndex, draggedIndex);
+
+        //swap their processor indexes (unecessary unless I start using it for something)
+        draggedComponent.getProcessor()->setProcessorIndex(otherIndex);
+        otherComponent.getProcessor()->setProcessorIndex(draggedIndex);
+
+        //reassign their pointers
+        draggedComponent.getProcessor()->assignParamPointers(otherIndex);
+        otherComponent.getProcessor()->assignParamPointers(draggedIndex);
+
+        //swap the attachments of components to apvts Params
+        otherComponent.setComponentAttachments(draggedIndex);
+        draggedComponent.setComponentAttachments(otherIndex);
+
+        // Swap their positions in UI
+        const auto draggedBounds = draggedComponent.getBounds();
         draggedComponent.setBounds(otherComponent.getBounds());
-        otherComponent.setBounds(boundsA);
+        otherComponent.setBounds(draggedBounds);
+        
+
+
+
+
 
         // Notify processor of the swap
         sendActionMessage("SWAPPED_" + String(draggedIndex) + "_" + String(otherIndex));
@@ -151,6 +170,92 @@ void SwappableComponentManager::swapComponents(SwappableComponent& draggedCompon
 }
 
 
+
+void SwappableComponentManager::swapProcessorParamsIfSameType(SwappableProcessor* a, SwappableProcessor* b, int otherIndex, int draggedIndex)
+{
+    if (auto* gateA = dynamic_cast<GateProcessor*>(a)) {
+        if (auto* gateB = dynamic_cast<GateProcessor*>(b)) {
+
+            float a_on = gateA->getOnState();
+            float a_thresh = gateA->getThreshold();
+            int a_type = gateA->getGateType();
+            float a_attack = gateA->getAttack();
+            float a_release = gateA->getRelease();
+            float a_hold = gateA->getHold();
+
+            float b_on = gateB->getOnState();
+            float b_thresh = gateB->getThreshold();
+            int b_type = gateB->getGateType();
+            float b_attack = gateB->getAttack();
+            float b_release = gateB->getRelease();
+            float b_hold = gateB->getHold();
+
+            gateA->setOnState(b_on);
+            gateA->setThreshold(b_thresh);
+            gateA->setGateType(b_type);
+            gateA->setAttack(b_attack);
+            gateA->setRelease(b_release);
+            gateA->setHold(b_hold);
+
+            gateB->setOnState(a_on);
+            gateB->setThreshold(a_thresh);
+            gateB->setGateType(a_type);
+            gateB->setAttack(a_attack);
+            gateB->setRelease(a_release);
+            gateB->setHold(a_hold);
+            return;
+        }
+    }
+
+    if (auto* distA = dynamic_cast<DistortionProcessor*>(a)) {
+        if (auto* distB = dynamic_cast<DistortionProcessor*>(b)) {
+            DBG("==== APVTS STATE before FIX ====");
+            DBG(apvts.state.toXmlString());
+            float a_on = distA->getOnState();
+            float a_amt = distA->getAmount();
+            int a_type = distA->getDistortionType();
+
+            float b_on = distB->getOnState();
+            float b_amt = distB->getAmount();
+            int b_type = distB->getDistortionType();
+
+
+            distA->setOnState(b_on);
+            distA->setAmount(b_amt);
+            distA->setDistortionType(b_type);
+
+            distB->setOnState(a_on);
+            distB->setAmount(a_amt);
+            distB->setDistortionType(a_type);
+            DBG("==== APVTS STATE AFTER FIX ====");
+            DBG(apvts.state.toXmlString());
+            return;
+        }
+    }
+
+    if (auto* flangerA = dynamic_cast<FlangerProcessor*>(a)) {
+        if (auto* flangerB = dynamic_cast<FlangerProcessor*>(b)) {
+            float a_delay = flangerA->getDelay();
+            float a_mix = flangerA->getMix();
+            bool a_on = flangerA->getOnState();
+
+            float b_delay = flangerB->getDelay();
+            float b_mix = flangerB->getMix();
+            bool b_on = flangerB->getOnState();
+
+            flangerA->setDelay(b_delay);
+            flangerA->setMix(b_mix);
+            flangerA->setOnState(b_on);
+
+            flangerB->setDelay(a_delay);
+            flangerB->setMix(a_mix);
+            flangerB->setOnState(a_on);
+            return;
+        }
+    }
+
+    DBG("swapProcessorParamsIfSameType(): processor types don't match or unsupported.");
+}
 
 std::vector<SwappableComponent*> SwappableComponentManager::getComponentList()
 {
@@ -160,9 +265,9 @@ std::vector<SwappableComponent*> SwappableComponentManager::getComponentList()
     return list;
 }
 
-int SwappableComponentManager::findComponentIndex(const SwappableComponent& component)
+int SwappableComponentManager::getComponentIndex(const SwappableComponent& component)
 {
-    for (int i = 0; i < static_cast<int>(swappableComponents.size()); i++)
+    for (int i = 0; i < swappableComponents.size(); i++)
         if (swappableComponents[i].get() == &component)
             return i;
 

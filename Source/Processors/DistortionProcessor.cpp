@@ -136,3 +136,36 @@ void DistortionProcessor::processDistortionSlewLimiter(juce::AudioBuffer<float>&
         lastSampleFromPrevBuffer[channel] = channelData[numSamples - 1];
     }
 }
+
+
+void DistortionProcessor::setOnState(bool value)
+{
+    if (auto* param = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(makeID(DISTORTION_ON_STRING, getProcessorIndex()))))
+    {
+        param->beginChangeGesture();
+        param->setValueNotifyingHost(value ? 1.0f : 0.0f);
+        param->endChangeGesture();
+    }
+}
+
+void DistortionProcessor::setAmount(float value)
+{
+    if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
+        apvts.getParameter(makeID(DISTORTION_AMOUNT_STRING, getProcessorIndex()))))
+    {
+        param->beginChangeGesture();
+        param->setValueNotifyingHost(param->convertTo0to1(value));
+        param->endChangeGesture();
+    }
+}
+
+void DistortionProcessor::setDistortionType(int value)
+{
+    if (auto* param = dynamic_cast<juce::AudioParameterChoice*>(
+        apvts.getParameter(makeID(DISTORTION_TYPE_STRING, getProcessorIndex()))))
+    {
+        param->beginChangeGesture();
+        param->setValueNotifyingHost(param->convertTo0to1(static_cast<float>(value)));
+        param->endChangeGesture();
+    }
+}

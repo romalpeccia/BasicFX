@@ -25,12 +25,16 @@ DistortionComponent::DistortionComponent(juce::AudioProcessorValueTreeState& apv
         addAndMakeVisible(comp);
     }
 }
-void DistortionComponent::setComponentAttachments() {
-    int index = getManager()->findComponentIndex(*this);
+void DistortionComponent::setComponentAttachments(int index) {
+    sliderAttachment = nullptr;
+    buttonAttachment = nullptr;
+    menuAttachment = nullptr;
     sliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(DISTORTION_AMOUNT_STRING, index), slider);
     buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeID(DISTORTION_ON_STRING, index), button);
     menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, makeID(DISTORTION_TYPE_STRING, index), menu);
+
 }
+
 
 std::vector<juce::Component*> DistortionComponent::getDistortionComps() {
     std::vector<juce::Component*> comps;

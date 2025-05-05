@@ -16,11 +16,17 @@ class FlangerProcessor : public SwappableProcessor {
 public:
     FlangerProcessor(juce::AudioProcessorValueTreeState& _apvts, int index);
     ~FlangerProcessor() {}
+
     float getDelay() { return *delayParam; }
     bool getOnState() { return bool(*onStateParam); }
     float getMix() { return *mixParam; }
-    void processBlock(juce::AudioBuffer<float>& buffer);
-    void prepareToPlay(double sampleRate, int _totalNumInputChannels) {
+
+    void setOnState(bool value);
+    void setDelay(float value);
+    void setMix(float value);
+
+    void processBlock(juce::AudioBuffer<float>& buffer) override;
+    void prepareToPlay(double sampleRate, int _totalNumInputChannels) override {
         totalNumInputChannels = totalNumInputChannels;
         sampleRate = static_cast<float>(sampleRate); 
         int maxindex = static_cast<int>(sampleRate * DELAY_MAX);

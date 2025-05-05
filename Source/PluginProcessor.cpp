@@ -49,7 +49,7 @@ void BasicFXAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock
 
 void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    juce::ScopedNoDenormals noDenormals; 
+    juce::ScopedNoDenormals noDenormals; //prevents numbers from 
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     int numSamples = buffer.getNumSamples();
@@ -72,7 +72,6 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
 void BasicFXAudioProcessor::actionListenerCallback(const juce::String& message) {
     
-    DBG("ACTIONCALLBACK");
     auto& componentList = swappableComponentManager->getComponentList();
     if (message.startsWith("SWAPPED_"))
     {   //called by SwappableComponentManager::swapComponents

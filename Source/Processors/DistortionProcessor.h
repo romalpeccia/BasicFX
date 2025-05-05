@@ -15,12 +15,18 @@ class DistortionProcessor : public SwappableProcessor {
 public:
     DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts, int index);
     ~DistortionProcessor() {}
+
     float getAmount() { return *amountParam; }
     bool getOnState() { return bool(*onStateParam); }
-    float getGateType() { return *distortionTypeParam; }
-    void processBlock(juce::AudioBuffer<float>& buffer);
-    void prepareToPlay(double _sampleRate, int _totalNumInputChannels) { sampleRate = _sampleRate, totalNumInputChannels = _totalNumInputChannels; }
+    float getDistortionType() { return *distortionTypeParam; }
+    void setOnState(bool value);
+    void setAmount(float value);
+    void setDistortionType(int value);
+
+    void processBlock(juce::AudioBuffer<float>& buffer) override;
+    void prepareToPlay(double _sampleRate, int _totalNumInputChannels) override { sampleRate = _sampleRate, totalNumInputChannels = _totalNumInputChannels; }
     void assignParamPointers(int index) override;
+
 private:
     juce::AudioProcessorValueTreeState& apvts;
     int totalNumInputChannels = 2;

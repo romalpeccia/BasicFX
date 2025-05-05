@@ -17,10 +17,12 @@ class EmptyComponent : public SwappableComponent {
 
 public:
     EmptyComponent(int index);
-    void setComponentAttachments();
     ~EmptyComponent() {}
+
+    void setComponentAttachments(int index) override;
+
     void resized() override {
-        menu.setBounds(getLocalBounds().withTrimmedBottom(getLocalBounds().getHeight() * 0.9));
+        menu.setBounds(getLocalBounds().withTrimmedTop(getLocalBounds().getHeight() * 0.9));
     }
 
 private:

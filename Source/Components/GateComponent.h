@@ -20,7 +20,7 @@ class GateComponent : public SwappableComponent {
 
         //initialization helpers
         std::vector<juce::Component*> getGateComps();
-        void setComponentAttachments() override;
+        void setComponentAttachments(int index) override;
 
         void resized() override;
     private:

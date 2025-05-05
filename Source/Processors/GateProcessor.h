@@ -15,14 +15,23 @@ class GateProcessor : public SwappableProcessor {
 public:
     GateProcessor(juce::AudioProcessorValueTreeState& _apvts, int index);
     ~GateProcessor() {}
+
     float getThreshold() { return *thresholdParam; }
     int getGateType() { return int(*gateTypeParam); }
     bool getOnState() { return bool(*onStateParam); }
     float getAttack() { return *attackParam; }
     float getRelease() { return *releaseParam; }
     float getHold() { return *holdParam; }
-    void processBlock(juce::AudioBuffer<float>& buffer);
-    void prepareToPlay(double _sampleRate, int _totalNumInputChannels) { sampleRate = _sampleRate, totalNumInputChannels = _totalNumInputChannels; }
+
+    void setOnState(bool value);
+    void setThreshold(float value);
+    void setGateType(int value);
+    void setAttack(float value);
+    void setRelease(float value);
+    void setHold(float value);
+
+    void processBlock(juce::AudioBuffer<float>& buffer) override;
+    void prepareToPlay(double _sampleRate, int _totalNumInputChannels) override { sampleRate = _sampleRate, totalNumInputChannels = _totalNumInputChannels; }
     void assignParamPointers(int index) override;
 
 private:

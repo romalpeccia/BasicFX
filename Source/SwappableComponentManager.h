@@ -22,15 +22,17 @@ class SwappableComponentManager : public juce::Component, public juce::ActionLis
     public:
 
         SwappableComponentManager(BasicFXAudioProcessor& p, juce::AudioProcessorValueTreeState& _apvts);
+        void initializeComponents();
 
         void resized() override;
-
         void actionListenerCallback(const juce::String& message) override;
         void handleDraggedComponent(SwappableComponent& draggedComp);
         void swapComponents(SwappableComponent& draggedComp, SwappableComponent& otherComp);
-        int findComponentIndex(const SwappableComponent& component);
+        void swapProcessorParamsIfSameType(SwappableProcessor* a, SwappableProcessor* b, int otherIndex, int draggedIndex);
+
+        int getComponentIndex(const SwappableComponent& component);
         std::vector<SwappableComponent*> getComponentList();
-        void initializeComponents();
+
 
     private:
         std::vector<std::unique_ptr<SwappableComponent>> swappableComponents; // contains pointers to all of our components. Unique pointers allow us to change what they point to delete the old component and assign a new one

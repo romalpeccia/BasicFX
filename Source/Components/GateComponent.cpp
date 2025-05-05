@@ -14,7 +14,7 @@
 
 GateComponent::GateComponent(juce::AudioProcessorValueTreeState& apvts, int index) : SwappableComponent(std::make_unique<GateProcessor>(apvts, index)), apvts(apvts) {
 
-
+    setComponentAttachments(index);
     button.setClickingTogglesState(true);
     menu.addItem(BASIC_GATE_STRING, 1);
     menu.addItem(RMS_GATE_STRING, 2);
@@ -26,8 +26,13 @@ GateComponent::GateComponent(juce::AudioProcessorValueTreeState& apvts, int inde
     }
 }
 
-void GateComponent::setComponentAttachments() {
-    int index = getManager()->findComponentIndex(*this);
+void GateComponent::setComponentAttachments(int index) {
+    thresholdAttachment = nullptr;
+    attackAttachment = nullptr;
+    releaseAttachment = nullptr;
+    holdAttachment = nullptr;
+    buttonAttachment = nullptr;
+    menuAttachment = nullptr;
     thresholdAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(THRESHOLD_STRING, index), thresholdSlider);
     attackAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(ATTACK_STRING, index), attackSlider);
     releaseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(RELEASE_STRING, index), releaseSlider);

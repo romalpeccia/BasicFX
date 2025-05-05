@@ -22,26 +22,25 @@ class SwappableComponent : public juce::Component, public juce::ActionBroadcaste
             : processor(std::move(processorPtr)) {}
 
         SwappableComponent::~SwappableComponent();
-
-        virtual void setComponentAttachments() = 0;
+        virtual void setComponentAttachments(int index) = 0;
 
         void mouseDown(const juce::MouseEvent& e) override;
         void mouseDrag(const juce::MouseEvent& e) override;
         void mouseUp(const juce::MouseEvent& e) override;
+
         juce::Rectangle<int> getInitialBounds() { return initialBounds; }
         juce::Rectangle<int> getDraggedBounds() { return draggedBounds; }
-        int getAreaOverLapThreshold() { return areaOverlapThreshold; }
-        void setAreaOverLapThreshold();
-
         void setBounds(juce::Rectangle<int> bounds);
         void setBounds(int x, int y, int width, int height);
+        int getAreaOverLapThreshold() { return areaOverlapThreshold; }
+        void setAreaOverLapThreshold();
 
         SwappableProcessor* getProcessor() const { return processor.get(); }
         void setProcessor(std::unique_ptr<SwappableProcessor> _processor) { processor = std::move(_processor); }
 
-
         SwappableComponentManager* getManager() const;
-        void setManager(SwappableComponentManager* _swappableComponentManager);
+        void setManager(SwappableComponentManager* _swappableComponentManager); 
+
 
     private:
 

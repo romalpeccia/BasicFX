@@ -21,7 +21,7 @@ EmptyComponent::EmptyComponent( int index) : SwappableComponent(std::make_unique
     addAndMakeVisible(menu);
 
     menu.onChange = [this]() {
-        int index = swappableComponentManager->findComponentIndex(*this);
+        int index = swappableComponentManager->getComponentIndex(*this);
         int selectedId = menu.getSelectedId();
         juce::String selectedText = menu.getText();
         //signal the ComponentManager to do something
@@ -30,6 +30,6 @@ EmptyComponent::EmptyComponent( int index) : SwappableComponent(std::make_unique
         };
 }
 
-void EmptyComponent::setComponentAttachments() {
+void EmptyComponent::setComponentAttachments(int index) {
 
 }

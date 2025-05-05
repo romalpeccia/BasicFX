@@ -13,22 +13,22 @@
 
 FlangerComponent::FlangerComponent(juce::AudioProcessorValueTreeState& apvts, int index) : SwappableComponent(std::make_unique<FlangerProcessor>(apvts, index)), apvts(apvts) {
 
-    flangerSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(FLANGER_DELAY_STRING, index), flangerSlider);
-    mixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(FLANGER_MIX_STRING, index), mixSlider);
-    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeID(FLANGER_ON_STRING, index), button);
-    button.setClickingTogglesState(true);
+    setComponentAttachments(index);
 
     for (auto* comp : getFlangerComps()) {
         addAndMakeVisible(comp);
     }
 }
 
-void FlangerComponent::setComponentAttachments() {
-    int index = getManager()->findComponentIndex(*this);
+void FlangerComponent::setComponentAttachments(int index) {
+    flangerSliderAttachment = nullptr;
+    mixSliderAttachment = nullptr;
+    buttonAttachment = nullptr;
     flangerSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(FLANGER_DELAY_STRING, index), flangerSlider);
     mixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(FLANGER_MIX_STRING, index), mixSlider);
     buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeID(FLANGER_ON_STRING, index), button);
 }
+
 std::vector<juce::Component*> FlangerComponent::getFlangerComps() {
     std::vector<juce::Component*> comps;
     comps.push_back(&flangerSlider);
