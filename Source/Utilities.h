@@ -16,7 +16,7 @@
 using namespace juce;
 
 enum class ProcessorType { Gate, Flanger, Distortion };
-const int MAX_COMPONENTS = 2;
+const int MAX_COMPONENTS = 4;
 const int MAX_INPUT_CHANNELS = 16;
 const int SAMPLE_RATE_FACTOR = 1000; //TODO: think of something better for this // just gives room for the CircularBuffers
 

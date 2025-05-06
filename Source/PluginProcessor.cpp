@@ -64,7 +64,8 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
     for (auto* processor : signalChain)
     {
-        processor->processBlock(buffer);
+        if (processor != nullptr)
+            processor->processBlock(buffer);
     }
     dbMeterOutgoingProcessor.processBlock(buffer);
     visualizerOutgoingProcessor.processBlock(buffer);

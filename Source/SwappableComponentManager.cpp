@@ -135,35 +135,32 @@ void SwappableComponentManager::swapComponents(SwappableComponent& draggedCompon
 
     if (!(draggedIndex == -1 || otherIndex == -1))
     {
-        // Swap components in the component list
-        std::swap(components[draggedIndex], components[otherIndex]);
+
         
 
-        // swap the values from the old pointers
-        swapProcessorParamsIfSameType(draggedComponent.getProcessor(), otherComponent.getProcessor(), otherIndex, draggedIndex);
+        // swap the param values and swap their pointers
+        swapProcessorParams(draggedComponent, otherComponent);
 
-        //swap their processor indexes (unecessary unless I start using it for something)
-        draggedComponent.getProcessor()->setProcessorIndex(otherIndex);
-        otherComponent.getProcessor()->setProcessorIndex(draggedIndex);
+        // Swap components in the component list
+        std::swap(components[draggedIndex], components[otherIndex]);
+        //swap their processor indexes 
+        //draggedComponent.getProcessor()->setProcessorIndex(otherIndex);
+        //otherComponent.getProcessor()->setProcessorIndex(draggedIndex);
 
         //reassign their pointers
-        draggedComponent.getProcessor()->assignParamPointers(otherIndex);
-        otherComponent.getProcessor()->assignParamPointers(draggedIndex);
+        //draggedComponent.getProcessor()->assignParamPointers(otherIndex);
+        //otherComponent.getProcessor()->assignParamPointers(draggedIndex);
 
-        //swap the attachments of components to apvts Params
+        //reset their attachments
         otherComponent.setComponentAttachments(draggedIndex);
         draggedComponent.setComponentAttachments(otherIndex);
+
 
         // Swap their positions in UI
         const auto draggedBounds = draggedComponent.getBounds();
         draggedComponent.setBounds(otherComponent.getBounds());
         otherComponent.setBounds(draggedBounds);
         
-
-
-
-
-
         // Notify processor of the swap
         sendActionMessage("SWAPPED_" + String(draggedIndex) + "_" + String(otherIndex));
     }
@@ -171,94 +168,219 @@ void SwappableComponentManager::swapComponents(SwappableComponent& draggedCompon
 
 
 
-void SwappableComponentManager::swapProcessorParamsIfSameType(SwappableProcessor* a, SwappableProcessor* b, int otherIndex, int draggedIndex)
+void SwappableComponentManager::swapProcessorParams(SwappableComponent& draggedComponent, SwappableComponent& otherComponent)
 {
-    if (auto* gateA = dynamic_cast<GateProcessor*>(a)) {
-        if (auto* gateB = dynamic_cast<GateProcessor*>(b)) {
+    SwappableProcessor* draggedProcessor = draggedComponent.getProcessor();
+    SwappableProcessor* otherProcessor = otherComponent.getProcessor();
+    int draggedIndex = getComponentIndex(draggedComponent);
+    int otherIndex = getComponentIndex(otherComponent);
+    
+    bool bothProcesorsSameType = false;
+    //if both components are the same type, simply swap their values, indexes, and pointers
+    if (auto* gateProcessorA = dynamic_cast<GateProcessor*>(draggedProcessor)) {
+        if (auto* gateProcessorB = dynamic_cast<GateProcessor*>(otherProcessor)) {
+            swapGateParams(gateProcessorA, gateProcessorB);
+            bothProcesorsSameType = true;
+        }
+    }
+    else if (auto* distortionProcessorA = dynamic_cast<DistortionProcessor*>(draggedProcessor)) {
+        if (auto* distortionProcessorB = dynamic_cast<DistortionProcessor*>(otherProcessor)) {
+            swapDistortionParams(distortionProcessorA, distortionProcessorB);
+            bothProcesorsSameType = true;
+        }
 
-            float a_on = gateA->getOnState();
-            float a_thresh = gateA->getThreshold();
-            int a_type = gateA->getGateType();
-            float a_attack = gateA->getAttack();
-            float a_release = gateA->getRelease();
-            float a_hold = gateA->getHold();
+    }
+    else if (auto* flangerProcessorA = dynamic_cast<FlangerProcessor*>(draggedProcessor)) {
+        if (auto* flangerProcessorB = dynamic_cast<FlangerProcessor*>(otherProcessor)) {
+            swapFlangerParams(flangerProcessorA, flangerProcessorB);
+            bothProcesorsSameType = true;
 
-            float b_on = gateB->getOnState();
-            float b_thresh = gateB->getThreshold();
-            int b_type = gateB->getGateType();
-            float b_attack = gateB->getAttack();
-            float b_release = gateB->getRelease();
-            float b_hold = gateB->getHold();
+        }
 
-            gateA->setOnState(b_on);
-            gateA->setThreshold(b_thresh);
-            gateA->setGateType(b_type);
-            gateA->setAttack(b_attack);
-            gateA->setRelease(b_release);
-            gateA->setHold(b_hold);
+    }
 
-            gateB->setOnState(a_on);
-            gateB->setThreshold(a_thresh);
-            gateB->setGateType(a_type);
-            gateB->setAttack(a_attack);
-            gateB->setRelease(a_release);
-            gateB->setHold(a_hold);
-            return;
+    if (bothProcesorsSameType) {
+        draggedComponent.getProcessor()->setProcessorIndex(otherIndex);
+        otherComponent.getProcessor()->setProcessorIndex(draggedIndex);
+        draggedComponent.getProcessor()->assignParamPointers(otherIndex);
+        otherComponent.getProcessor()->assignParamPointers(draggedIndex);
+    }
+    else {
+
+        if (auto* distortionProcessor = dynamic_cast<DistortionProcessor*>(draggedProcessor)) {
+            moveDistortionParams(distortionProcessor, otherIndex);
+        }
+        else if (auto* gateProcessor = dynamic_cast<GateProcessor*>(draggedProcessor)) {
+            moveGateParams(gateProcessor, otherIndex);
+        }
+        else if (auto* flangerProcessor = dynamic_cast<FlangerProcessor*>(draggedProcessor)) {
+            moveFlangerParams(flangerProcessor, otherIndex);
+        }
+        
+        if (auto* distortionProcessor = dynamic_cast<DistortionProcessor*>(otherProcessor)) {
+            moveDistortionParams(distortionProcessor, draggedIndex);
+        }
+        else if (auto* gateProcessor = dynamic_cast<GateProcessor*>(otherProcessor)) {
+            moveGateParams(gateProcessor, draggedIndex);
+        }
+        else if (auto* flangerProcessor = dynamic_cast<FlangerProcessor*>(otherProcessor)) {
+            moveFlangerParams(flangerProcessor, draggedIndex);
         }
     }
 
-    if (auto* distA = dynamic_cast<DistortionProcessor*>(a)) {
-        if (auto* distB = dynamic_cast<DistortionProcessor*>(b)) {
-            DBG("==== APVTS STATE before FIX ====");
-            DBG(apvts.state.toXmlString());
-            float a_on = distA->getOnState();
-            float a_amt = distA->getAmount();
-            int a_type = distA->getDistortionType();
 
-            float b_on = distB->getOnState();
-            float b_amt = distB->getAmount();
-            int b_type = distB->getDistortionType();
+}
+void SwappableComponentManager::moveDistortionParams(DistortionProcessor* distortionProcessor, int index) {
+    //cache current values
+    const auto on = distortionProcessor->getOnState();
+    const auto amt = distortionProcessor->getAmount();
+    const auto type = distortionProcessor->getDistortionType();
 
+    //reset currently pointed to values
+    distortionProcessor->setOnState(false);
+    distortionProcessor->setAmount(0);
+    distortionProcessor->setDistortionType(0);
 
-            distA->setOnState(b_on);
-            distA->setAmount(b_amt);
-            distA->setDistortionType(b_type);
+    //change index and move pointers to new index
+    distortionProcessor->setProcessorIndex(index);
+    distortionProcessor->assignParamPointers(index);
 
-            distB->setOnState(a_on);
-            distB->setAmount(a_amt);
-            distB->setDistortionType(a_type);
-            DBG("==== APVTS STATE AFTER FIX ====");
-            DBG(apvts.state.toXmlString());
-            return;
-        }
-    }
+    //overwrite newly pointed to values
+    distortionProcessor->setOnState(on);
+    distortionProcessor->setAmount(amt);
+    distortionProcessor->setDistortionType(type);
 
-    if (auto* flangerA = dynamic_cast<FlangerProcessor*>(a)) {
-        if (auto* flangerB = dynamic_cast<FlangerProcessor*>(b)) {
-            float a_delay = flangerA->getDelay();
-            float a_mix = flangerA->getMix();
-            bool a_on = flangerA->getOnState();
+}
 
-            float b_delay = flangerB->getDelay();
-            float b_mix = flangerB->getMix();
-            bool b_on = flangerB->getOnState();
+void SwappableComponentManager::moveGateParams(GateProcessor* gateProcessor, int index){
+    //cache current values
+    const auto on = gateProcessor->getOnState();
+    const auto thresh = gateProcessor->getThreshold();
+    const auto type = gateProcessor->getGateType();
+    const auto attack = gateProcessor->getAttack();
+    const auto release = gateProcessor->getRelease();
+    const auto hold = gateProcessor->getHold();
 
-            flangerA->setDelay(b_delay);
-            flangerA->setMix(b_mix);
-            flangerA->setOnState(b_on);
+    //reset currently pointed to values
+    gateProcessor->setOnState(false);
+    gateProcessor->setThreshold(0.0f);
+    gateProcessor->setGateType(0);
+    gateProcessor->setAttack(0.0f);
+    gateProcessor->setRelease(0.0f);
+    gateProcessor->setHold(0.0f);
 
-            flangerB->setDelay(a_delay);
-            flangerB->setMix(a_mix);
-            flangerB->setOnState(a_on);
-            return;
-        }
-    }
+    //change index and move pointers to new index
+    gateProcessor->setProcessorIndex(index);
+    gateProcessor->assignParamPointers(index);
 
-    DBG("swapProcessorParamsIfSameType(): processor types don't match or unsupported.");
+    //overwrite newly pointed to values
+    gateProcessor->setOnState(on);
+    gateProcessor->setThreshold(thresh);
+    gateProcessor->setGateType(type);
+    gateProcessor->setAttack(attack);
+    gateProcessor->setRelease(release);
+    gateProcessor->setHold(hold);
+}
+
+void SwappableComponentManager::moveFlangerParams(FlangerProcessor* flangerProcessor, int index){
+    //cache current values
+    const auto on = flangerProcessor->getOnState();
+    const auto delay = flangerProcessor->getDelay();
+    const auto mix = flangerProcessor->getMix();
+
+    //reset currently pointed to values
+    flangerProcessor->setOnState(false);
+    flangerProcessor->setDelay(0.0f);
+    flangerProcessor->setMix(0.0f);
+
+    //change index and move pointers to new index
+    flangerProcessor->setProcessorIndex(index);
+    flangerProcessor->assignParamPointers(index);
+
+    //overwrite newly pointed to values
+    flangerProcessor->setOnState(on);
+    flangerProcessor->setDelay(delay);
+    flangerProcessor->setMix(mix);
+}
+
+void SwappableComponentManager::swapGateParams(GateProcessor* a, GateProcessor* b)
+{
+    //cache current values
+    const auto a_on = a->getOnState();
+    const auto a_thresh = a->getThreshold();
+    const auto a_type = a->getGateType();
+    const auto a_attack = a->getAttack();
+    const auto a_release = a->getRelease();
+    const auto a_hold = a->getHold();
+
+    const auto b_on = b->getOnState();
+    const auto b_thresh = b->getThreshold();
+    const auto b_type = b->getGateType();
+    const auto b_attack = b->getAttack();
+    const auto b_release = b->getRelease();
+    const auto b_hold = b->getHold();
+
+    //swap values
+    a->setOnState(b_on);
+    a->setThreshold(b_thresh);
+    a->setGateType(b_type);
+    a->setAttack(b_attack);
+    a->setRelease(b_release);
+    a->setHold(b_hold);
+
+    b->setOnState(a_on);
+    b->setThreshold(a_thresh);
+    b->setGateType(a_type);
+    b->setAttack(a_attack);
+    b->setRelease(a_release);
+    b->setHold(a_hold);
+}
+
+void SwappableComponentManager::swapDistortionParams(DistortionProcessor* a, DistortionProcessor* b)
+{
+    //cache current values
+    const auto a_on = a->getOnState();
+    const auto a_amt = a->getAmount();
+    const auto a_type = a->getDistortionType();
+
+    const auto b_on = b->getOnState();
+    const auto b_amt = b->getAmount();
+    const auto b_type = b->getDistortionType();
+    
+    //swap values
+    a->setOnState(b_on);
+    a->setAmount(b_amt);
+    a->setDistortionType(b_type);
+
+    b->setOnState(a_on);
+    b->setAmount(a_amt);
+    b->setDistortionType(a_type);
+}
+
+void SwappableComponentManager::swapFlangerParams(FlangerProcessor* a, FlangerProcessor* b)
+{
+    //cache current values
+    const auto a_on = a->getOnState();
+    const auto a_delay = a->getDelay();
+    const auto a_mix = a->getMix();
+
+    const auto b_on = b->getOnState();
+    const auto b_delay = b->getDelay();
+    const auto b_mix = b->getMix();
+
+    //swap values
+    a->setOnState(b_on);
+    a->setDelay(b_delay);
+    a->setMix(b_mix);
+
+    b->setOnState(a_on);
+    b->setDelay(a_delay);
+    b->setMix(a_mix);
 }
 
 std::vector<SwappableComponent*> SwappableComponentManager::getComponentList()
 {
+    //returns all components in std::vector<std::unique_ptr<SwappableComponent>> swappableComponents
     std::vector<SwappableComponent*> list;
     for (auto& compPtr : swappableComponents)
         list.push_back(compPtr.get());
@@ -267,6 +389,7 @@ std::vector<SwappableComponent*> SwappableComponentManager::getComponentList()
 
 int SwappableComponentManager::getComponentIndex(const SwappableComponent& component)
 {
+    //returns index of a component if it is in std::vector<std::unique_ptr<SwappableComponent>> swappableComponents
     for (int i = 0; i < swappableComponents.size(); i++)
         if (swappableComponents[i].get() == &component)
             return i;
