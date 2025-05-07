@@ -12,6 +12,7 @@
 
 FlangerProcessor::FlangerProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) : SwappableProcessor(index), apvts(_apvts) {
     assignParamPointers(index);
+    prepareToPlay(sampleRate, totalNumInputChannels);
 }
 void FlangerProcessor::assignParamPointers(int index) {
     delayParam = apvts.getRawParameterValue(makeID(FLANGER_DELAY_STRING, index));
