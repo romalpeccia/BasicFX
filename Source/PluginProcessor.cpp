@@ -73,10 +73,8 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 void BasicFXAudioProcessor::actionListenerCallback(const juce::String& message) {
     
     auto& componentList = swappableComponentManager->getComponentList();
-    if (message.startsWith("SWAPPED_"))
-    {   //called by SwappableComponentManager::swapComponents
-
-
+    if (message.startsWith("SWAPPED_") || message.startsWith("CREATECOMPONENT") || message.startsWith("DELETECOMPONENT"))
+    {   //called by SwappableComponentManager::swapComponents, SwappableComponent xButton and menu onClick methods
         //rebuild the signal chain
         signalChain.clear();
         for (auto* comp : componentList)
@@ -86,16 +84,6 @@ void BasicFXAudioProcessor::actionListenerCallback(const juce::String& message) 
         }
         
     }
-    else if (message.startsWith("CREATECOMPONENT")) {
-        //called by EmptyComponent.menu.onClick
-        signalChain.clear();
-        for (auto* comp : componentList)
-        {
-            if (comp->getProcessor() != nullptr)
-                signalChain.push_back(comp->getProcessor());
-        }
-    }
-    
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout BasicFXAudioProcessor::createParameterLayout() {
@@ -142,8 +130,9 @@ void BasicFXAudioProcessor::addFlangerParametersToLayout(juce::AudioProcessorVal
 void BasicFXAudioProcessor::addEQParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int i) {
     layout.add(std::make_unique<juce::AudioParameterBool>(makeID(EQ_ON_STRING, i), makeName(EQ_ON_STRING, i), false));
     layout.add(std::make_unique<juce::AudioParameterChoice>(makeID(EQ_TYPE_STRING, i), makeName(EQ_TYPE_STRING, i),
-        juce::StringArray{ BIT_CRUSHER_STRING, WAVE_RECTIFIER_STRING, SOFT_CLIPPER_CUBIC_STRING, SOFT_CLIPPER_ARCTAN_STRING, SLEW_LIMITER_STRING }, 0));
-    layout.add(std::make_unique<juce::AudioParameterFloat>(makeID(EQ_AMOUNT_STRING, i), makeName(EQ_AMOUNT_STRING, i), juce::NormalisableRange<float>(0, 1.f, 0.001f, 1.f), 0.f));
+        juce::StringArray{ LOW_PASS_STRING, BAND_PASS_STRING, HIGH_PASS_STRING}, 0));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(makeID(EQ_LOW_FREQUENCY_STRING, i), makeName(EQ_LOW_FREQUENCY_STRING, i), juce::NormalisableRange<float>(0.1, 20000.f, 1.f, 1.f), 0.f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(makeID(EQ_HIGH_FREQUENCY_STRING, i), makeName(EQ_HIGH_FREQUENCY_STRING, i), juce::NormalisableRange<float>(0.1, 20000.f, 1.f, 1.f), 0.f));
 }
 
 //==============================================================================

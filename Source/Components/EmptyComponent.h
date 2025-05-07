@@ -28,7 +28,6 @@ public:
         menu.setBounds(bottomBounds.withTrimmedTop(bottomBounds.getHeight() * 0.8));
 
         auto topBounds = bounds.withTrimmedBottom(bounds.getHeight() * 0.4);
-
     }
 
 private:

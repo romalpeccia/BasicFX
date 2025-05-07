@@ -11,7 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 
-class SwappableProcessor {
+class SwappableProcessor : public juce::ActionListener {
     public: 
         SwappableProcessor(int index) : processorIndex(index) {}
         ~SwappableProcessor() {};
@@ -25,7 +25,7 @@ class SwappableProcessor {
         void setProcessorIndex(int index) { processorIndex = index; }
         int getProcessorIndex() { return processorIndex; }
 
-
+        void actionListenerCallback(const juce::String& message) override {};
     private:
             int processorIndex; //TODO: is this obsolete now?
 };

@@ -61,9 +61,14 @@ const float DELAY_MAX = 1;
 
 const juce::Colour COMPONENT_COLOUR_OFF = juce::Colours::dimgrey;
 
-const juce::String EQ_AMOUNT_STRING = "EQ_AMOUNT";
+const juce::String EQ_LOW_FREQUENCY_STRING = "EQ_LOW_FREQUENCY";
+const juce::String EQ_HIGH_FREQUENCY_STRING = "EQ_HIGH_FREQUENCY";
 const juce::String EQ_ON_STRING = "EQ_ON";
 const juce::String EQ_TYPE_STRING = "EQ_TYPE";
+
+const juce::String LOW_PASS_STRING = "LOW_PASS";
+const juce::String BAND_PASS_STRING = "BAND_PASS";
+const juce::String HIGH_PASS_STRING = "HIGH_PASS";
 
 //math functions
 float calculateRMS(const float* samples, int numSamples);
