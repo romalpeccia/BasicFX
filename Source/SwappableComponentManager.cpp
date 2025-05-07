@@ -53,9 +53,9 @@ void SwappableComponentManager::actionListenerCallback(const juce::String& messa
 
             if (index < 0 || index > MAX_COMPONENTS || index >= swappableComponents.size())
                 return;
-            if (componentType != "EMPTY" && (componentType == "GATE" || componentType == "DISTORTION" || componentType == "FLANGER")) {
+            if (componentType != "EMPTY" && (componentType == "GATE" || componentType == "DISTORTION" || componentType == "FLANGER" || componentType == "EQ")) {
 
-                //delete the EmptyComponent (by changing its pointer, it automatically deletes due to unique_ptr logic), and creates a new one
+                //replace the EmptyComponent (by changing its pointer, it automatically deletes due to unique_ptr logic) with the new Component
                 if (componentType == "GATE") {
                     swappableComponents[index] = std::make_unique<GateComponent>(apvts,  index);
                 }
@@ -64,7 +64,9 @@ void SwappableComponentManager::actionListenerCallback(const juce::String& messa
                 }
                 else if (componentType == "FLANGER") {
                     swappableComponents[index] = std::make_unique<FlangerComponent>(apvts, index);
-
+                }
+                else if (componentType == "EQ") {
+                    swappableComponents[index] = std::make_unique<EQComponent>(apvts, index);
                 }
                 //TODO: maybe some of these calls should be in the swappableComponent constructor
                 swappableComponents[index]->addActionListener(this);
@@ -198,6 +200,12 @@ void SwappableComponentManager::swapProcessorParams(SwappableComponent& draggedC
             bothProcesorsSameType = true;
         }
     }
+    else if (auto* EQProcessorA = dynamic_cast<EQProcessor*>(draggedProcessor)) {
+        if (auto* EQProcessorB = dynamic_cast<EQProcessor*>(otherProcessor)) {
+            swapEQParams(EQProcessorA, EQProcessorB);
+            bothProcesorsSameType = true;
+        }
+    }
 
     if (bothProcesorsSameType) {
         draggedComponent.getProcessor()->setProcessorIndex(otherIndex);
@@ -215,6 +223,9 @@ void SwappableComponentManager::swapProcessorParams(SwappableComponent& draggedC
         else if (auto* flangerProcessor = dynamic_cast<FlangerProcessor*>(draggedProcessor)) {
             moveFlangerParams(flangerProcessor, otherIndex);
         }
+        else if (auto* eqProcessor = dynamic_cast<EQProcessor*>(draggedProcessor)) {
+            moveEQParams(eqProcessor, otherIndex);
+        }
         
         if (auto* distortionProcessor = dynamic_cast<DistortionProcessor*>(otherProcessor)) {
             moveDistortionParams(distortionProcessor, draggedIndex);
@@ -224,6 +235,9 @@ void SwappableComponentManager::swapProcessorParams(SwappableComponent& draggedC
         }
         else if (auto* flangerProcessor = dynamic_cast<FlangerProcessor*>(otherProcessor)) {
             moveFlangerParams(flangerProcessor, draggedIndex);
+        }
+        else if (auto* eqProcessor = dynamic_cast<EQProcessor*>(otherProcessor)) {
+            moveEQParams(eqProcessor, draggedIndex);
         }
     }
 }
@@ -301,6 +315,28 @@ void SwappableComponentManager::moveFlangerParams(FlangerProcessor* flangerProce
     flangerProcessor->setMix(mix);
 }
 
+void SwappableComponentManager::moveEQParams(EQProcessor* eqProcessor, int index) {
+    //cache current values
+    const auto on = eqProcessor->getOnState();
+    const auto amt = eqProcessor->getAmount();
+    const auto type = eqProcessor->getEQType();
+
+    //reset currently pointed to values
+    eqProcessor->setOnState(false);
+    eqProcessor->setAmount(0);
+    eqProcessor->setEQType(0);
+
+    //change index and move pointers to new index
+    eqProcessor->setProcessorIndex(index);
+    eqProcessor->assignParamPointers(index);
+
+    //overwrite newly pointed to values
+    eqProcessor->setOnState(on);
+    eqProcessor->setAmount(amt);
+    eqProcessor->setEQType(type);
+
+}
+
 void SwappableComponentManager::swapGateParams(GateProcessor* a, GateProcessor* b)
 {
     //cache current values
@@ -374,6 +410,27 @@ void SwappableComponentManager::swapFlangerParams(FlangerProcessor* a, FlangerPr
     b->setOnState(a_on);
     b->setDelay(a_delay);
     b->setMix(a_mix);
+}
+
+void SwappableComponentManager::swapEQParams(EQProcessor* a, EQProcessor* b)
+{
+    //cache current values
+    const auto a_on = a->getOnState();
+    const auto a_amt = a->getAmount();
+    const auto a_type = a->getEQType();
+
+    const auto b_on = b->getOnState();
+    const auto b_amt = b->getAmount();
+    const auto b_type = b->getEQType();
+
+    //swap values
+    a->setOnState(b_on);
+    a->setAmount(b_amt);
+    a->setEQType(b_type);
+
+    b->setOnState(a_on);
+    b->setAmount(a_amt);
+    b->setEQType(a_type);
 }
 
 std::vector<SwappableComponent*> SwappableComponentManager::getComponentList()

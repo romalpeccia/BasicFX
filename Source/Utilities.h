@@ -16,7 +16,7 @@
 using namespace juce;
 
 enum class ProcessorType { Gate, Flanger, Distortion };
-const int MAX_COMPONENTS = 4;
+const int MAX_COMPONENTS = 16;
 const int MAX_INPUT_CHANNELS = 16;
 const int SAMPLE_RATE_FACTOR = 1000; //TODO: think of something better for this // just gives room for the CircularBuffers
 
@@ -60,6 +60,10 @@ const juce::String FLANGER_ON_STRING = "FLANGER_ON";
 const float DELAY_MAX = 1; 
 
 const juce::Colour COMPONENT_COLOUR_OFF = juce::Colours::dimgrey;
+
+const juce::String EQ_AMOUNT_STRING = "EQ_AMOUNT";
+const juce::String EQ_ON_STRING = "EQ_ON";
+const juce::String EQ_TYPE_STRING = "EQ_TYPE";
 
 //math functions
 float calculateRMS(const float* samples, int numSamples);

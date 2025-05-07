@@ -21,6 +21,8 @@
               file="Source/Processors/DistortionProcessor.cpp"/>
         <FILE id="RrUGFr" name="DistortionProcessor.h" compile="0" resource="0"
               file="Source/Processors/DistortionProcessor.h"/>
+        <FILE id="lVDN3B" name="EQProcessor.cpp" compile="1" resource="0" file="Source/Processors/EQProcessor.cpp"/>
+        <FILE id="GZtoo6" name="EQProcessor.h" compile="0" resource="0" file="Source/Processors/EQProcessor.h"/>
         <FILE id="VZup3b" name="FlangerProcessor.cpp" compile="1" resource="0"
               file="Source/Processors/FlangerProcessor.cpp"/>
         <FILE id="ikpVZi" name="FlangerProcessor.h" compile="0" resource="0"
@@ -53,6 +55,8 @@
               file="Source/Components/EmptyComponent.cpp"/>
         <FILE id="P5Gdz7" name="EmptyComponent.h" compile="0" resource="0"
               file="Source/Components/EmptyComponent.h"/>
+        <FILE id="FMkwnN" name="EQComponent.cpp" compile="1" resource="0" file="Source/Components/EQComponent.cpp"/>
+        <FILE id="OtBIvP" name="EQComponent.h" compile="0" resource="0" file="Source/Components/EQComponent.h"/>
         <FILE id="hb213e" name="FlangerComponent.cpp" compile="1" resource="0"
               file="Source/Components/FlangerComponent.cpp"/>
         <FILE id="LIvVzG" name="FlangerComponent.h" compile="0" resource="0"

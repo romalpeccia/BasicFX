@@ -15,6 +15,7 @@
 #include "Components/GateComponent.h"
 #include "Components/DistortionComponent.h"
 #include "Components/FlangerComponent.h"
+#include "Components/EQComponent.h"
 #include "Components/EmptyComponent.h"
 #include "Utilities.h"
 
@@ -35,11 +36,13 @@ class SwappableComponentManager : public juce::Component, public juce::ActionLis
         void swapGateParams(GateProcessor* a, GateProcessor* b);
         void swapDistortionParams(DistortionProcessor* a, DistortionProcessor* b);
         void swapFlangerParams(FlangerProcessor* a, FlangerProcessor* b);
-    
+        void swapEQParams(EQProcessor* a, EQProcessor* b);
+
         //TODO make these function calls coorespond to default values
         void moveDistortionParams(DistortionProcessor* distortionProcessor, int index);
         void moveGateParams(GateProcessor* gateProcessor, int index);
         void moveFlangerParams(FlangerProcessor* flangerProcessor, int index);
+        void moveEQParams(EQProcessor* eqProcessor, int index);
 
         int getComponentIndex(const SwappableComponent& component);
         std::vector<SwappableComponent*> getComponentList();

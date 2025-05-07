@@ -13,6 +13,7 @@
 #include "Processors/GateProcessor.h"
 #include "Processors/DistortionProcessor.h"
 #include "Processors/FlangerProcessor.h"
+#include "Processors/EQProcessor.h"
 #include "Processors/DBMeterProcessor.h"
 #include "Processors/VisualizerProcessor.h"
 class SwappableComponentManager;
@@ -73,6 +74,7 @@ public:
     static void addGateParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int i);
     static void addDistortionParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int i);
     static void addFlangerParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int i);
+    static void addEQParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int i);
 
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 

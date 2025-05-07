@@ -49,23 +49,22 @@ void BasicFXAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock
 
 void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    juce::ScopedNoDenormals noDenormals; //prevents numbers from 
+    juce::ScopedNoDenormals noDenormals; //prevents numbers from blowing up due to weird floating point math
+    //clear unused channels
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     int numSamples = buffer.getNumSamples();
     int sampleRate = getSampleRate();
-
-    //clear unused channels
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, numSamples);
+
 
     dbMeterIncomingProcessor.processBlock(buffer);
     visualizerIncomingProcessor.processBlock(buffer);
 
     for (auto* processor : signalChain)
     {
-        if (processor != nullptr)
-            processor->processBlock(buffer);
+        processor->processBlock(buffer);
     }
     dbMeterOutgoingProcessor.processBlock(buffer);
     visualizerOutgoingProcessor.processBlock(buffer);
@@ -107,8 +106,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout BasicFXAudioProcessor::creat
         addGateParametersToLayout(layout, i);
         addDistortionParametersToLayout(layout, i);
         addFlangerParametersToLayout(layout, i);
+        addEQParametersToLayout(layout, i);
         layout.add(std::make_unique<juce::AudioParameterChoice>(makeID(SWAPPABLE_COMPONENT_TYPE_STRING, i), makeName(SWAPPABLE_COMPONENT_TYPE_STRING, i),
-            juce::StringArray{ "EMPTY", "GATE", "DISTORTION", "FLANGER" }, 0)); //TODO: this doesnt do anything yet but will be important when loading/saving component states
+            juce::StringArray{ "EMPTY", "GATE", "DISTORTION", "FLANGER", "EQ"}, 0)); //TODO: this doesnt do anything yet but will be important when loading/saving component states
     }
 
     layout.add(std::make_unique<juce::AudioParameterInt>(DB_METER_RATE_STRING, DB_METER_RATE_STRING.toLowerCase(), 1, 500, 33));
@@ -137,6 +137,13 @@ void BasicFXAudioProcessor::addFlangerParametersToLayout(juce::AudioProcessorVal
     layout.add(std::make_unique<juce::AudioParameterBool>(makeID(FLANGER_ON_STRING, i), makeName(FLANGER_ON_STRING, i), false));
     layout.add(std::make_unique<juce::AudioParameterFloat>(makeID(FLANGER_DELAY_STRING, i), makeName(FLANGER_DELAY_STRING, i), juce::NormalisableRange<float>(0, DELAY_MAX, 0.01f, 1.f), 0));
     layout.add(std::make_unique<juce::AudioParameterFloat>(makeID(FLANGER_MIX_STRING, i), makeName(FLANGER_MIX_STRING, i), juce::NormalisableRange<float>(0, 100, 0.01f, 1.f), 0));
+}
+
+void BasicFXAudioProcessor::addEQParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int i) {
+    layout.add(std::make_unique<juce::AudioParameterBool>(makeID(EQ_ON_STRING, i), makeName(EQ_ON_STRING, i), false));
+    layout.add(std::make_unique<juce::AudioParameterChoice>(makeID(EQ_TYPE_STRING, i), makeName(EQ_TYPE_STRING, i),
+        juce::StringArray{ BIT_CRUSHER_STRING, WAVE_RECTIFIER_STRING, SOFT_CLIPPER_CUBIC_STRING, SOFT_CLIPPER_ARCTAN_STRING, SLEW_LIMITER_STRING }, 0));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(makeID(EQ_AMOUNT_STRING, i), makeName(EQ_AMOUNT_STRING, i), juce::NormalisableRange<float>(0, 1.f, 0.001f, 1.f), 0.f));
 }
 
 //==============================================================================

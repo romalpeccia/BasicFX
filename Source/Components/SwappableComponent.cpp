@@ -27,13 +27,12 @@ SwappableComponent::~SwappableComponent() {
 
 void SwappableComponent::resized(){
     auto bounds = getLocalBounds();
-    xButton.setBounds(bounds.withTrimmedBottom(bounds.getHeight() * 0.9).withTrimmedLeft(bounds.getWidth() * 0.9));
+    xButton.setBounds(bounds.withTrimmedBottom(bounds.getHeight() * 0.95).withTrimmedLeft(bounds.getWidth() * 0.75));
 }
 
 
 void SwappableComponent::paint(juce::Graphics & g){
-    g.setColour(juce::Colours::black);
-    g.drawRect(getLocalBounds(), 2);
+
 }
 
 void SwappableComponent::mouseDown(const juce::MouseEvent& e)

@@ -48,13 +48,13 @@ void GateComponent::resized() {
 
     auto bottomBounds = bounds.withTrimmedTop(bounds.getHeight() * 0.6);
     thresholdSlider.setBounds(bottomBounds.withTrimmedBottom(bottomBounds.getHeight() * 0.2));
+    menu.setBounds(bottomBounds.withTrimmedTop(bottomBounds.getHeight() * 0.6).withTrimmedBottom(bottomBounds.getHeight() * 0.2));
     button.setBounds(bottomBounds.withTrimmedTop(bottomBounds.getHeight() * 0.8));
-    auto topBounds = bounds.withTrimmedBottom(bounds.getHeight() * 0.4);
 
-    menu.setBounds(topBounds.withTrimmedTop(topBounds.getHeight() * 0.9));
-    attackSlider.setBounds(topBounds.withTrimmedRight(topBounds.getWidth() * 0.66).withTrimmedBottom(topBounds.getHeight() * 0.1));
-    holdSlider.setBounds(topBounds.withTrimmedLeft(topBounds.getWidth() * 0.33).withTrimmedRight(topBounds.getWidth() * 0.33).withTrimmedBottom(topBounds.getHeight() * 0.1));
-    releaseSlider.setBounds(topBounds.withTrimmedLeft(topBounds.getWidth() * 0.66).withTrimmedBottom(topBounds.getHeight() * 0.1));
+    auto sliderBounds = bounds.withTrimmedBottom(bounds.getHeight() * 0.4);
+    attackSlider.setBounds(sliderBounds.withTrimmedBottom(sliderBounds.getHeight() * 0.66));
+    holdSlider.setBounds(sliderBounds.withTrimmedBottom(sliderBounds.getHeight() * 0.33).withTrimmedTop(sliderBounds.getHeight() * 0.33));
+    releaseSlider.setBounds(sliderBounds.withTrimmedTop(sliderBounds.getHeight() * 0.66));
 }
 
 std::vector<juce::Component*> GateComponent::getGateComps() {

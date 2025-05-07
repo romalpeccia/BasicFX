@@ -47,9 +47,12 @@ void DistortionComponent::resized() {
     SwappableComponent::resized();
 
     auto bounds = getLocalBounds();
+
     auto bottomBounds = bounds.withTrimmedTop(bounds.getHeight() * 0.6);
     slider.setBounds(bottomBounds.withTrimmedBottom(bottomBounds.getHeight() * 0.2));
+    menu.setBounds(bottomBounds.withTrimmedTop(bottomBounds.getHeight() * 0.6).withTrimmedBottom(bottomBounds.getHeight() * 0.2));
     button.setBounds(bottomBounds.withTrimmedTop(bottomBounds.getHeight() * 0.8));
+
     auto topBounds = bounds.withTrimmedBottom(bounds.getHeight() * 0.4);
-    menu.setBounds(topBounds.withTrimmedTop(topBounds.getHeight() * 0.9));
+
 }

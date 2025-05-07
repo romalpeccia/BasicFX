@@ -43,6 +43,7 @@ void FlangerComponent::resized() {
     auto bottomBounds = bounds.withTrimmedTop(bounds.getHeight() * 0.6);
     flangerSlider.setBounds(bottomBounds.withTrimmedBottom(bottomBounds.getHeight() * 0.2));
     button.setBounds(bottomBounds.withTrimmedTop(bottomBounds.getHeight() * 0.8));
+
     auto topBounds = bounds.withTrimmedBottom(bounds.getHeight() * 0.4);
-    mixSlider.setBounds(topBounds.withTrimmedRight(topBounds.getWidth() * 0.66).withTrimmedBottom(topBounds.getHeight() * 0.1));
+    mixSlider.setBounds(topBounds);
 }

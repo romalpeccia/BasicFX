@@ -17,6 +17,7 @@ EmptyComponent::EmptyComponent( int index) : SwappableComponent(std::make_unique
     menu.addItem("GATE", 2);
     menu.addItem("DISTORTION", 3);
     menu.addItem("FLANGER", 4);
+    menu.addItem("EQ", 5);
     menu.setSelectedId(1);
     addAndMakeVisible(menu);
 
