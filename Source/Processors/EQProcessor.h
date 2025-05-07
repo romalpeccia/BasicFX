@@ -26,6 +26,8 @@ public:
     void processBlock(juce::AudioBuffer<float>& buffer) override;
     void prepareToPlay(double _sampleRate, int _totalNumInputChannels) override { }
     void assignParamPointers(int index) override;
+    void moveParamValues(int index) override;
+    void swapParamValues(SwappableProcessor* otherProcessor) override;
 
 private:
     juce::AudioProcessorValueTreeState& apvts;

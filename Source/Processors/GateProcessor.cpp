@@ -26,6 +26,70 @@ void GateProcessor::assignParamPointers(int index){
 
 }
 
+void GateProcessor::moveParamValues(int index){
+    //cache current values
+    const auto on = getOnState();
+    const auto thresh = getThreshold();
+    const auto type = getGateType();
+    const auto attack = getAttack();
+    const auto release = getRelease();
+    const auto hold = getHold();
+
+    //reset currently pointed to values
+    setOnState(false);
+    setThreshold(0.0f);
+    setGateType(0);
+    setAttack(0.0f);
+    setRelease(0.0f);
+    setHold(0.0f);
+
+    //change index and move pointers to new index
+    setProcessorIndex(index);
+    assignParamPointers(index);
+
+    //overwrite newly pointed to values
+    setOnState(on);
+    setThreshold(thresh);
+    setGateType(type);
+    setAttack(attack);
+    setRelease(release);
+    setHold(hold);
+}
+
+void GateProcessor::swapParamValues(SwappableProcessor* otherProcessor)
+{
+    if (auto* gateProcessor = dynamic_cast<GateProcessor*>(otherProcessor)) {
+        //cache current values
+        const auto a_on = getOnState();
+        const auto a_thresh = getThreshold();
+        const auto a_type = getGateType();
+        const auto a_attack = getAttack();
+        const auto a_release = getRelease();
+        const auto a_hold = getHold();
+
+        const auto b_on = gateProcessor->getOnState();
+        const auto b_thresh = gateProcessor->getThreshold();
+        const auto b_type = gateProcessor->getGateType();
+        const auto b_attack = gateProcessor->getAttack();
+        const auto b_release = gateProcessor->getRelease();
+        const auto b_hold = gateProcessor->getHold();
+
+        //swap values
+        setOnState(b_on);
+        setThreshold(b_thresh);
+        setGateType(b_type);
+        setAttack(b_attack);
+        setRelease(b_release);
+        setHold(b_hold);
+
+        gateProcessor->setOnState(a_on);
+        gateProcessor->setThreshold(a_thresh);
+        gateProcessor->setGateType(a_type);
+        gateProcessor->setAttack(a_attack);
+        gateProcessor->setRelease(a_release);
+        gateProcessor->setHold(a_hold);
+    }
+}
 
 void GateProcessor::processBlock(juce::AudioBuffer <float>& buffer) {
     if (onStateParam != nullptr && thresholdParam != nullptr && gateTypeParam != nullptr && attackParam != nullptr && releaseParam != nullptr && holdParam != nullptr) {

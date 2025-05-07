@@ -170,75 +170,26 @@ void SwappableComponentManager::swapComponents(SwappableComponent& draggedCompon
     }
 }
 
-
-
 void SwappableComponentManager::swapProcessorParams(SwappableComponent& draggedComponent, SwappableComponent& otherComponent)
 {
     SwappableProcessor* draggedProcessor = draggedComponent.getProcessor();
     SwappableProcessor* otherProcessor = otherComponent.getProcessor();
     int draggedIndex = getComponentIndex(draggedComponent);
     int otherIndex = getComponentIndex(otherComponent);
-    
-    bool bothProcesorsSameType = false;
-    //if both components are the same type, simply swap their values, indexes, and pointers
-    if (auto* gateProcessorA = dynamic_cast<GateProcessor*>(draggedProcessor)) {
-        if (auto* gateProcessorB = dynamic_cast<GateProcessor*>(otherProcessor)) {
-            swapGateParams(gateProcessorA, gateProcessorB);
-            bothProcesorsSameType = true;
-        }
-    }
-    else if (auto* distortionProcessorA = dynamic_cast<DistortionProcessor*>(draggedProcessor)) {
-        if (auto* distortionProcessorB = dynamic_cast<DistortionProcessor*>(otherProcessor)) {
-            swapDistortionParams(distortionProcessorA, distortionProcessorB);
-            bothProcesorsSameType = true;
-        }
 
-    }
-    else if (auto* flangerProcessorA = dynamic_cast<FlangerProcessor*>(draggedProcessor)) {
-        if (auto* flangerProcessorB = dynamic_cast<FlangerProcessor*>(otherProcessor)) {
-            swapFlangerParams(flangerProcessorA, flangerProcessorB);
-            bothProcesorsSameType = true;
-        }
-    }
-    else if (auto* EQProcessorA = dynamic_cast<EQProcessor*>(draggedProcessor)) {
-        if (auto* EQProcessorB = dynamic_cast<EQProcessor*>(otherProcessor)) {
-            swapEQParams(EQProcessorA, EQProcessorB);
-            bothProcesorsSameType = true;
-        }
-    }
+    if (typeid(*draggedProcessor) == typeid(*otherProcessor)) {
+        // if both components are the same type, simply swap their values, indexes, and pointers
+        draggedProcessor->swapParamValues(otherProcessor);
 
-    if (bothProcesorsSameType) {
-        draggedComponent.getProcessor()->setProcessorIndex(otherIndex);
-        otherComponent.getProcessor()->setProcessorIndex(draggedIndex);
-        draggedComponent.getProcessor()->assignParamPointers(otherIndex);
-        otherComponent.getProcessor()->assignParamPointers(draggedIndex);
+        draggedProcessor->setProcessorIndex(otherIndex);
+        otherProcessor->setProcessorIndex(draggedIndex);
+        draggedProcessor->assignParamPointers(otherIndex);
+        otherProcessor->assignParamPointers(draggedIndex);
     }
     else {
-        if (auto* distortionProcessor = dynamic_cast<DistortionProcessor*>(draggedProcessor)) {
-            moveDistortionParams(distortionProcessor, otherIndex);
-        }
-        else if (auto* gateProcessor = dynamic_cast<GateProcessor*>(draggedProcessor)) {
-            moveGateParams(gateProcessor, otherIndex);
-        }
-        else if (auto* flangerProcessor = dynamic_cast<FlangerProcessor*>(draggedProcessor)) {
-            moveFlangerParams(flangerProcessor, otherIndex);
-        }
-        else if (auto* eqProcessor = dynamic_cast<EQProcessor*>(draggedProcessor)) {
-            moveEQParams(eqProcessor, otherIndex);
-        }
-        
-        if (auto* distortionProcessor = dynamic_cast<DistortionProcessor*>(otherProcessor)) {
-            moveDistortionParams(distortionProcessor, draggedIndex);
-        }
-        else if (auto* gateProcessor = dynamic_cast<GateProcessor*>(otherProcessor)) {
-            moveGateParams(gateProcessor, draggedIndex);
-        }
-        else if (auto* flangerProcessor = dynamic_cast<FlangerProcessor*>(otherProcessor)) {
-            moveFlangerParams(flangerProcessor, draggedIndex);
-        }
-        else if (auto* eqProcessor = dynamic_cast<EQProcessor*>(otherProcessor)) {
-            moveEQParams(eqProcessor, draggedIndex);
-        }
+        // otherwise, reset the current values and then swap the indexes and pointers (internally), and values
+        draggedProcessor->moveParamValues(otherIndex);
+        otherProcessor->moveParamValues(draggedIndex);
     }
 }
 

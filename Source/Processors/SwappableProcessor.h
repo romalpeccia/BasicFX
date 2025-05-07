@@ -20,6 +20,8 @@ class SwappableProcessor {
         virtual void processBlock(juce::AudioBuffer<float>& buffer) = 0; 
         virtual void prepareToPlay(double sampleRate, int _totalNumInputChannels) = 0; 
         virtual void assignParamPointers(int index) = 0;    //changes the pointers of the processor to point to the params cooresponding to the index supplied
+        virtual void moveParamValues(int index) = 0;
+        virtual void swapParamValues(SwappableProcessor* otherProcessor) = 0;
         void setProcessorIndex(int index) { processorIndex = index; }
         int getProcessorIndex() { return processorIndex; }
 
@@ -38,5 +40,7 @@ class EmptyProcessor : public SwappableProcessor{
         void processBlock(juce::AudioBuffer<float>& buffer) override {}
         void prepareToPlay(double sampleRate, int _totalNumInputChannels) override {}
         void assignParamPointers(int index) override {}
+        void moveParamValues(int index) override {}
+        virtual void swapParamValues(SwappableProcessor* otherProcessor) override {};
 
 };

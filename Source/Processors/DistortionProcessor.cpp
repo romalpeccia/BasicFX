@@ -21,6 +21,52 @@ void DistortionProcessor::assignParamPointers(int index) {
     distortionTypeParam = apvts.getRawParameterValue(makeID(DISTORTION_TYPE_STRING, index));
 }
 
+void DistortionProcessor::moveParamValues(int index) {
+
+    //cache current values
+    const auto on = getOnState();
+    const auto amt = getAmount();
+    const auto type = getDistortionType();
+
+    //reset currently pointed to values
+    setOnState(false);
+    setAmount(0);
+    setDistortionType(0);
+
+    //change index and move pointers to new index
+    setProcessorIndex(index);
+    assignParamPointers(index);
+
+    //overwrite newly pointed to values
+    setOnState(on);
+    setAmount(amt);
+    setDistortionType(type);
+
+}
+
+void DistortionProcessor::swapParamValues(SwappableProcessor* otherProcessor)
+{
+    if (auto* distortionProcessor = dynamic_cast<DistortionProcessor*>(otherProcessor)) {
+        //cache current values
+        const auto a_on = getOnState();
+        const auto a_amt = getAmount();
+        const auto a_type = getDistortionType();
+
+        const auto b_on = distortionProcessor->getOnState();
+        const auto b_amt = distortionProcessor->getAmount();
+        const auto b_type = distortionProcessor->getDistortionType();
+
+        //swap values
+        setOnState(b_on);
+        setAmount(b_amt);
+        setDistortionType(b_type);
+
+        distortionProcessor->setOnState(a_on);
+        distortionProcessor->setAmount(a_amt);
+        distortionProcessor->setDistortionType(a_type);
+    }
+}
+
 void DistortionProcessor::processBlock(juce::AudioBuffer <float>& buffer) {
     if (onStateParam != nullptr && amountParam != nullptr && distortionTypeParam != nullptr){
         if (*onStateParam) {

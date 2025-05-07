@@ -16,8 +16,8 @@ public:
     DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts, int index);
     ~DistortionProcessor() {}
 
-    float getAmount() { return *amountParam; }
     bool getOnState() { return bool(*onStateParam); }
+    float getAmount() { return *amountParam; }
     float getDistortionType() { return *distortionTypeParam; }
     void setOnState(bool value);
     void setAmount(float value);
@@ -25,8 +25,10 @@ public:
 
     void processBlock(juce::AudioBuffer<float>& buffer) override;
     void prepareToPlay(double _sampleRate, int _totalNumInputChannels) override { sampleRate = _sampleRate, totalNumInputChannels = _totalNumInputChannels; }
+    
     void assignParamPointers(int index) override;
-
+    void moveParamValues(int index) override;
+    void swapParamValues(SwappableProcessor* otherProcessor) override;
 private:
     juce::AudioProcessorValueTreeState& apvts;
     int totalNumInputChannels = 2;

@@ -20,6 +20,50 @@ void FlangerProcessor::assignParamPointers(int index) {
     mixParam = apvts.getRawParameterValue(makeID(FLANGER_MIX_STRING, index));
 }
 
+void FlangerProcessor::moveParamValues(int index) {
+    //cache current values
+    const auto on = getOnState();
+    const auto delay = getDelay();
+    const auto mix = getMix();
+
+    //reset currently pointed to values
+    setOnState(false);
+    setDelay(0.0f);
+    setMix(0.0f);
+
+    //change index and move pointers to new index
+    setProcessorIndex(index);
+    assignParamPointers(index);
+
+    //overwrite newly pointed to values
+    setOnState(on);
+    setDelay(delay);
+    setMix(mix);
+}
+
+void FlangerProcessor::swapParamValues(SwappableProcessor* otherProcessor)
+{
+    if (auto* flangerProcessor = dynamic_cast<FlangerProcessor*>(otherProcessor)) {
+        //cache current values
+        const auto a_on = getOnState();
+        const auto a_delay = getDelay();
+        const auto a_mix = getMix();
+
+        const auto b_on = flangerProcessor->getOnState();
+        const auto b_delay = flangerProcessor->getDelay();
+        const auto b_mix = flangerProcessor->getMix();
+
+        //swap values
+        setOnState(b_on);
+        setDelay(b_delay);
+        setMix(b_mix);
+
+        flangerProcessor->setOnState(a_on);
+        flangerProcessor->setDelay(a_delay);
+        flangerProcessor->setMix(a_mix);
+    }
+}
+
 
 void FlangerProcessor::processBlock(juce::AudioBuffer<float>& buffer) {
     if (delayParam != nullptr && onStateParam != nullptr && mixParam != nullptr) {

@@ -21,6 +21,51 @@ void EQProcessor::assignParamPointers(int index) {
     eqTypeParam = apvts.getRawParameterValue(makeID(EQ_TYPE_STRING, index));
 }
 
+void EQProcessor::moveParamValues(int index) {
+    //cache current values
+    const auto on = getOnState();
+    const auto amt = getAmount();
+    const auto type = getEQType();
+
+    //reset currently pointed to values
+    setOnState(false);
+    setAmount(0);
+    setEQType(0);
+
+    //change index and move pointers to new index
+    setProcessorIndex(index);
+    assignParamPointers(index);
+
+    //overwrite newly pointed to values
+    setOnState(on);
+    setAmount(amt);
+    setEQType(type);
+
+}
+
+void EQProcessor::swapParamValues(SwappableProcessor* otherProcessor)
+{
+    if (auto* eqProcessor = dynamic_cast<EQProcessor*>(otherProcessor)) {
+        //cache current values
+        const auto a_on = getOnState();
+        const auto a_amt = getAmount();
+        const auto a_type = getEQType();
+
+        const auto b_on = eqProcessor->getOnState();
+        const auto b_amt = eqProcessor->getAmount();
+        const auto b_type = eqProcessor->getEQType();
+
+        //swap values
+        setOnState(b_on);
+        setAmount(b_amt);
+        setEQType(b_type);
+
+        eqProcessor->setOnState(a_on);
+        eqProcessor->setAmount(a_amt);
+        eqProcessor->setEQType(a_type);
+    }
+}
+
 void EQProcessor::processBlock(juce::AudioBuffer <float>& buffer) {
     if (onStateParam != nullptr && amountParam != nullptr && eqTypeParam != nullptr) {
         if (*onStateParam) {
