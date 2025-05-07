@@ -30,7 +30,10 @@ void SwappableComponent::resized(){
     xButton.setBounds(bounds.withTrimmedBottom(bounds.getHeight() * 0.9).withTrimmedLeft(bounds.getWidth() * 0.9));
 }
 
-
+void SwappableComponent::paint(juce::Graphics & g){
+    g.setColour(juce::Colours::black);
+    g.drawRect(getLocalBounds(), 2);
+}
 void SwappableComponent::mouseDown(const juce::MouseEvent& e)
 {   //called when the component is clicked on
     initialBounds = getBounds();

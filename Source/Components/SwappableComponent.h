@@ -36,6 +36,7 @@ class SwappableComponent : public juce::Component, public juce::ActionBroadcaste
         void setAreaOverLapThreshold();
 
         void resized() override;
+        void paint(juce::Graphics& g);
 
         SwappableProcessor* getProcessor() const { return processor.get(); }
         void setProcessor(std::unique_ptr<SwappableProcessor> _processor) { processor = std::move(_processor); }

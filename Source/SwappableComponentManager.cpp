@@ -226,9 +226,8 @@ void SwappableComponentManager::swapProcessorParams(SwappableComponent& draggedC
             moveFlangerParams(flangerProcessor, draggedIndex);
         }
     }
-
-
 }
+
 void SwappableComponentManager::moveDistortionParams(DistortionProcessor* distortionProcessor, int index) {
     //cache current values
     const auto on = distortionProcessor->getOnState();

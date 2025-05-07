@@ -29,6 +29,7 @@ class DistortionComponent : public SwappableComponent {
         CustomTextButton button{ "Distortion", DISTORTION_COLOUR_1 };
         CustomComboBox menu{ DISTORTION_COLOUR_1, DISTORTION_COLOUR_2 };
         CustomSlider slider{ "Amount", "", DISTORTION_COLOUR_1,  DISTORTION_COLOUR_2 };
+
         std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonAttachment;
         std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> menuAttachment;
         std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachment;
