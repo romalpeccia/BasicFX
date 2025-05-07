@@ -22,7 +22,13 @@ public:
     void setComponentAttachments(int index) override;
 
     void resized() override {
-        menu.setBounds(getLocalBounds().withTrimmedTop(getLocalBounds().getHeight() * 0.9));
+        auto bounds = getLocalBounds();
+
+        auto bottomBounds = bounds.withTrimmedTop(bounds.getHeight() * 0.6);
+        menu.setBounds(bottomBounds.withTrimmedTop(bottomBounds.getHeight() * 0.8));
+
+        auto topBounds = bounds.withTrimmedBottom(bounds.getHeight() * 0.4);
+
     }
 
 private:
