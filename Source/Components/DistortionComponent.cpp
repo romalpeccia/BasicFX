@@ -44,6 +44,8 @@ std::vector<juce::Component*> DistortionComponent::getDistortionComps() {
     return comps;
 }
 void DistortionComponent::resized() {
+    SwappableComponent::resized();
+
     auto bounds = getLocalBounds();
     auto bottomBounds = bounds.withTrimmedTop(bounds.getHeight() * 0.6);
     slider.setBounds(bottomBounds.withTrimmedBottom(bottomBounds.getHeight() * 0.2));

@@ -42,6 +42,8 @@ void GateComponent::setComponentAttachments(int index) {
 }
 
 void GateComponent::resized() {
+    SwappableComponent::resized();
+
     auto bounds = getLocalBounds();
 
     auto bottomBounds = bounds.withTrimmedTop(bounds.getHeight() * 0.6);

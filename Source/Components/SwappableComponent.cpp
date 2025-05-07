@@ -11,10 +11,25 @@
 #include "SwappableComponent.h"
 #include "../PluginEditor.h"
 
+SwappableComponent::SwappableComponent(std::unique_ptr<SwappableProcessor> processorPtr) : processor(std::move(processorPtr)) {
 
+    xButton.onClick = [this]() {
+        int index = swappableComponentManager->getComponentIndex(*this);
+        //signal the ComponentManager to do something
+        sendActionMessage("DELETECOMPONENT_" + String(index));
+        };
+
+    addAndMakeVisible(xButton);
+}
 SwappableComponent::~SwappableComponent() {
 
 }
+
+void SwappableComponent::resized(){
+    auto bounds = getLocalBounds();
+    xButton.setBounds(bounds.withTrimmedBottom(bounds.getHeight() * 0.9).withTrimmedLeft(bounds.getWidth() * 0.9));
+}
+
 
 void SwappableComponent::mouseDown(const juce::MouseEvent& e)
 {   //called when the component is clicked on

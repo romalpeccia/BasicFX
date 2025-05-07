@@ -18,11 +18,11 @@ class SwappableComponentManager; //forward declaration of SwappableComponentMana
 class SwappableComponent : public juce::Component, public juce::ActionBroadcaster {
     public:
         SwappableComponent() = delete;
-        SwappableComponent(std::unique_ptr<SwappableProcessor> processorPtr)
-            : processor(std::move(processorPtr)) {}
+        SwappableComponent(std::unique_ptr<SwappableProcessor> processorPtr);
 
         SwappableComponent::~SwappableComponent();
         virtual void setComponentAttachments(int index) = 0;
+
 
         void mouseDown(const juce::MouseEvent& e) override;
         void mouseDrag(const juce::MouseEvent& e) override;
@@ -34,6 +34,8 @@ class SwappableComponent : public juce::Component, public juce::ActionBroadcaste
         void setBounds(int x, int y, int width, int height);
         int getAreaOverLapThreshold() { return areaOverlapThreshold; }
         void setAreaOverLapThreshold();
+
+        void resized() override;
 
         SwappableProcessor* getProcessor() const { return processor.get(); }
         void setProcessor(std::unique_ptr<SwappableProcessor> _processor) { processor = std::move(_processor); }
@@ -49,7 +51,7 @@ class SwappableComponent : public juce::Component, public juce::ActionBroadcaste
         juce::Rectangle<int> draggedBounds; //bounds of the component while it is being dragged
         int areaOverlapThreshold = 0; //how much area the component has to share with the other component to trigger swapping them in void swapComponents(SwappableComponent* otherComp);
         
-        
+        juce::TextButton xButton{ "X" };
 
     protected: //accessible by derived classes but not external code
         std::unique_ptr<SwappableProcessor> processor;

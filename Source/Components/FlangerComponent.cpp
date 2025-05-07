@@ -37,6 +37,8 @@ std::vector<juce::Component*> FlangerComponent::getFlangerComps() {
     return comps;
 }
 void FlangerComponent::resized() {
+    SwappableComponent::resized();
+
     auto bounds = getLocalBounds();
     auto bottomBounds = bounds.withTrimmedTop(bounds.getHeight() * 0.6);
     flangerSlider.setBounds(bottomBounds.withTrimmedBottom(bottomBounds.getHeight() * 0.2));
