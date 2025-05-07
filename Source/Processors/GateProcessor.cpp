@@ -28,17 +28,19 @@ void GateProcessor::assignParamPointers(int index){
 
 
 void GateProcessor::processBlock(juce::AudioBuffer <float>& buffer) {
-    if (*onStateParam) {
-        switch (int(*gateTypeParam)) {
-        case 0:
-            processGateSimple(buffer);
-            break;
-        case 1:
-            processGateMedium(buffer);
-            break;
-        case 2:
-            processGateAdvanced(buffer);
-            break;
+    if (onStateParam != nullptr && thresholdParam != nullptr && gateTypeParam != nullptr && attackParam != nullptr && releaseParam != nullptr && holdParam != nullptr) {
+        if (*onStateParam) {
+            switch (int(*gateTypeParam)) {
+            case 0:
+                processGateSimple(buffer);
+                break;
+            case 1:
+                processGateMedium(buffer);
+                break;
+            case 2:
+                processGateAdvanced(buffer);
+                break;
+            }
         }
     }
 }

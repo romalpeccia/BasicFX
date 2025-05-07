@@ -22,25 +22,28 @@ void DistortionProcessor::assignParamPointers(int index) {
 }
 
 void DistortionProcessor::processBlock(juce::AudioBuffer <float>& buffer) {
-    if (*onStateParam) {
-        switch (int(*distortionTypeParam)) {
-        case 0:
-            processDistortionWaveRectifier(buffer);
-            break;
-        case 1:
-            processDistortionBitCrusher(buffer);
-            break;
-        case 2:
-            processDistortionSoftClipperCubic(buffer);
-            break;
-        case 3:
-            processDistortionSoftClipperArcTan(buffer);
-            break;
-        case 4:
-            processDistortionSlewLimiter(buffer);
-            break;
+    if (onStateParam != nullptr && amountParam != nullptr && distortionTypeParam != nullptr){
+        if (*onStateParam) {
+            switch (int(*distortionTypeParam)) {
+            case 0:
+                processDistortionWaveRectifier(buffer);
+                break;
+            case 1:
+                processDistortionBitCrusher(buffer);
+                break;
+            case 2:
+                processDistortionSoftClipperCubic(buffer);
+                break;
+            case 3:
+                processDistortionSoftClipperArcTan(buffer);
+                break;
+            case 4:
+                processDistortionSlewLimiter(buffer);
+                break;
+            }
         }
     }
+
 }
 
 void DistortionProcessor::processDistortionWaveRectifier(juce::AudioBuffer<float>& buffer) {
