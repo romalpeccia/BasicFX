@@ -76,18 +76,20 @@ void CustomSlider::paint(juce::Graphics& g) {
     auto font = juce::Font(fontHeight);
     g.setFont(font);
 
+    juce::String valueString = juce::String(value);
+    juce::String unitString = units;
     if (units == "s") {
-        value = value * 1000;
-        units = "ms";
+        valueString = juce::String(value * 1000);
+        unitString = "ms";
     }
     else if (units == "amplitude") {
-        value = juce::Decibels::gainToDecibels(value);
-        units = "db";
+        valueString = juce::String(juce::Decibels::gainToDecibels(value));
+        unitString = "db";
     }
 
     //Draw the label, value, and units      TODO: non-priority make text editable?
     g.drawText(getName(), x, y, font.getStringWidth(getName()), fontHeight, juce::Justification::centred);
-    g.drawText(juce::String(value), x, y + fontHeight, font.getStringWidth(juce::String(value)), fontHeight, juce::Justification::centred);
-    g.drawText(units, x + font.getStringWidth("0.000000"), y + fontHeight, font.getStringWidth(units), fontHeight, juce::Justification::centredRight);
+    g.drawText(juce::String(valueString), x, y + fontHeight, font.getStringWidth(juce::String(valueString)), fontHeight, juce::Justification::centred);
+    g.drawText(unitString, x + font.getStringWidth("0.000000"), y + fontHeight, font.getStringWidth(unitString), fontHeight, juce::Justification::centredRight);
 };
 

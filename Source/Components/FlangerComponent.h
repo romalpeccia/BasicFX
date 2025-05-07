@@ -28,7 +28,7 @@ class FlangerComponent : public SwappableComponent {
         const juce::Colour FLANGER_COLOUR_2 = juce::Colours::yellow;
 
         CustomTextButton button{ "Flanger" , FLANGER_COLOUR_1};
-        CustomSlider flangerSlider{"Delay", "ms", FLANGER_COLOUR_1, FLANGER_COLOUR_2};
+        CustomSlider flangerSlider{"Delay", "s", FLANGER_COLOUR_1, FLANGER_COLOUR_2};
         CustomSlider mixSlider{ "Mix", "%", FLANGER_COLOUR_1, FLANGER_COLOUR_2};
 
         std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> flangerSliderAttachment;
