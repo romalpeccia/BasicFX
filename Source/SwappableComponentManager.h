@@ -9,7 +9,7 @@
 */
 
 #pragma once
-#include<JuceHeader.h>
+#include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "Components/SwappableComponent.h"
 #include "Components/GateComponent.h"
@@ -27,22 +27,10 @@ class SwappableComponentManager : public juce::Component, public juce::ActionLis
 
         void resized() override;
         void actionListenerCallback(const juce::String& message) override;
-        void handleDraggedComponent(SwappableComponent& draggedComp);
 
+        void handleDraggedComponent(SwappableComponent& draggedComp);
         void swapComponents(SwappableComponent& draggedComp, SwappableComponent& otherComp); 
         void swapProcessorParams(SwappableComponent& draggedComponent, SwappableComponent& otherComponent); //called by swapComponents
-        
-        //helper functions for swapProcessorParams
-        void swapGateParams(GateProcessor* a, GateProcessor* b);
-        void swapDistortionParams(DistortionProcessor* a, DistortionProcessor* b);
-        void swapFlangerParams(FlangerProcessor* a, FlangerProcessor* b);
-        void swapEQParams(EQProcessor* a, EQProcessor* b);
-
-        //TODO make these function calls coorespond to default values
-        void moveDistortionParams(DistortionProcessor* distortionProcessor, int index);
-        void moveGateParams(GateProcessor* gateProcessor, int index);
-        void moveFlangerParams(FlangerProcessor* flangerProcessor, int index);
-        void moveEQParams(EQProcessor* eqProcessor, int index);
 
         int getComponentIndex(const SwappableComponent& component);
         std::vector<SwappableComponent*> getComponentList();

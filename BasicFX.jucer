@@ -4,14 +4,18 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="raWmpG" name="BasicFX">
     <GROUP id="{A1F0544F-3C73-4724-D918-5CDB1150ED99}" name="Source">
-      <FILE id="xALmgE" name="SwappableComponentManager.cpp" compile="1"
-            resource="0" file="Source/SwappableComponentManager.cpp"/>
-      <FILE id="epLvCm" name="SwappableComponentManager.h" compile="0" resource="0"
-            file="Source/SwappableComponentManager.h"/>
+      <FILE id="bd5wHf" name="MultiBandSignalChainManager.cpp" compile="1"
+            resource="0" file="Source/MultiBandSignalChainManager.cpp"/>
+      <FILE id="oS10Ob" name="MultiBandSignalChainManager.h" compile="0"
+            resource="0" file="Source/MultiBandSignalChainManager.h"/>
       <FILE id="IWS1wh" name="CircularBuffer.cpp" compile="1" resource="0"
             file="Source/CircularBuffer.cpp"/>
       <FILE id="xxsXjh" name="CircularBuffer.h" compile="0" resource="0"
             file="Source/CircularBuffer.h"/>
+      <FILE id="xALmgE" name="SwappableComponentManager.cpp" compile="1"
+            resource="0" file="Source/SwappableComponentManager.cpp"/>
+      <FILE id="epLvCm" name="SwappableComponentManager.h" compile="0" resource="0"
+            file="Source/SwappableComponentManager.h"/>
       <GROUP id="{033A6964-5620-C0D2-B02B-4FCBD9CA1D89}" name="Processors">
         <FILE id="WaO4rm" name="DBMeterProcessor.cpp" compile="1" resource="0"
               file="Source/Processors/DBMeterProcessor.cpp"/>

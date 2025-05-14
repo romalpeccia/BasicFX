@@ -13,6 +13,7 @@
 #include "SwappableComponentManager.h"
 #include "Components/DBMeterComponent.h"
 #include "Components/VisualizerComponent.h"
+#include "MultiBandSignalChainManager.h"
 //==============================================================================
 /**
 */
@@ -36,7 +37,7 @@ private:
     DBMeterComponent incomingDBMeterComponent{apvts, &audioProcessor.dbMeterIncomingProcessor };
     VisualizerComponent visualizerComponent{ &audioProcessor.visualizerIncomingProcessor, &audioProcessor.visualizerOutgoingProcessor };
     DBMeterComponent outgoingDBMeterComponent{apvts, &audioProcessor.dbMeterOutgoingProcessor };
-    SwappableComponentManager swappableComponentManager{ audioProcessor, apvts };
+    MultiBandSignalChainManager MultiBandSignalChainManager{audioProcessor,  apvts};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicFXAudioProcessorEditor)
 };
