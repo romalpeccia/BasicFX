@@ -8,13 +8,12 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-
+#include "MultiBandSignalChainProcessor.h"
 //==============================================================================
 BasicFXAudioProcessorEditor::BasicFXAudioProcessorEditor (BasicFXAudioProcessor& p, juce::AudioProcessorValueTreeState & _apvts)
     : AudioProcessorEditor (&p), audioProcessor (p), apvts(_apvts)
 {
-
-    //audioProcessor.swappableComponentManager = &swappableComponentManager;
+    audioProcessor.setSignalChainManager(&multiBandSignalChainManager);
     for (auto* comp : getVisibleComps())
     {
         addAndMakeVisible(comp);
@@ -50,7 +49,7 @@ void BasicFXAudioProcessorEditor::resized()
     incomingDBMeterComponent.setBounds(incomingDBMeterBounds);
     outgoingDBMeterComponent.setBounds(outgoingDBMeterBounds);
     
-    MultiBandSignalChainManager.setBounds(FXBounds);
+    multiBandSignalChainManager.setBounds(FXBounds);
 }
 
 
@@ -61,7 +60,7 @@ std::vector<juce::Component*> BasicFXAudioProcessorEditor::getVisibleComps() {
     comps.push_back(&visualizerComponent);
     comps.push_back(&incomingDBMeterComponent);
     comps.push_back(&outgoingDBMeterComponent);
-    comps.push_back(&MultiBandSignalChainManager);
+    comps.push_back(&multiBandSignalChainManager);
     return comps;
 }
 

@@ -53,7 +53,7 @@ void SwappableComponentManager::actionListenerCallback(const juce::String& messa
 
             if (index < 0 || index > MAX_COMPONENTS || index >= swappableComponents.size())
                 return;
-            if (componentType != "EMPTY" && (componentType == "GATE" || componentType == "DISTORTION" || componentType == "FLANGER" || componentType == "EQ")) {
+            if (componentType != "-" && (componentType == "GATE" || componentType == "DISTORTION" || componentType == "FLANGER" || componentType == "EQ")) {
 
                 //replace the EmptyComponent (by changing its pointer, it automatically deletes due to unique_ptr logic) with the new Component
                 if (componentType == "GATE") {

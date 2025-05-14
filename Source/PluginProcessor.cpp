@@ -8,6 +8,8 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "MultiBandSignalChainProcessor.h"
+#include "MultiBandSignalChainManager.h"
 
 using namespace std;
 //==============================================================================
@@ -24,8 +26,6 @@ BasicFXAudioProcessor::BasicFXAudioProcessor()
 #endif
 {
 
-
-
 }
 
 BasicFXAudioProcessor::~BasicFXAudioProcessor()
@@ -37,10 +37,13 @@ BasicFXAudioProcessor::~BasicFXAudioProcessor()
 
 void BasicFXAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-
-    for (auto* processor : signalChain)
-    {
-        processor->prepareToPlay(sampleRate, getTotalNumInputChannels());
+    if (signalChainComponents != nullptr ) {
+        if (auto* signalChainProcessors = signalChainComponents->getMultiBandSignalChainProcessors()) {
+            if (signalChainProcessors != nullptr) {
+                signalChainProcessors->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumInputChannels());
+            }
+            
+        }
     }
     visualizerIncomingProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
     visualizerOutgoingProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
@@ -56,35 +59,41 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     int numSamples = buffer.getNumSamples();
     int sampleRate = getSampleRate();
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear(i, 0, numSamples);
+        buffer.clear(i, 0, numSamples); // clear unused buffers
 
 
     dbMeterIncomingProcessor.processBlock(buffer);
     visualizerIncomingProcessor.processBlock(buffer);
+    /*if (signalChainManager != nullptr) {
+        if (auto* signalChainProcessors = signalChainManager->getMultiBandSignalChainProcessors()) {
+            if (signalChainProcessors != nullptr ){ // TODO uncesary?
 
-    for (auto* processor : signalChain)
-    {
-        processor->processBlock(buffer);
-    }
+                //TODO: split buffer into MAX_BANDS copies (create a vector),
+                // create proceossBlock(buffer, i) to process  individual chains
+                // then add them after. 
+                signalChainProcessors->processBlock(buffer);
+            }
+        }
+    }*/
     dbMeterOutgoingProcessor.processBlock(buffer);
     visualizerOutgoingProcessor.processBlock(buffer);
 }
 
 void BasicFXAudioProcessor::actionListenerCallback(const juce::String& message) {
-    /*
-    auto& componentList = swappableComponentManager->getComponentList();
+    
     if (message.startsWith("SWAPPED_") || message.startsWith("CREATECOMPONENT") || message.startsWith("DELETECOMPONENT"))
     {   //called by SwappableComponentManager::swapComponents, SwappableComponent xButton and menu onClick methods
         //rebuild the signal chain
-        signalChain.clear();
-        for (auto* comp : componentList)
-        {
-            if (comp->getProcessor() != nullptr)
-                signalChain.push_back(comp->getProcessor());
-        }
-        
+        /*if (signalChainManager != nullptr) {
+            if (auto* signalChainProcessors = signalChainManager->getMultiBandSignalChainProcessors()) {
+                if (signalChainProcessors != nullptr) {
+                    signalChainProcessors->rebuildSignalChains();
+                }
+                
+            }
+        }*/
     }
-    */
+    
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout BasicFXAudioProcessor::createParameterLayout() {
@@ -243,6 +252,7 @@ bool BasicFXAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* BasicFXAudioProcessor::createEditor()
 {
+    //return new GenericAudioProcessorEditor(*this);
     return new BasicFXAudioProcessorEditor (*this, apvts);
 }
 
