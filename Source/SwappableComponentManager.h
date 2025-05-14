@@ -23,6 +23,7 @@ class SwappableComponentManager : public juce::Component, public juce::ActionLis
     public:
 
         SwappableComponentManager(BasicFXAudioProcessor& p, juce::AudioProcessorValueTreeState& _apvts);
+        ~SwappableComponentManager(){}
         void initializeComponents();
 
         void resized() override;

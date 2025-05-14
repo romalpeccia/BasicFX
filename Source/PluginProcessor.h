@@ -10,14 +10,12 @@
 
 #include <JuceHeader.h>
 #include "Utilities.h"
-#include "Processors/GateProcessor.h"
-#include "Processors/DistortionProcessor.h"
-#include "Processors/FlangerProcessor.h"
-#include "Processors/EQProcessor.h"
+//#include "MultiBandSignalChainManager.h"
 #include "Processors/DBMeterProcessor.h"
 #include "Processors/VisualizerProcessor.h"
-class SwappableComponentManager;
 
+class MultiBandSignalChainManager;
+class MultiBandSignalChainProcessor;
 //==============================================================================
 /**
 */
@@ -79,9 +77,14 @@ public:
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
 
-    SwappableComponentManager* swappableComponentManager = nullptr; //used to keep track of processor order and update signal chain
-    std::vector<SwappableProcessor*> signalChain;
+    MultiBandSignalChainManager* signalChainComponents = nullptr; //used to keep track of processor order and update signal chain
+    //MultiBandSignalChainProcessor* signalChainProcessors;
+
     void actionListenerCallback(const juce::String& message) override;
+
+    void setSignalChainManager(MultiBandSignalChainManager* manager) {
+        signalChainComponents = manager;
+    }
 
     DBMeterProcessor dbMeterIncomingProcessor;
     DBMeterProcessor dbMeterOutgoingProcessor;

@@ -10,20 +10,29 @@
 
 #pragma once
 #include <JuceHeader.h>
+//#include "MultiBandSignalChainProcessor.h"
 #include "PluginProcessor.h"
 #include "SwappableComponentManager.h"
+class MultiBandSignalChainProcessor;
 
-const int NUM_BANDS = 4;
 class MultiBandSignalChainManager : public juce::Component {
 public:
     MultiBandSignalChainManager(BasicFXAudioProcessor& p, juce::AudioProcessorValueTreeState& _apvts);
-    ~MultiBandSignalChainManager() {}
-    ;
-    std::vector <std::unique_ptr<SwappableComponentManager>> signalChainComponents;
+        
+    ~MultiBandSignalChainManager() {};
+    
+   
 
     void resized() override;
+    SwappableComponentManager* getComponentManager(int index);
+
+    std::vector<std::unique_ptr<SwappableComponentManager>>& getComponentList();
+    MultiBandSignalChainProcessor* getMultiBandSignalChainProcessors();
 
 private:
     BasicFXAudioProcessor& audioProcessor;
     juce::AudioProcessorValueTreeState& apvts;
+
+    std::unique_ptr< MultiBandSignalChainProcessor> signalChainProcessors = nullptr;
+    std::vector <std::unique_ptr<SwappableComponentManager>> signalChainComponents;
 };

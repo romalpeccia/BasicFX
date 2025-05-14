@@ -13,7 +13,7 @@
 
 EmptyComponent::EmptyComponent( int index) : SwappableComponent(std::make_unique<EmptyProcessor>(index)) {
 
-    menu.addItem("EMPTY", 1);
+    menu.addItem("-", 1);
     menu.addItem("GATE", 2);
     menu.addItem("DISTORTION", 3);
     menu.addItem("FLANGER", 4);

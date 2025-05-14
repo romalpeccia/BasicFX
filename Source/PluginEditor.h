@@ -37,7 +37,7 @@ private:
     DBMeterComponent incomingDBMeterComponent{apvts, &audioProcessor.dbMeterIncomingProcessor };
     VisualizerComponent visualizerComponent{ &audioProcessor.visualizerIncomingProcessor, &audioProcessor.visualizerOutgoingProcessor };
     DBMeterComponent outgoingDBMeterComponent{apvts, &audioProcessor.dbMeterOutgoingProcessor };
-    MultiBandSignalChainManager MultiBandSignalChainManager{audioProcessor,  apvts};
+    MultiBandSignalChainManager multiBandSignalChainManager{audioProcessor,  apvts};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicFXAudioProcessorEditor)
 };

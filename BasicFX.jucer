@@ -4,6 +4,14 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="raWmpG" name="BasicFX">
     <GROUP id="{A1F0544F-3C73-4724-D918-5CDB1150ED99}" name="Source">
+      <FILE id="ocXrem" name="MultiBandSignalChainProcessor.cpp" compile="1"
+            resource="0" file="Source/MultiBandSignalChainProcessor.cpp"/>
+      <FILE id="lEHkuf" name="MultiBandSignalChainProcessor.h" compile="0"
+            resource="0" file="Source/MultiBandSignalChainProcessor.h"/>
+      <FILE id="hhl4Ng" name="SignalChainProcessor.cpp" compile="1" resource="0"
+            file="Source/SignalChainProcessor.cpp"/>
+      <FILE id="hWXXuH" name="SignalChainProcessor.h" compile="0" resource="0"
+            file="Source/SignalChainProcessor.h"/>
       <FILE id="bd5wHf" name="MultiBandSignalChainManager.cpp" compile="1"
             resource="0" file="Source/MultiBandSignalChainManager.cpp"/>
       <FILE id="oS10Ob" name="MultiBandSignalChainManager.h" compile="0"
