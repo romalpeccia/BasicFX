@@ -38,7 +38,7 @@ BasicFXAudioProcessor::~BasicFXAudioProcessor()
 void BasicFXAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     if (signalChainComponents != nullptr ) {
-        if (auto* signalChainProcessors = signalChainComponents->getMultiBandSignalChainProcessors()) {
+        if (auto* signalChainProcessors = signalChainComponents->getMultiBandSignalChainProcessors()) { //TODO this seems janky
             if (signalChainProcessors != nullptr) {
                 signalChainProcessors->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumInputChannels());
             }
@@ -63,17 +63,14 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
     dbMeterIncomingProcessor.processBlock(buffer);
     visualizerIncomingProcessor.processBlock(buffer);
-    /*if (signalChainManager != nullptr) {
-        if (auto* signalChainProcessors = signalChainManager->getMultiBandSignalChainProcessors()) {
+    
+    if (signalChainComponents != nullptr) {
+        if (auto* signalChainProcessors = signalChainComponents->getMultiBandSignalChainProcessors()) {
             if (signalChainProcessors != nullptr ){ // TODO uncesary?
-
-                //TODO: split buffer into MAX_BANDS copies (create a vector),
-                // create proceossBlock(buffer, i) to process  individual chains
-                // then add them after. 
                 signalChainProcessors->processBlock(buffer);
             }
         }
-    }*/
+    }
     dbMeterOutgoingProcessor.processBlock(buffer);
     visualizerOutgoingProcessor.processBlock(buffer);
 }
@@ -81,16 +78,16 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 void BasicFXAudioProcessor::actionListenerCallback(const juce::String& message) {
     
     if (message.startsWith("SWAPPED_") || message.startsWith("CREATECOMPONENT") || message.startsWith("DELETECOMPONENT"))
-    {   //called by SwappableComponentManager::swapComponents, SwappableComponent xButton and menu onClick methods
+    {   //called by SwappableComponentManager::swapComponents, SwappableComponent xButton, and menu onClick methods
         //rebuild the signal chain
-        /*if (signalChainManager != nullptr) {
-            if (auto* signalChainProcessors = signalChainManager->getMultiBandSignalChainProcessors()) {
+        if (signalChainComponents != nullptr) {
+            if (auto* signalChainProcessors = signalChainComponents->getMultiBandSignalChainProcessors()) {
                 if (signalChainProcessors != nullptr) {
                     signalChainProcessors->rebuildSignalChains();
                 }
                 
             }
-        }*/
+        }
     }
     
 }
