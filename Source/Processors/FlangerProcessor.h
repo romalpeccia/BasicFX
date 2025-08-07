@@ -14,7 +14,8 @@
 #include "SwappableProcessor.h"
 class FlangerProcessor : public SwappableProcessor {
 public:
-    FlangerProcessor(juce::AudioProcessorValueTreeState& _apvts, int index);
+    //FlangerProcessor(juce::AudioProcessorValueTreeState& _apvts, int index);
+    FlangerProcessor(juce::AudioProcessorValueTreeState& _apvts, int bandIndex, int processorIndex);
     ~FlangerProcessor() {}
 
     float getDelay() { return *delayParam; }

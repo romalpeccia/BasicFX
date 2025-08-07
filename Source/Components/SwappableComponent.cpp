@@ -11,8 +11,9 @@
 #include "SwappableComponent.h"
 #include "../PluginEditor.h"
 #include "../MultiBandSignalChainProcessor.h"
-SwappableComponent::SwappableComponent(std::unique_ptr<SwappableProcessor> processorPtr) : processor(std::move(processorPtr)) {
-
+SwappableComponent::SwappableComponent(std::unique_ptr<SwappableProcessor> processorPtr, SwappableComponentManager *manager) 
+    : processor(std::move(processorPtr)) {
+    setManager(manager);
     xButton.onClick = [this]() {
         int index = swappableComponentManager->getComponentIndex(*this);
         //signal the ComponentManager to do something

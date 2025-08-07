@@ -14,8 +14,9 @@
 #include "../Processors/GateProcessor.h"
 #include "../SwappableComponentManager.h"
 class GateComponent : public SwappableComponent {
-    public:
-        GateComponent(juce::AudioProcessorValueTreeState& apvts, int index);
+    public: 
+        //GateComponent(juce::AudioProcessorValueTreeState& apvts, int index);
+        GateComponent(juce::AudioProcessorValueTreeState& apvts, int index, SwappableComponentManager* manager);
         ~GateComponent() {}
 
         //initialization helpers

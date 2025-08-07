@@ -23,6 +23,7 @@ class SwappableComponentManager : public juce::Component, public juce::ActionLis
     public:
 
         SwappableComponentManager(BasicFXAudioProcessor& p, juce::AudioProcessorValueTreeState& _apvts);
+        SwappableComponentManager(BasicFXAudioProcessor& p, juce::AudioProcessorValueTreeState& _apvts, int _bandIndex);
         ~SwappableComponentManager(){}
         void initializeComponents();
 
@@ -35,10 +36,11 @@ class SwappableComponentManager : public juce::Component, public juce::ActionLis
 
         int getComponentIndex(const SwappableComponent& component);
         std::vector<SwappableComponent*> getComponentList();
-
+        int getManagerIndex() { return bandIndex; }
 
     private:
         std::vector<std::unique_ptr<SwappableComponent>> swappableComponents; // contains pointers to all of our components. Unique pointers allow us to change what they point to delete the old component and assign a new one
+        int bandIndex = -1;
         BasicFXAudioProcessor& audioProcessor;
         juce::AudioProcessorValueTreeState& apvts;
 

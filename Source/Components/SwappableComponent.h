@@ -18,8 +18,8 @@ class SwappableComponentManager; //forward declaration of SwappableComponentMana
 class SwappableComponent : public juce::Component, public juce::ActionBroadcaster {
     public:
         SwappableComponent() = delete;
-        SwappableComponent(std::unique_ptr<SwappableProcessor> processorPtr);
-
+        //SwappableComponent(std::unique_ptr<SwappableProcessor> processorPtr);
+        SwappableComponent(std::unique_ptr<SwappableProcessor> processorPtr, SwappableComponentManager *manager);
         SwappableComponent::~SwappableComponent();
         virtual void setComponentAttachments(int index) = 0;
 
@@ -55,6 +55,6 @@ class SwappableComponent : public juce::Component, public juce::ActionBroadcaste
         juce::TextButton xButton{ "X" };
 
     protected: //accessible by derived classes but not external code
-        std::unique_ptr<SwappableProcessor> processor;
+        std::unique_ptr<SwappableProcessor> processor; 
         SwappableComponentManager* swappableComponentManager = nullptr;
 };

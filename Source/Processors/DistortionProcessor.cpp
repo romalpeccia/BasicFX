@@ -10,15 +10,27 @@
 
 #include "DistortionProcessor.h"
 
-
+/*
 DistortionProcessor::DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) : SwappableProcessor(index), apvts(_apvts) {
     assignParamPointers(index);
+}*/
+DistortionProcessor::DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts, int bandIndex, int processorIndex) : SwappableProcessor(bandIndex, processorIndex), apvts(_apvts) {
+    assignParamPointers(processorIndex);
 }
 
 void DistortionProcessor::assignParamPointers(int index) {
-    onStateParam = apvts.getRawParameterValue(makeID(DISTORTION_ON_STRING, index));
-    amountParam = apvts.getRawParameterValue(makeID(DISTORTION_AMOUNT_STRING, index));
-    distortionTypeParam = apvts.getRawParameterValue(makeID(DISTORTION_TYPE_STRING, index));
+    if (bandIndex >= 0) {
+        onStateParam = apvts.getRawParameterValue(makeMultibandParamID(DISTORTION_ON_STRING, bandIndex, index));
+        amountParam = apvts.getRawParameterValue(makeMultibandParamID(DISTORTION_AMOUNT_STRING, bandIndex, index));
+        distortionTypeParam = apvts.getRawParameterValue(makeMultibandParamID(DISTORTION_TYPE_STRING, bandIndex, index));
+    }
+    else {
+        /*
+        onStateParam = apvts.getRawParameterValue(makeID(DISTORTION_ON_STRING, index));
+        amountParam = apvts.getRawParameterValue(makeID(DISTORTION_AMOUNT_STRING, index));
+        distortionTypeParam = apvts.getRawParameterValue(makeID(DISTORTION_TYPE_STRING, index));
+        */
+    }
 }
 
 void DistortionProcessor::moveParamValues(int index) {
@@ -104,13 +116,6 @@ void DistortionProcessor::processDistortionWaveRectifier(juce::AudioBuffer<float
         }
     }
 }
-float bitCrush(float sample, int bits) {
-
-    float stepSize = 2.0f / (bits - 1);
-    float crushedSample = round(sample / stepSize) * stepSize;
-    return juce::jlimit(-1.0f, 1.0f, crushedSample);
-}
-
 void DistortionProcessor::processDistortionBitCrusher(juce::AudioBuffer<float>& buffer) {
     //starts at 100 bits and goes down to 1 bit 
     int numBits = int((1 - *amountParam) * 100);
@@ -186,35 +191,72 @@ void DistortionProcessor::processDistortionSlewLimiter(juce::AudioBuffer<float>&
     }
 }
 
+float DistortionProcessor::bitCrush(float sample, int bits) {
 
+    float stepSize = 2.0f / (bits - 1);
+    float crushedSample = round(sample / stepSize) * stepSize;
+    return juce::jlimit(-1.0f, 1.0f, crushedSample);
+}
 void DistortionProcessor::setOnState(bool value)
 {
+    if (bandIndex >= 0) {
+        if (auto* param = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(makeMultibandParamID(DISTORTION_ON_STRING, bandIndex, getProcessorIndex()))))
+        {
+            param->beginChangeGesture();
+            param->setValueNotifyingHost(value ? 1.0f : 0.0f);
+            param->endChangeGesture();
+        }
+    }
+    else {/*
     if (auto* param = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(makeID(DISTORTION_ON_STRING, getProcessorIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(value ? 1.0f : 0.0f);
         param->endChangeGesture();
+    }*/
     }
 }
 
 void DistortionProcessor::setAmount(float value)
 {
+    if (bandIndex >= 0) {
+        if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
+            apvts.getParameter(makeMultibandParamID(DISTORTION_AMOUNT_STRING, bandIndex, getProcessorIndex()))))
+        {
+            param->beginChangeGesture();
+            param->setValueNotifyingHost(param->convertTo0to1(value));
+            param->endChangeGesture();
+        }
+    }
+    else {/*
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
         apvts.getParameter(makeID(DISTORTION_AMOUNT_STRING, getProcessorIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));
         param->endChangeGesture();
+    }*/
     }
 }
 
 void DistortionProcessor::setDistortionType(int value)
 {
+    if (bandIndex >= 0) {
+        if (auto* param = dynamic_cast<juce::AudioParameterChoice*>(
+            apvts.getParameter(makeMultibandParamID(DISTORTION_TYPE_STRING, bandIndex, getProcessorIndex()))))
+        {
+            param->beginChangeGesture();
+            param->setValueNotifyingHost(param->convertTo0to1(static_cast<float>(value)));
+            param->endChangeGesture();
+        }
+    }
+    else {/*
     if (auto* param = dynamic_cast<juce::AudioParameterChoice*>(
         apvts.getParameter(makeID(DISTORTION_TYPE_STRING, getProcessorIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(static_cast<float>(value)));
         param->endChangeGesture();
+    }*/
     }
 }

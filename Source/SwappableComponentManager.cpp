@@ -17,28 +17,53 @@ SwappableComponentManager::SwappableComponentManager(BasicFXAudioProcessor& p, j
     initializeComponents();
 }
 
+SwappableComponentManager::SwappableComponentManager(BasicFXAudioProcessor& p, juce::AudioProcessorValueTreeState& _apvts, int _bandIndex) 
+    : audioProcessor(p), apvts(_apvts), bandIndex(_bandIndex) {
+    initializeComponents();
+}
+
 void SwappableComponentManager::initializeComponents() {
     bool paramsFromMemory = false;
-
-    if (!paramsFromMemory) {
-        //create a bunch of empty components
-        for (int i = 0; i < MAX_COMPONENTS; i++)
-        {
-            swappableComponents.push_back(std::make_unique<EmptyComponent>(i));
-            //TODO: some of these calls should be in the swappableComponent constructor
-            swappableComponents[i]->addActionListener(this);
-            swappableComponents[i]->addActionListener(&audioProcessor);
-            swappableComponents[i]->setManager(this);
-            //swappableComponents[i]->getProcessor()->assignParamPointers(i);
-            swappableComponents[i]->setComponentAttachments(i);
-            addAndMakeVisible(swappableComponents.back().get());
+    if (bandIndex >= 0) {
+        if (!paramsFromMemory) {
+            //create a bunch of empty components
+            for (int i = 0; i < MAX_COMPONENTS; i++)
+            {
+                swappableComponents.push_back(std::make_unique<EmptyComponent>(i, this));
+                //TODO: some of these calls should be in the swappableComponent constructor
+                swappableComponents[i]->addActionListener(this);
+                swappableComponents[i]->addActionListener(&audioProcessor);
+                //swappableComponents[i]->getProcessor()->assignParamPointers(i);
+                swappableComponents[i]->setComponentAttachments(i);
+                addAndMakeVisible(swappableComponents.back().get());
+            }
         }
+
     }
     else {
-        //TODO: implement this when memory save/loading is implemented
+        /*
+        if (!paramsFromMemory) {
+            //create a bunch of empty components
+            for (int i = 0; i < MAX_COMPONENTS; i++)
+            {
+                swappableComponents.push_back(std::make_unique<EmptyComponent>(i));
+                //TODO: some of these calls should be in the swappableComponent constructor
+                swappableComponents[i]->addActionListener(this);
+                swappableComponents[i]->addActionListener(&audioProcessor);
+                //swappableComponents[i]->getProcessor()->assignParamPointers(i);
+                swappableComponents[i]->setComponentAttachments(i);
+                addAndMakeVisible(swappableComponents.back().get());
+            }
+        }
+        else {
+            //TODO: implement this when memory save/loading is implemented
+        }
+        */
     }
-
 }
+
+
+
 
 void SwappableComponentManager::actionListenerCallback(const juce::String& message) {
     
@@ -57,21 +82,20 @@ void SwappableComponentManager::actionListenerCallback(const juce::String& messa
 
                 //replace the EmptyComponent (by changing its pointer, it automatically deletes due to unique_ptr logic) with the new Component
                 if (componentType == "GATE") {
-                    swappableComponents[index] = std::make_unique<GateComponent>(apvts,  index);
+                    swappableComponents[index] = std::make_unique<GateComponent>(apvts,  index, this);
                 }
                 else if (componentType == "DISTORTION") {
-                    swappableComponents[index] = std::make_unique<DistortionComponent>(apvts, index);
+                    swappableComponents[index] = std::make_unique<DistortionComponent>(apvts, index, this);
                 }
                 else if (componentType == "FLANGER") {
-                    swappableComponents[index] = std::make_unique<FlangerComponent>(apvts, index);
+                    swappableComponents[index] = std::make_unique<FlangerComponent>(apvts, index, this);
                 }
                 else if (componentType == "EQ") {
-                    swappableComponents[index] = std::make_unique<EQComponent>(apvts, index);
+                    swappableComponents[index] = std::make_unique<EQComponent>(apvts, index, this);
                 }
                 //TODO: maybe some of these calls should be in the swappableComponent constructor
                 swappableComponents[index]->addActionListener(this);
                 swappableComponents[index]->addActionListener(&audioProcessor);
-                swappableComponents[index]->setManager(this);
                 //swappableComponents[index]->getProcessor()->assignParamPointers(index); //TODO unecessary?  already in constructor
                 swappableComponents[index]->setComponentAttachments(index); //TODO: why doesnt this work in the constructor?
                 addAndMakeVisible(swappableComponents[index].get());
@@ -90,10 +114,9 @@ void SwappableComponentManager::actionListenerCallback(const juce::String& messa
             if (index < 0 || index > MAX_COMPONENTS || index >= swappableComponents.size())
                 return;
 
-            swappableComponents[index] = std::make_unique<EmptyComponent>(index);
+            swappableComponents[index] = std::make_unique<EmptyComponent>(index, this);
             swappableComponents[index]->addActionListener(this);
             swappableComponents[index]->addActionListener(&audioProcessor);
-            swappableComponents[index]->setManager(this);
             addAndMakeVisible(swappableComponents[index].get());
             resized();
             audioProcessor.actionListenerCallback(message);//notify the processor that the UI has changed
@@ -179,6 +202,7 @@ void SwappableComponentManager::swapProcessorParams(SwappableComponent& draggedC
 
     if (typeid(*draggedProcessor) == typeid(*otherProcessor)) {
         // if both components are the same type, simply swap their values, indexes, and pointers
+
         draggedProcessor->swapParamValues(otherProcessor);
 
         draggedProcessor->setProcessorIndex(otherIndex);

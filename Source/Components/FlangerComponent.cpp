@@ -11,7 +11,8 @@
 #include "FlangerComponent.h"
 #include "../Processors/FlangerProcessor.h"
 
-FlangerComponent::FlangerComponent(juce::AudioProcessorValueTreeState& apvts, int index) : SwappableComponent(std::make_unique<FlangerProcessor>(apvts, index)), apvts(apvts) {
+FlangerComponent::FlangerComponent(juce::AudioProcessorValueTreeState& apvts, int index, SwappableComponentManager* manager) 
+    : SwappableComponent(std::make_unique<FlangerProcessor>(apvts, manager->getManagerIndex(), index), manager), apvts(apvts) {
 
     setComponentAttachments(index);
     button.setClickingTogglesState(true);
@@ -24,9 +25,10 @@ void FlangerComponent::setComponentAttachments(int index) {
     flangerSliderAttachment = nullptr;
     mixSliderAttachment = nullptr;
     buttonAttachment = nullptr;
-    flangerSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(FLANGER_DELAY_STRING, index), flangerSlider);
-    mixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(FLANGER_MIX_STRING, index), mixSlider);
-    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeID(FLANGER_ON_STRING, index), button);
+    int bandIndex = getManager()->getManagerIndex();
+    flangerSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeMultibandParamID(FLANGER_DELAY_STRING, bandIndex, index), flangerSlider);
+    mixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeMultibandParamID(FLANGER_MIX_STRING, bandIndex, index), mixSlider);
+    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeMultibandParamID(FLANGER_ON_STRING, bandIndex, index), button);
 }
 
 std::vector<juce::Component*> FlangerComponent::getFlangerComps() {

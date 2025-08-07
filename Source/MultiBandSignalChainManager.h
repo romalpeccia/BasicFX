@@ -26,7 +26,7 @@ public:
     void resized() override;
     SwappableComponentManager* getComponentManager(int index);
 
-    std::vector<std::unique_ptr<SwappableComponentManager>>& getComponentList();
+    std::vector<std::unique_ptr<SwappableComponentManager>>& getSwappableComponentManagerList();
     MultiBandSignalChainProcessor* getMultiBandSignalChainProcessors();
 
 private:
@@ -35,5 +35,5 @@ private:
 
     std::unique_ptr< MultiBandSignalChainProcessor> signalChainProcessors = nullptr; 
     //todo renamethis to multibandSignalChainProcessors (also figure out if it belongs here or in editor)
-    std::vector <std::unique_ptr<SwappableComponentManager>> signalChainComponents;
+    std::vector <std::unique_ptr<SwappableComponentManager>> swappableComponentManagers;
 };

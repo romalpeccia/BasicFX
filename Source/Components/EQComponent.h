@@ -16,7 +16,8 @@
 
     class EQComponent : public SwappableComponent{
     public:
-        EQComponent(juce::AudioProcessorValueTreeState& _apvts, int index);
+        //EQComponent(juce::AudioProcessorValueTreeState& _apvts, int index);
+        EQComponent(juce::AudioProcessorValueTreeState& _apvts, int index, SwappableComponentManager* manager);
         std::vector<juce::Component*> getEQComps();
         void setComponentAttachments(int index) override;
         void resized() override;

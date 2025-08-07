@@ -12,7 +12,8 @@
 
 
 
-GateComponent::GateComponent(juce::AudioProcessorValueTreeState& apvts, int index) : SwappableComponent(std::make_unique<GateProcessor>(apvts, index)), apvts(apvts) {
+GateComponent::GateComponent(juce::AudioProcessorValueTreeState& apvts, int index, SwappableComponentManager* manager) 
+    : SwappableComponent(std::make_unique<GateProcessor>(apvts, manager->getManagerIndex(), index), manager), apvts(apvts) {
 
     setComponentAttachments(index);
     button.setClickingTogglesState(true);
@@ -33,12 +34,13 @@ void GateComponent::setComponentAttachments(int index) {
     holdAttachment = nullptr;
     buttonAttachment = nullptr;
     menuAttachment = nullptr;
-    thresholdAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(THRESHOLD_STRING, index), thresholdSlider);
-    attackAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(ATTACK_STRING, index), attackSlider);
-    releaseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(RELEASE_STRING, index), releaseSlider);
-    holdAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(HOLD_STRING, index), holdSlider);
-    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeID(GATE_ON_STRING, index), button);
-    menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, makeID(GATE_STATE_STRING, index), menu);
+    int bandIndex = getManager()->getManagerIndex();
+    thresholdAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeMultibandParamID(THRESHOLD_STRING, bandIndex, index), thresholdSlider);
+    attackAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeMultibandParamID(ATTACK_STRING, bandIndex, index), attackSlider);
+    releaseAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeMultibandParamID(RELEASE_STRING, bandIndex, index), releaseSlider);
+    holdAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeMultibandParamID(HOLD_STRING, bandIndex, index), holdSlider);
+    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeMultibandParamID(GATE_ON_STRING, bandIndex, index), button);
+    menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, makeMultibandParamID(GATE_STATE_STRING, bandIndex, index), menu);
 }
 
 void GateComponent::resized() {

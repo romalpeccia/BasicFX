@@ -69,10 +69,10 @@ public:
 
     //C++ note: static member belongs to the class and not the object of the class, meaning the member can be used before the object is constructed
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
-    static void addGateParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int i);
-    static void addDistortionParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int i);
-    static void addFlangerParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int i);
-    static void addEQParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int i);
+    static void addGateParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int bandIndex, int componentIndex);
+    static void addDistortionParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int bandIndex, int componentIndex);
+    static void addFlangerParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int bandIndex, int componentIndex);
+    static void addEQParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int bandIndex, int componentIndex);
 
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 

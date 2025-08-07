@@ -23,13 +23,20 @@ const int SAMPLE_RATE_FACTOR = 1000; //TODO: think of something better for this 
 
 
 /// IDs for APVTS, with helper functions to add suffixes to keep track of multiple components
-inline auto makeID(const juce::String& base, int i) {
-    return base + "_" + juce::String(i);
+inline auto makeParamID(const juce::String& paramName, int componentIndex) {
+    return paramName + "_" + juce::String(componentIndex);
+}
+inline auto makeMultibandParamID(const juce::String& paramName, int bandIndex, int componentIndex) {
+    return paramName + juce::String(bandIndex) +  "_" + juce::String(componentIndex);
 }
 
-inline auto makeName(const juce::String& base, int i) {
-    return base.toLowerCase() + "_" + juce::String(i);
+inline auto makeParamName(const juce::String& paramName, int componentIndex) {
+    return paramName.toLowerCase() + "_"  + juce::String(componentIndex);
 }
+inline auto makeMultibandParamName(const juce::String& paramName, int bandIndex, int componentIndex) {
+    return paramName.toLowerCase() + "_" + juce::String(bandIndex) + "_" + juce::String(componentIndex);
+}
+
 const juce::String DB_METER_RATE_STRING = "DB_METER_AMOUNT";
 
 const juce::String SWAPPABLE_COMPONENT_TYPE_STRING = "SWAPPABLE_COMPONENT_TYPE";

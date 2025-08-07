@@ -10,7 +10,8 @@
 
 #include "EQComponent.h"
 
-EQComponent::EQComponent(juce::AudioProcessorValueTreeState& apvts, int index) : SwappableComponent(std::make_unique<EQProcessor>(apvts, index)), apvts(apvts) {
+EQComponent::EQComponent(juce::AudioProcessorValueTreeState& apvts, int index, SwappableComponentManager* manager) 
+    : SwappableComponent(std::make_unique<EQProcessor>(apvts, manager->getManagerIndex(), index), manager), apvts(apvts) {
 
     button.setClickingTogglesState(true);
     menu.addItem("LOW PASS", 1);
@@ -37,10 +38,11 @@ void EQComponent::setComponentAttachments(int index) {
     highFrequencySliderAttachment = nullptr;
     buttonAttachment = nullptr;
     menuAttachment = nullptr;
-    lowFrequencySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(EQ_LOW_FREQUENCY_STRING, index), lowFrequencySlider);
-    highFrequencySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(EQ_HIGH_FREQUENCY_STRING, index), highFrequencySlider);
-    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeID(EQ_ON_STRING, index), button);
-    menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, makeID(EQ_TYPE_STRING, index), menu);
+    int bandIndex = getManager()->getManagerIndex();
+    lowFrequencySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeMultibandParamID(EQ_LOW_FREQUENCY_STRING, bandIndex, index), lowFrequencySlider);
+    highFrequencySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeMultibandParamID(EQ_HIGH_FREQUENCY_STRING, bandIndex, index), highFrequencySlider);
+    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeMultibandParamID(EQ_ON_STRING, bandIndex, index), button);
+    menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, makeMultibandParamID(EQ_TYPE_STRING, bandIndex, index), menu);
 
 }
 

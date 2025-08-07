@@ -13,7 +13,8 @@
 #include "SwappableProcessor.h"
 class GateProcessor : public SwappableProcessor {
 public:
-    GateProcessor(juce::AudioProcessorValueTreeState& _apvts, int index);
+    //GateProcessor(juce::AudioProcessorValueTreeState& _apvts, int index);
+    GateProcessor(juce::AudioProcessorValueTreeState& _apvts, int bandIndex, int processorIndex);
     ~GateProcessor() {}
 
     float getThreshold() { return *thresholdParam; }

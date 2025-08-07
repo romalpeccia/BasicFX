@@ -10,7 +10,8 @@
 
 #include "DistortionComponent.h"
 
-DistortionComponent::DistortionComponent(juce::AudioProcessorValueTreeState& apvts, int index): SwappableComponent(std::make_unique<DistortionProcessor>(apvts, index)),apvts(apvts) {
+DistortionComponent::DistortionComponent(juce::AudioProcessorValueTreeState& apvts, int index, SwappableComponentManager* manager)
+    : SwappableComponent(std::make_unique<DistortionProcessor>(apvts, manager->getManagerIndex(),  index), manager),apvts(apvts) {
 
 
     button.setClickingTogglesState(true);
@@ -29,9 +30,10 @@ void DistortionComponent::setComponentAttachments(int index) {
     sliderAttachment = nullptr;
     buttonAttachment = nullptr;
     menuAttachment = nullptr;
-    sliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeID(DISTORTION_AMOUNT_STRING, index), slider);
-    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeID(DISTORTION_ON_STRING, index), button);
-    menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, makeID(DISTORTION_TYPE_STRING, index), menu);
+    int bandIndex = getManager()->getManagerIndex();
+    sliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, makeMultibandParamID(DISTORTION_AMOUNT_STRING, bandIndex, index), slider);
+    buttonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, makeMultibandParamID(DISTORTION_ON_STRING, bandIndex, index), button);
+    menuAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, makeMultibandParamID(DISTORTION_TYPE_STRING, bandIndex, index), menu);
 
 }
 

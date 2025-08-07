@@ -13,7 +13,8 @@
 #include "SwappableProcessor.h"
 class DistortionProcessor : public SwappableProcessor {
 public:
-    DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts, int index);
+    //DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts, int index);
+    DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts, int bandIndex, int processorIndex);
     ~DistortionProcessor() {}
 
     bool getOnState() { return bool(*onStateParam); }
@@ -43,5 +44,7 @@ private:
     void processDistortionSoftClipperCubic(juce::AudioBuffer<float>& buffer);
     void processDistortionSoftClipperArcTan(juce::AudioBuffer<float>& buffer);
     void processDistortionSlewLimiter(juce::AudioBuffer<float>& buffer);
+    float bitCrush(float sample, int bits);
+
     float lastSampleFromPrevBuffer[16] = { 0 };
 };

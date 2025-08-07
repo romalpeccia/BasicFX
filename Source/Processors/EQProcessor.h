@@ -14,7 +14,8 @@
 #include <juce_dsp/juce_dsp.h>
 class EQProcessor : public SwappableProcessor{
 public:
-    EQProcessor(juce::AudioProcessorValueTreeState& _apvts, int index);
+    //EQProcessor(juce::AudioProcessorValueTreeState& _apvts, int index);
+    EQProcessor(juce::AudioProcessorValueTreeState& _apvts, int bandIndex, int processorIndex);
     ~EQProcessor() {}
 
     float getLowFrequency() { return *lowFrequencyParam; }

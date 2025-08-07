@@ -14,8 +14,8 @@ MultiBandSignalChainManager::MultiBandSignalChainManager(BasicFXAudioProcessor& 
     : audioProcessor(p), apvts(_apvts) {
     
     for (int band = 0; band < MAX_BANDS; band++) {
-        signalChainComponents.push_back(std::make_unique<SwappableComponentManager>(p, apvts));
-        addAndMakeVisible(signalChainComponents.back().get());
+        swappableComponentManagers.push_back(std::make_unique<SwappableComponentManager>(p, apvts, band));
+        addAndMakeVisible(swappableComponentManagers.back().get());
     }
 
     signalChainProcessors = std::make_unique< MultiBandSignalChainProcessor>(this);
@@ -25,14 +25,14 @@ MultiBandSignalChainManager::MultiBandSignalChainManager(BasicFXAudioProcessor& 
 
 void MultiBandSignalChainManager::resized() {
     auto bounds = getLocalBounds();
-    if (!signalChainComponents.empty()) {
+    if (!swappableComponentManagers.empty()) {
 
         float x = bounds.getX();
         float y = bounds.getY();
         float width = bounds.getWidth() ;
-        float height = bounds.getHeight() / signalChainComponents.size();
+        float height = bounds.getHeight() / swappableComponentManagers.size();
         //start at the top of bounds and iterate, drawing components proportional to the size of the MultiBandSignalChainManager
-        for (auto& compPtr : signalChainComponents) {
+        for (auto& compPtr : swappableComponentManagers) {
             auto comp = compPtr.get();
             comp->setBounds(x, y, width, height);
             y += height;
@@ -42,19 +42,19 @@ void MultiBandSignalChainManager::resized() {
 
 SwappableComponentManager* MultiBandSignalChainManager::getComponentManager(int index)
 {
-    if (index >= 0 && index < static_cast<int>(signalChainComponents.size()))
-        return signalChainComponents[index].get();  // return raw pointer
+    if (index >= 0 && index < static_cast<int>(swappableComponentManagers.size()))
+        return swappableComponentManagers[index].get();  // return raw pointer
 
     return nullptr; // index out of range
 }
-std::vector<std::unique_ptr<SwappableComponentManager>>& MultiBandSignalChainManager::getComponentList()
+std::vector<std::unique_ptr<SwappableComponentManager>>& MultiBandSignalChainManager::getSwappableComponentManagerList()
 {
-    return signalChainComponents;
+    return swappableComponentManagers;
 }
 
 MultiBandSignalChainProcessor* MultiBandSignalChainManager::getMultiBandSignalChainProcessors()
 {
-    if (signalChainComponents.size() < 1) {
+    if (swappableComponentManagers.size() < 1) {
         return nullptr;
     }
     else {

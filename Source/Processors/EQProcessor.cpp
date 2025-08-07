@@ -10,17 +10,32 @@
 
 #include "EQProcessor.h"
 
-
+/*
 EQProcessor::EQProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) : SwappableProcessor(index), apvts(_apvts) {
     assignParamPointers(index);
+    prepareToPlay(sampleRate, totalNumInputChannels);
+}*/
+
+EQProcessor::EQProcessor(juce::AudioProcessorValueTreeState& _apvts, int bandIndex, int processorIndex) : SwappableProcessor(bandIndex, processorIndex), apvts(_apvts) {
+    assignParamPointers(processorIndex);
     prepareToPlay(sampleRate, totalNumInputChannels);
 }
 
 void EQProcessor::assignParamPointers(int index) {
-    onStateParam = apvts.getRawParameterValue(makeID(EQ_ON_STRING, index));
-    lowFrequencyParam = apvts.getRawParameterValue(makeID(EQ_LOW_FREQUENCY_STRING, index));
-    highFrequencyParam = apvts.getRawParameterValue(makeID(EQ_HIGH_FREQUENCY_STRING, index));
-    eqTypeParam = apvts.getRawParameterValue(makeID(EQ_TYPE_STRING, index));
+    if (bandIndex >= 0) {
+        onStateParam = apvts.getRawParameterValue(makeMultibandParamID(EQ_ON_STRING, bandIndex, index));
+        lowFrequencyParam = apvts.getRawParameterValue(makeMultibandParamID(EQ_LOW_FREQUENCY_STRING, bandIndex, index));
+        highFrequencyParam = apvts.getRawParameterValue(makeMultibandParamID(EQ_HIGH_FREQUENCY_STRING, bandIndex, index));
+        eqTypeParam = apvts.getRawParameterValue(makeMultibandParamID(EQ_TYPE_STRING, bandIndex, index));
+    }
+    else {
+        /*
+        onStateParam = apvts.getRawParameterValue(makeID(EQ_ON_STRING, index));
+        lowFrequencyParam = apvts.getRawParameterValue(makeID(EQ_LOW_FREQUENCY_STRING, index));
+        highFrequencyParam = apvts.getRawParameterValue(makeID(EQ_HIGH_FREQUENCY_STRING, index));
+        eqTypeParam = apvts.getRawParameterValue(makeID(EQ_TYPE_STRING, index));
+        */
+    }
 }
 
 void EQProcessor::moveParamValues(int index) {
@@ -83,7 +98,6 @@ void EQProcessor::processBlock(juce::AudioBuffer <float>& buffer) {
         {
             auto channelBlock = block.getSingleChannelBlock(ch);
             juce::dsp::ProcessContextReplacing<float> context(channelBlock);
-            DBG(*eqTypeParam);
             switch (int(*eqTypeParam)) {
                 case 0:
                     lowPassFilters[ch].process(context);
@@ -143,45 +157,89 @@ void EQProcessor::actionListenerCallback(const juce::String& message) {
 
 void EQProcessor::setOnState(bool value)
 {
+    if (bandIndex >= 0) {
+        if (auto* param = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(makeMultibandParamID(EQ_ON_STRING, bandIndex, getProcessorIndex()))))
+        {
+            param->beginChangeGesture();
+            param->setValueNotifyingHost(value ? 1.0f : 0.0f);
+            param->endChangeGesture();
+        }
+    }
+    else {/*
     if (auto* param = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(makeID(EQ_ON_STRING, getProcessorIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(value ? 1.0f : 0.0f);
         param->endChangeGesture();
+    }*/
     }
 }
 
 void EQProcessor::setHighFrequency(float value)
 {
+    if (bandIndex >= 0) {
+        if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
+            apvts.getParameter(makeMultibandParamID(EQ_HIGH_FREQUENCY_STRING, bandIndex, getProcessorIndex()))))
+        {
+            param->beginChangeGesture();
+            param->setValueNotifyingHost(param->convertTo0to1(value));
+            param->endChangeGesture();
+        }
+    }
+    else {/*
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
         apvts.getParameter(makeID(EQ_HIGH_FREQUENCY_STRING, getProcessorIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));
         param->endChangeGesture();
+    }*/
     }
     updateFilters();
 }
 
 void EQProcessor::setLowFrequency(float value)
 {
+    if (bandIndex >= 0) {
+        if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
+            apvts.getParameter(makeMultibandParamID(EQ_LOW_FREQUENCY_STRING, bandIndex, getProcessorIndex()))))
+        {
+            param->beginChangeGesture();
+            param->setValueNotifyingHost(param->convertTo0to1(value));
+            param->endChangeGesture();
+        }
+    }
+    else {/*
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
         apvts.getParameter(makeID(EQ_LOW_FREQUENCY_STRING, getProcessorIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));
         param->endChangeGesture();
+    }*/
     }
     updateFilters();
 }
 
 void EQProcessor::setEQType(int value)
 {
+    if (bandIndex >= 0) {
+        if (auto* param = dynamic_cast<juce::AudioParameterChoice*>(
+            apvts.getParameter(makeMultibandParamID(EQ_TYPE_STRING, bandIndex, getProcessorIndex()))))
+        {
+            param->beginChangeGesture();
+            param->setValueNotifyingHost(param->convertTo0to1(static_cast<float>(value)));
+            param->endChangeGesture();
+        }
+    }
+    else {/*
     if (auto* param = dynamic_cast<juce::AudioParameterChoice*>(
         apvts.getParameter(makeID(EQ_TYPE_STRING, getProcessorIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(static_cast<float>(value)));
         param->endChangeGesture();
+    }
+    */
     }
 }

@@ -16,7 +16,8 @@
 class EmptyComponent : public SwappableComponent {
 
 public:
-    EmptyComponent(int index);
+    //EmptyComponent(int index);
+    EmptyComponent(int index, SwappableComponentManager* manager);
     ~EmptyComponent() {}
 
     void setComponentAttachments(int index) override;
