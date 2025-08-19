@@ -19,6 +19,7 @@ EmptyComponent::EmptyComponent(int index, SwappableComponentManager* manager)
     menu.addItem("DISTORTION", 3);
     menu.addItem("FLANGER", 4);
     menu.addItem("EQ", 5);
+    menu.addItem("UTILITY", 6);
     menu.setSelectedId(1);
     addAndMakeVisible(menu);
 

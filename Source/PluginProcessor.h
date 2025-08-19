@@ -73,6 +73,7 @@ public:
     static void addDistortionParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int bandIndex, int componentIndex);
     static void addFlangerParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int bandIndex, int componentIndex);
     static void addEQParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int bandIndex, int componentIndex);
+    static void addUtilityParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int bandIndex, int componentIndex);
 
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 

@@ -46,6 +46,10 @@
               file="Source/Processors/SwappableProcessor.cpp"/>
         <FILE id="fJvhIo" name="SwappableProcessor.h" compile="0" resource="0"
               file="Source/Processors/SwappableProcessor.h"/>
+        <FILE id="DMZRt3" name="UtilityProcessor.cpp" compile="1" resource="0"
+              file="Source/Processors/UtilityProcessor.cpp"/>
+        <FILE id="IXaiBh" name="UtilityProcessor.h" compile="0" resource="0"
+              file="Source/Processors/UtilityProcessor.h"/>
         <FILE id="DmVCL7" name="VisualizerProcessor.cpp" compile="1" resource="0"
               file="Source/Processors/VisualizerProcessor.cpp"/>
         <FILE id="xofenX" name="VisualizerProcessor.h" compile="0" resource="0"
@@ -80,6 +84,10 @@
               file="Source/Components/SwappableComponent.cpp"/>
         <FILE id="eE1QUD" name="SwappableComponent.h" compile="0" resource="0"
               file="Source/Components/SwappableComponent.h"/>
+        <FILE id="uV8fW5" name="UtilityComponent.cpp" compile="1" resource="0"
+              file="Source/Components/UtilityComponent.cpp"/>
+        <FILE id="XWGy2X" name="UtilityComponent.h" compile="0" resource="0"
+              file="Source/Components/UtilityComponent.h"/>
         <FILE id="WvzdIV" name="VisualizerComponent.cpp" compile="1" resource="0"
               file="Source/Components/VisualizerComponent.cpp"/>
         <FILE id="FKJW72" name="VisualizerComponent.h" compile="0" resource="0"

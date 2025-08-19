@@ -16,6 +16,7 @@
 #include "Components/DistortionComponent.h"
 #include "Components/FlangerComponent.h"
 #include "Components/EQComponent.h"
+#include "Components/UtilityComponent.h"
 #include "Components/EmptyComponent.h"
 #include "Utilities.h"
 

@@ -42,7 +42,7 @@ class MultiBandSignalChainProcessor {
             {
                 int i = 0;
                 signalChainProcessor->processBlock(bufferCopies[i]);
-                DBG(juce::String(bufferCopies[i].getMagnitude(0, 0, numSamples)));
+                //DBG(juce::String(bufferCopies[i].getMagnitude(0, 0, numSamples)));
                 i++;
             }
             //normalize each buffer

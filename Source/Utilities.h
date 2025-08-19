@@ -18,7 +18,7 @@ using namespace juce;
 
 const int MAX_COMPONENTS = 6;
 const int MAX_INPUT_CHANNELS = 16;
-const int MAX_BANDS = 4;
+const int MAX_BANDS = 1;
 const int SAMPLE_RATE_FACTOR = 1000; //TODO: think of something better for this // just gives room for the CircularBuffers
 
 
@@ -61,6 +61,10 @@ const juce::String BIT_CRUSHER_STRING = "BIT_CRUSHER";
 const juce::String SOFT_CLIPPER_CUBIC_STRING = "SOFT_CLIPPER_CUBIC";
 const juce::String SOFT_CLIPPER_ARCTAN_STRING = "SOFT_CLIPPER_ARCTAN";
 const juce::String SLEW_LIMITER_STRING = "SLEW_LIMITER";
+
+const juce::String UTILITY_VOLUME_STRING = "UTILITY_VOLUME";
+const juce::String UTILITY_ON_STRING = "UTILITY_ON";
+const juce::String UTILITY_STEREO_STRING = "UTILITY_STEREO";
 
 const juce::String FLANGER_DELAY_STRING = "FLANGER_DELAY_MS";
 const juce::String FLANGER_MIX_STRING = "FLANGER_MIX";

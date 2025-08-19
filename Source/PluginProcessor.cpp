@@ -102,9 +102,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout BasicFXAudioProcessor::creat
             addDistortionParametersToLayout(layout, band, comp);
             addFlangerParametersToLayout(layout, band, comp);
             addEQParametersToLayout(layout, band, comp);
+            addUtilityParametersToLayout(layout, band, comp);
             /*
             layout.add(std::make_unique<juce::AudioParameterChoice>(makeMultibandParamID(SWAPPABLE_COMPONENT_TYPE_STRING, i), makeMultibandParamName(SWAPPABLE_COMPONENT_TYPE_STRING, i),
-                juce::StringArray{ "EMPTY", "GATE", "DISTORTION", "FLANGER", "EQ"}, 0)); //TODO: this doesnt do anything yet but will be important when loading/saving component states
+                juce::StringArray{ "EMPTY", "GATE", "DISTORTION", "FLANGER", "EQ", "UTILITY"}, 0)); //TODO: this doesnt do anything yet but will be important when loading/saving component states
                 */
         }
     }
@@ -186,6 +187,18 @@ void BasicFXAudioProcessor::addEQParametersToLayout(juce::AudioProcessorValueTre
         */
     }
 }
+
+void BasicFXAudioProcessor::addUtilityParametersToLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout, int bandIndex, int componentIndex) {
+
+    if (bandIndex >= 0) {
+        layout.add(std::make_unique<juce::AudioParameterBool>(makeMultibandParamID(UTILITY_ON_STRING, bandIndex, componentIndex), makeMultibandParamName(UTILITY_ON_STRING, bandIndex, componentIndex), false));
+        layout.add(std::make_unique<juce::AudioParameterFloat>(makeMultibandParamID(UTILITY_VOLUME_STRING, bandIndex, componentIndex), makeMultibandParamName(UTILITY_VOLUME_STRING, bandIndex, componentIndex), juce::NormalisableRange<float>(-100, 0, 1.f, 1.f), 0.f));
+        layout.add(std::make_unique<juce::AudioParameterFloat>(makeMultibandParamID(UTILITY_STEREO_STRING, bandIndex, componentIndex), makeMultibandParamName(UTILITY_STEREO_STRING, bandIndex, componentIndex), juce::NormalisableRange<float>(-50, 50, 1.f, 1.f), 0.f));
+    }
+    else {
+    }
+}
+
 
 //==============================================================================
 const juce::String BasicFXAudioProcessor::getName() const

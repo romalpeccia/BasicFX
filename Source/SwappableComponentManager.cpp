@@ -78,7 +78,7 @@ void SwappableComponentManager::actionListenerCallback(const juce::String& messa
 
             if (index < 0 || index > MAX_COMPONENTS || index >= swappableComponents.size())
                 return;
-            if (componentType != "-" && (componentType == "GATE" || componentType == "DISTORTION" || componentType == "FLANGER" || componentType == "EQ")) {
+            if (componentType != "-" && (componentType == "GATE" || componentType == "DISTORTION" || componentType == "FLANGER" || componentType == "EQ" || componentType == "UTILITY")) {
 
                 //replace the EmptyComponent (by changing its pointer, it automatically deletes due to unique_ptr logic) with the new Component
                 if (componentType == "GATE") {
@@ -92,6 +92,9 @@ void SwappableComponentManager::actionListenerCallback(const juce::String& messa
                 }
                 else if (componentType == "EQ") {
                     swappableComponents[index] = std::make_unique<EQComponent>(apvts, index, this);
+                }
+                else if (componentType == "UTILITY") {
+                    swappableComponents[index] = std::make_unique<UtilityComponent>(apvts, index, this);
                 }
                 //TODO: maybe some of these calls should be in the swappableComponent constructor
                 swappableComponents[index]->addActionListener(this);
