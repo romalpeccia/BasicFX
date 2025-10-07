@@ -13,7 +13,7 @@
 #include "../Utilities.h"
 #include "../Processors/SwappableProcessor.h"
 
-class SwappableComponentManager; //forward declaration of SwappableComponentManager to avoid circular dependencies
+class SignalChainComponent; //forward declaration of SignalChainComponent to avoid circular dependencies
 
 class SwappableComponent : public juce::Component, public juce::ActionBroadcaster {
     public:
@@ -21,7 +21,7 @@ class SwappableComponent : public juce::Component, public juce::ActionBroadcaste
         SwappableComponent(std::unique_ptr<SwappableProcessor> processorPtr);
 
         SwappableComponent::~SwappableComponent();
-        virtual void setComponentAttachments(int index) = 0;
+        virtual void setComponentAttachments(int index) {};
 
 
         void mouseDown(const juce::MouseEvent& e) override;
@@ -41,8 +41,8 @@ class SwappableComponent : public juce::Component, public juce::ActionBroadcaste
         SwappableProcessor* getProcessor() const { return processor.get(); }
         void setProcessor(std::unique_ptr<SwappableProcessor> _processor) { processor = std::move(_processor); }
 
-        SwappableComponentManager* getManager() const;
-        void setManager(SwappableComponentManager* _swappableComponentManager); 
+        SignalChainComponent* getSignalChainComponent() const;
+        void setSignalChainComponent(SignalChainComponent* _signalChainComponent); 
 
 
     private:
@@ -56,5 +56,5 @@ class SwappableComponent : public juce::Component, public juce::ActionBroadcaste
 
     protected: //accessible by derived classes but not external code
         std::unique_ptr<SwappableProcessor> processor;
-        SwappableComponentManager* swappableComponentManager = nullptr;
+        SignalChainComponent* signalChainComponent = nullptr;
 };

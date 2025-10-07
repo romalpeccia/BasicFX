@@ -11,7 +11,7 @@
 #pragma once
 #include "../Utilities.h"
 #include "CustomSlider.h"
-#include "../SwappableComponentManager.h"
+#include "../SignalChainComponent.h"
 #include "../Processors/FlangerProcessor.h"
 class FlangerComponent : public SwappableComponent {
 

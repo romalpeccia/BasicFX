@@ -72,9 +72,9 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
 void BasicFXAudioProcessor::actionListenerCallback(const juce::String& message) {
     
-    auto& componentList = swappableComponentManager->getComponentList();
+    auto& componentList = signalChainComponent->getComponentList();
     if (message.startsWith("SWAPPED_") || message.startsWith("CREATECOMPONENT") || message.startsWith("DELETECOMPONENT"))
-    {   //called by SwappableComponentManager::swapComponents, SwappableComponent xButton and menu onClick methods
+    {   //called by SignalChainComponent::swapComponents, SwappableComponent xButton and menu onClick methods
         //rebuild the signal chain
         signalChain.clear();
         for (auto* comp : componentList)

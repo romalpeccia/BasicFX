@@ -12,7 +12,7 @@
 #include "../Utilities.h"
 #include "CustomSlider.h"
 #include "../Processors/GateProcessor.h"
-#include "../SwappableComponentManager.h"
+#include "../SignalChainComponent.h"
 class GateComponent : public SwappableComponent {
     public:
         GateComponent(juce::AudioProcessorValueTreeState& apvts, int index);

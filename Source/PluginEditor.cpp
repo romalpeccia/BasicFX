@@ -14,7 +14,7 @@ BasicFXAudioProcessorEditor::BasicFXAudioProcessorEditor (BasicFXAudioProcessor&
     : AudioProcessorEditor (&p), audioProcessor (p), apvts(_apvts)
 {
 
-    audioProcessor.swappableComponentManager = &swappableComponentManager;
+    audioProcessor.signalChainComponent = &signalChainComponent;
     for (auto* comp : getVisibleComps())
     {
         addAndMakeVisible(comp);
@@ -50,7 +50,7 @@ void BasicFXAudioProcessorEditor::resized()
     incomingDBMeterComponent.setBounds(incomingDBMeterBounds);
     outgoingDBMeterComponent.setBounds(outgoingDBMeterBounds);
     
-    swappableComponentManager.setBounds(FXBounds);
+    signalChainComponent.setBounds(FXBounds);
 }
 
 
@@ -61,7 +61,7 @@ std::vector<juce::Component*> BasicFXAudioProcessorEditor::getVisibleComps() {
     comps.push_back(&visualizerComponent);
     comps.push_back(&incomingDBMeterComponent);
     comps.push_back(&outgoingDBMeterComponent);
-    comps.push_back(&swappableComponentManager);
+    comps.push_back(&signalChainComponent);
     return comps;
 }
 

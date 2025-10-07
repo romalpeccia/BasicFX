@@ -10,7 +10,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "SwappableComponentManager.h"
+#include "SignalChainComponent.h"
 #include "Components/DBMeterComponent.h"
 #include "Components/VisualizerComponent.h"
 //==============================================================================
@@ -36,7 +36,7 @@ private:
     DBMeterComponent incomingDBMeterComponent{apvts, &audioProcessor.dbMeterIncomingProcessor };
     VisualizerComponent visualizerComponent{ &audioProcessor.visualizerIncomingProcessor, &audioProcessor.visualizerOutgoingProcessor };
     DBMeterComponent outgoingDBMeterComponent{apvts, &audioProcessor.dbMeterOutgoingProcessor };
-    SwappableComponentManager swappableComponentManager{ audioProcessor, apvts };
+    SignalChainComponent signalChainComponent{ audioProcessor, apvts };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicFXAudioProcessorEditor)
 };

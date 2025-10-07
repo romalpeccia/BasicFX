@@ -11,7 +11,7 @@
 #pragma once
 #include "../Utilities.h"
 #include "CustomSlider.h"
-#include "../SwappableComponentManager.h"
+#include "../SignalChainComponent.h"
 #include "../Processors/DistortionProcessor.h"
 class DistortionComponent : public SwappableComponent {
     public:

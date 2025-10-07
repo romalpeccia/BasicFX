@@ -9,7 +9,7 @@
 */
 
 #include "EmptyComponent.h"
-#include "../SwappableComponentManager.h" 
+#include "../SignalChainComponent.h" 
 
 EmptyComponent::EmptyComponent( int index) : SwappableComponent(std::make_unique<EmptyProcessor>(index)) {
 
@@ -22,7 +22,7 @@ EmptyComponent::EmptyComponent( int index) : SwappableComponent(std::make_unique
     addAndMakeVisible(menu);
 
     menu.onChange = [this]() {
-        int index = swappableComponentManager->getComponentIndex(*this);
+        int index = signalChainComponent->getComponentIndex(*this);
         int selectedId = menu.getSelectedId();
         juce::String selectedText = menu.getText();
         //signal the ComponentManager to do something

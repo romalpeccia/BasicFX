@@ -14,7 +14,7 @@
 SwappableComponent::SwappableComponent(std::unique_ptr<SwappableProcessor> processorPtr) : processor(std::move(processorPtr)) {
 
     xButton.onClick = [this]() {
-        int index = swappableComponentManager->getComponentIndex(*this);
+        int index = signalChainComponent->getComponentIndex(*this);
         //signal the ComponentManager to do something
         sendActionMessage("DELETECOMPONENT_" + String(index));
         };
@@ -51,8 +51,8 @@ void SwappableComponent::mouseUp(const juce::MouseEvent& e)  {
     //called while the component has stopped being dragged
 
     setBounds(initialBounds);
-    if (swappableComponentManager != nullptr) {
-        swappableComponentManager->handleDraggedComponent(*this);
+    if (signalChainComponent != nullptr) {
+        signalChainComponent->handleDraggedComponent(*this);
     }
 
 }
@@ -72,10 +72,10 @@ void SwappableComponent::setAreaOverLapThreshold() {
 }
 
 
-void SwappableComponent::setManager(SwappableComponentManager* _swappableComponentManager) {
-    swappableComponentManager = _swappableComponentManager;
+void SwappableComponent::setSignalChainComponent(SignalChainComponent* _signalChainComponent) {
+    signalChainComponent = _signalChainComponent;
 }
 
-SwappableComponentManager* SwappableComponent::getManager() const {
-    return swappableComponentManager;
+SignalChainComponent* SwappableComponent::getSignalChainComponent() const {
+    return signalChainComponent;
 }

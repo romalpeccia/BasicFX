@@ -10,7 +10,7 @@
 
 #pragma once
 #include "../Utilities.h"
-#include "../SwappableComponentManager.h"
+#include "../SignalChainComponent.h"
 #include "../Processors/SwappableProcessor.h"
 
 class EmptyComponent : public SwappableComponent {

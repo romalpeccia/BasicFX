@@ -11,7 +11,7 @@
 #pragma once
 #include "../Utilities.h"
 #include "CustomSlider.h"
-#include "../SwappableComponentManager.h"
+#include "../SignalChainComponent.h"
 #include "../Processors/EQProcessor.h"
 
     class EQComponent : public SwappableComponent{
