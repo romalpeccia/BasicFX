@@ -23,6 +23,7 @@ void SignalChainProcessor::prepareToPlay(double sampleRate, int samplesPerBlock,
 }
 
 void SignalChainProcessor::processBlock(juce::AudioBuffer<float>& buffer) {
+ // check if atomic bool is true or not before processing, if true call rebuildSignalChain and then set bool to false
     for (auto* processor : signalChain)
     {
         processor->processBlock(buffer);
@@ -37,3 +38,7 @@ void SignalChainProcessor::rebuildSignalChain() {
             signalChain.push_back(comp->getProcessor());
     }
 }
+
+void triggerRebuild() {
+    // set some atomic bool to true
+};
