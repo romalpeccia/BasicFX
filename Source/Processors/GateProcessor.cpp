@@ -251,9 +251,6 @@ void GateProcessor::processGateAdvanced(juce::AudioBuffer<float>& buffer) {
 
 
 
-
-
-
 void GateProcessor::setOnState(bool value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterBool*>(

@@ -11,7 +11,7 @@
 #include "EmptyComponent.h"
 #include "../SignalChainComponent.h" 
 
-EmptyComponent::EmptyComponent( int index) : SwappableComponent(std::make_unique<EmptyProcessor>(index)) {
+EmptyComponent::EmptyComponent(int index) {
 
     menu.addItem("EMPTY", 1);
     menu.addItem("GATE", 2);

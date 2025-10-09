@@ -10,7 +10,7 @@
 
 #include "EQComponent.h"
 
-EQComponent::EQComponent(juce::AudioProcessorValueTreeState& apvts, int index) : SwappableComponent(std::make_unique<EQProcessor>(apvts, index)), apvts(apvts) {
+EQComponent::EQComponent(juce::AudioProcessorValueTreeState& apvts, int index) : apvts(apvts) {
 
     button.setClickingTogglesState(true);
     menu.addItem("LOW PASS", 1);
@@ -18,7 +18,7 @@ EQComponent::EQComponent(juce::AudioProcessorValueTreeState& apvts, int index) :
     menu.addItem("HIGH PASS", 3);
     menu.setSelectedId(1);
 
-    addActionListener(processor.get());
+    addActionListener(getProcessor());
     lowFrequencySlider.onValueChange = [this]() {
         sendActionMessage("");
         };

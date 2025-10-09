@@ -34,7 +34,7 @@ public:
     void swapParamValues(SwappableProcessor* otherProcessor) override;
 
     void updateFilters();
-    void actionListenerCallback(const juce::String& message) override;
+    void actionListenerCallback(const juce::String& message) ;
 private:
     juce::AudioProcessorValueTreeState& apvts;
 

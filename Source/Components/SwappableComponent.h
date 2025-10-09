@@ -17,8 +17,7 @@ class SignalChainComponent; //forward declaration of SignalChainComponent to avo
 
 class SwappableComponent : public juce::Component, public juce::ActionBroadcaster {
     public:
-        SwappableComponent() = delete;
-        SwappableComponent(std::unique_ptr<SwappableProcessor> processorPtr);
+        SwappableComponent();
 
         SwappableComponent::~SwappableComponent();
         virtual void setComponentAttachments(int index) {};
@@ -38,13 +37,10 @@ class SwappableComponent : public juce::Component, public juce::ActionBroadcaste
         void resized() override;
         void paint(juce::Graphics& g) override;
 
-        SwappableProcessor* getProcessor() const { return processor.get(); }
-        void setProcessor(std::unique_ptr<SwappableProcessor> _processor) { processor = std::move(_processor); }
-
         SignalChainComponent* getSignalChainComponent() const;
         void setSignalChainComponent(SignalChainComponent* _signalChainComponent); 
 
-
+        SwappableProcessor* getProcessor() { return nullptr; };
     private:
 
         juce::ComponentDragger componentDragger; //adding this member allows us to drag the component using the mouseEvent that triggered it
@@ -55,6 +51,5 @@ class SwappableComponent : public juce::Component, public juce::ActionBroadcaste
         juce::TextButton xButton{ "X" };
 
     protected: //accessible by derived classes but not external code
-        std::unique_ptr<SwappableProcessor> processor;
         SignalChainComponent* signalChainComponent = nullptr;
 };

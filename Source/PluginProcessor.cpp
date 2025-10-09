@@ -11,7 +11,7 @@
 
 using namespace std;
 //==============================================================================
-BasicFXAudioProcessor::BasicFXAudioProcessor()
+BasicFXAudioProcessor::BasicFXAudioProcessor() 
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -23,8 +23,7 @@ BasicFXAudioProcessor::BasicFXAudioProcessor()
                        )
 #endif
 {
-
-
+    signalChainProcessor = std::make_unique<SignalChainProcessor>(apvts);
 
 }
 
@@ -37,11 +36,7 @@ BasicFXAudioProcessor::~BasicFXAudioProcessor()
 
 void BasicFXAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-
-    for (auto* processor : signalChain)
-    {
-        processor->prepareToPlay(sampleRate, getTotalNumInputChannels());
-    }
+    signalChainProcessor->prepareToPlay(sampleRate, getTotalNumInputChannels());
     visualizerIncomingProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
     visualizerOutgoingProcessor.prepareToPlay(sampleRate, getTotalNumInputChannels());
 }
@@ -61,30 +56,11 @@ void BasicFXAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
     dbMeterIncomingProcessor.processBlock(buffer);
     visualizerIncomingProcessor.processBlock(buffer);
-
-    for (auto* processor : signalChain)
-    {
-        processor->processBlock(buffer);
-    }
+    signalChainProcessor->processBlock(buffer);
     dbMeterOutgoingProcessor.processBlock(buffer);
     visualizerOutgoingProcessor.processBlock(buffer);
 }
 
-void BasicFXAudioProcessor::actionListenerCallback(const juce::String& message) {
-    
-    auto& componentList = signalChainComponent->getComponentList();
-    if (message.startsWith("SWAPPED_") || message.startsWith("CREATECOMPONENT") || message.startsWith("DELETECOMPONENT"))
-    {   //called by SignalChainComponent::swapComponents, SwappableComponent xButton and menu onClick methods
-        //rebuild the signal chain
-        signalChain.clear();
-        for (auto* comp : componentList)
-        {
-            if (comp->getProcessor() != nullptr)
-                signalChain.push_back(comp->getProcessor());
-        }
-        
-    }
-}
 
 juce::AudioProcessorValueTreeState::ParameterLayout BasicFXAudioProcessor::createParameterLayout() {
     //Creates all the parameters that change based on the user input and returns them in a AudioProcessorValueTreeState::ParameterLayout object

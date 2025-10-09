@@ -16,13 +16,13 @@
 #include "Processors/EQProcessor.h"
 #include "Processors/DBMeterProcessor.h"
 #include "Processors/VisualizerProcessor.h"
-class SignalChainComponent;
+#include "SignalChainProcessor.h"
 
 //==============================================================================
 /**
 */
 
-class BasicFXAudioProcessor : public juce::AudioProcessor, public juce::ActionListener
+class BasicFXAudioProcessor : public juce::AudioProcessor
 #if JucePlugin_Enable_ARA
     , public juce::AudioProcessorARAExtension
 #endif
@@ -39,8 +39,6 @@ public:
 #ifndef JucePlugin_PreferredChannelConfigurations
     bool isBusesLayoutSupported(const BusesLayout& layouts) const override;
 #endif
-
-
 
     //==============================================================================
     juce::AudioProcessorEditor* createEditor() override;
@@ -79,14 +77,14 @@ public:
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
 
-    SignalChainComponent* signalChainComponent = nullptr; //used to keep track of processor order and update signal chain
-    std::vector<SwappableProcessor*> signalChain;
-    void actionListenerCallback(const juce::String& message) override;
+   
 
     DBMeterProcessor dbMeterIncomingProcessor;
     DBMeterProcessor dbMeterOutgoingProcessor;
     VisualizerProcessor visualizerIncomingProcessor{ 44100 * SAMPLE_RATE_FACTOR };
     VisualizerProcessor visualizerOutgoingProcessor{ 44100 * SAMPLE_RATE_FACTOR };
+    
+    std::unique_ptr<SignalChainProcessor> signalChainProcessor = nullptr;
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicFXAudioProcessor)

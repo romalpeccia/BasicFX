@@ -13,7 +13,7 @@
 
 
 SignalChainComponent::SignalChainComponent(BasicFXAudioProcessor& p, juce::AudioProcessorValueTreeState& _apvts) : audioProcessor(p), apvts(_apvts) {
-
+    addActionListener(p.signalChainProcessor.get());
     initializeComponents();
 }
 
@@ -25,13 +25,14 @@ void SignalChainComponent::initializeComponents() {
         for (int i = 0; i < MAX_COMPONENTS; i++)
         {
             swappableComponents.push_back(std::make_unique<EmptyComponent>(i));
-            //TODO: some of these calls should be in the swappableComponent constructor
             swappableComponents[i]->addActionListener(this);
-            swappableComponents[i]->addActionListener(&audioProcessor);
+            swappableComponents[i]->addActionListener(audioProcessor.signalChainProcessor.get());
             swappableComponents[i]->setSignalChainComponent(this);
-            //swappableComponents[i]->getProcessor()->assignParamPointers(i);
             swappableComponents[i]->setComponentAttachments(i);
             addAndMakeVisible(swappableComponents.back().get());
+
+            juce::String message = "CREATECOMPONENT_" + String(i) + "_EMPTY";
+            audioProcessor.signalChainProcessor->actionListenerCallback(message);
         }
     }
     else {
@@ -68,15 +69,16 @@ void SignalChainComponent::actionListenerCallback(const juce::String& message) {
                 else if (componentType == "EQ") {
                     swappableComponents[index] = std::make_unique<EQComponent>(apvts, index);
                 }
-                //TODO: maybe some of these calls should be in the swappableComponent constructor
-                swappableComponents[index]->addActionListener(this);
-                swappableComponents[index]->addActionListener(&audioProcessor);
-                swappableComponents[index]->setSignalChainComponent(this);
-                //swappableComponents[index]->getProcessor()->assignParamPointers(index); //TODO unecessary?  already in constructor
+                //TODO: maybe some of these calls should be in the swappableComponent constructor ?
+                //TODO make this a function
+                swappableComponents[index]->addActionListener(this); //for SwappableComponent.xButton to signal a delete
+                swappableComponents[index]->addActionListener(audioProcessor.signalChainProcessor.get());
+                swappableComponents[index]->setSignalChainComponent(this); 
                 swappableComponents[index]->setComponentAttachments(index); //TODO: why doesnt this work in the constructor?
+
                 addAndMakeVisible(swappableComponents[index].get());
                 resized();
-                audioProcessor.actionListenerCallback(message);//notify the processor that the UI has changed
+                audioProcessor.signalChainProcessor->actionListenerCallback(message);//notify the processor that the UI has changed
             }
         }
     }
@@ -92,48 +94,15 @@ void SignalChainComponent::actionListenerCallback(const juce::String& message) {
 
             swappableComponents[index] = std::make_unique<EmptyComponent>(index);
             swappableComponents[index]->addActionListener(this);
-            swappableComponents[index]->addActionListener(&audioProcessor);
+            swappableComponents[index]->addActionListener(audioProcessor.signalChainProcessor.get());
             swappableComponents[index]->setSignalChainComponent(this);
             addAndMakeVisible(swappableComponents[index].get());
             resized();
-            audioProcessor.actionListenerCallback(message);//notify the processor that the UI has changed
+            audioProcessor.signalChainProcessor->actionListenerCallback(message); //notify the processor that the UI has changed
         }
     }
 }
-/*
-void SignalChainComponent::createComponent(juce::String componentType, int index, const juce::String& message) {
-    //WIP
-    if (componentType == "GATE" || componentType == "DISTORTION" || componentType == "FLANGER" || componentType == "EQ" || componentType == "EMPTY") {
 
-        //replace the EmptyComponent (by changing its pointer, it automatically deletes due to unique_ptr logic) with the new Component
-        if (componentType == "GATE") {
-            swappableComponents[index] = std::make_unique<GateComponent>(apvts, index);
-        }
-        else if (componentType == "DISTORTION") {
-            swappableComponents[index] = std::make_unique<DistortionComponent>(apvts, index);
-        }
-        else if (componentType == "FLANGER") {
-            swappableComponents[index] = std::make_unique<FlangerComponent>(apvts, index);
-        }
-        else if (componentType == "EQ") {
-            swappableComponents[index] = std::make_unique<EQComponent>(apvts, index);
-        }
-        else if (componentType == "EMPTY") {
-            swappableComponents[index] = std::make_unique<EmptyComponent>(index);
-        }
-
-        //TODO: maybe some of these calls should be in the swappableComponent constructor
-        swappableComponents[index]->addActionListener(this);
-        swappableComponents[index]->addActionListener(&audioProcessor);
-        swappableComponents[index]->setSignalChainComponent(this);
-        //swappableComponents[index]->getProcessor()->assignParamPointers(index); //TODO unecessary?  already in constructor
-        swappableComponents[index]->setComponentAttachments(index); //TODO: why doesnt this work in the constructor?
-        addAndMakeVisible(swappableComponents[index].get());
-        resized();
-        audioProcessor.actionListenerCallback(message);//notify the processor that the UI has changed
-    }
-}
-*/
 void SignalChainComponent::resized() {
     auto bounds = getLocalBounds();
     if (!swappableComponents.empty()) {
@@ -155,7 +124,6 @@ void SignalChainComponent::handleDraggedComponent(SwappableComponent& draggedCom
 
     SwappableComponent* componentToSwap = nullptr;
     int largestIntersectionArea = 0;
-
     for (auto& compPtr : swappableComponents) {
         auto comp = compPtr.get();
         if (comp != nullptr && comp != &draggedComp) {
@@ -183,9 +151,6 @@ void SignalChainComponent::swapComponents(SwappableComponent& draggedComponent, 
 
     if (!(draggedIndex == -1 || otherIndex == -1))
     {
-        // swap the param values and swap their pointers
-        swapProcessorParams(draggedComponent, otherComponent);
-
         // Swap components in the component list
         std::swap(components[draggedIndex], components[otherIndex]);
 
@@ -202,30 +167,6 @@ void SignalChainComponent::swapComponents(SwappableComponent& draggedComponent, 
         sendActionMessage("SWAPPED_" + String(draggedIndex) + "_" + String(otherIndex));
     }
 }
-
-void SignalChainComponent::swapProcessorParams(SwappableComponent& draggedComponent, SwappableComponent& otherComponent)
-{
-    SwappableProcessor* draggedProcessor = draggedComponent.getProcessor();
-    SwappableProcessor* otherProcessor = otherComponent.getProcessor();
-    int draggedIndex = getComponentIndex(draggedComponent);
-    int otherIndex = getComponentIndex(otherComponent);
-
-    if (typeid(*draggedProcessor) == typeid(*otherProcessor)) {
-        // if both components are the same type, simply swap their values, indexes, and pointers
-        draggedProcessor->swapParamValues(otherProcessor);
-
-        draggedProcessor->setProcessorIndex(otherIndex);
-        otherProcessor->setProcessorIndex(draggedIndex);
-        draggedProcessor->assignParamPointers(otherIndex);
-        otherProcessor->assignParamPointers(draggedIndex);
-    }
-    else {
-        // otherwise, reset the current values and then swap the indexes and pointers (internally), and values
-        draggedProcessor->moveParamValues(otherIndex);
-        otherProcessor->moveParamValues(draggedIndex);
-    }
-}
-
 
 std::vector<SwappableComponent*> SignalChainComponent::getComponentList()
 {

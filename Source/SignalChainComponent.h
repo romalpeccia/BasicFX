@@ -30,9 +30,7 @@ public:
     void resized() override;
     void actionListenerCallback(const juce::String& message) override;
     void handleDraggedComponent(SwappableComponent& draggedComp);
-
     void swapComponents(SwappableComponent& draggedComp, SwappableComponent& otherComp);
-    void swapProcessorParams(SwappableComponent& draggedComponent, SwappableComponent& otherComponent); //called by swapComponents
 
     int getComponentIndex(const SwappableComponent& component);
     std::vector<SwappableComponent*> getComponentList();

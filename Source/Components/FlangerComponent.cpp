@@ -11,7 +11,7 @@
 #include "FlangerComponent.h"
 #include "../Processors/FlangerProcessor.h"
 
-FlangerComponent::FlangerComponent(juce::AudioProcessorValueTreeState& apvts, int index) : SwappableComponent(std::make_unique<FlangerProcessor>(apvts, index)), apvts(apvts) {
+FlangerComponent::FlangerComponent(juce::AudioProcessorValueTreeState& apvts, int index) : apvts(apvts) {
 
     setComponentAttachments(index);
     button.setClickingTogglesState(true);

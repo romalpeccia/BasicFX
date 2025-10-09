@@ -14,7 +14,7 @@ BasicFXAudioProcessorEditor::BasicFXAudioProcessorEditor (BasicFXAudioProcessor&
     : AudioProcessorEditor (&p), audioProcessor (p), apvts(_apvts)
 {
 
-    audioProcessor.signalChainComponent = &signalChainComponent;
+    //audioProcessor.signalChainComponent = &signalChainComponent;
     for (auto* comp : getVisibleComps())
     {
         addAndMakeVisible(comp);

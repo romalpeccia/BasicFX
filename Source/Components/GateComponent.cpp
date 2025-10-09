@@ -12,7 +12,7 @@
 
 
 
-GateComponent::GateComponent(juce::AudioProcessorValueTreeState& apvts, int index) : SwappableComponent(std::make_unique<GateProcessor>(apvts, index)), apvts(apvts) {
+GateComponent::GateComponent(juce::AudioProcessorValueTreeState& apvts, int index) :  apvts(apvts) {
 
     setComponentAttachments(index);
     button.setClickingTogglesState(true);

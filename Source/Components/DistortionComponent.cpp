@@ -10,8 +10,7 @@
 
 #include "DistortionComponent.h"
 
-DistortionComponent::DistortionComponent(juce::AudioProcessorValueTreeState& apvts, int index): SwappableComponent(std::make_unique<DistortionProcessor>(apvts, index)),apvts(apvts) {
-
+DistortionComponent::DistortionComponent(juce::AudioProcessorValueTreeState& apvts, int index): apvts(apvts) {
 
     button.setClickingTogglesState(true);
     menu.addItem(WAVE_RECTIFIER_STRING, 1);

@@ -138,7 +138,6 @@ void EQProcessor::updateFilters()
 
 void EQProcessor::actionListenerCallback(const juce::String& message) {
     updateFilters();
-
 }
 
 void EQProcessor::setOnState(bool value)

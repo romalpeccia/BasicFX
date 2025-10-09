@@ -4,6 +4,10 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="raWmpG" name="BasicFX">
     <GROUP id="{A1F0544F-3C73-4724-D918-5CDB1150ED99}" name="Source">
+      <FILE id="A6Ofbh" name="SignalChainProcessor.cpp" compile="1" resource="0"
+            file="Source/SignalChainProcessor.cpp"/>
+      <FILE id="eXRhmY" name="SignalChainProcessor.h" compile="0" resource="0"
+            file="Source/SignalChainProcessor.h"/>
       <FILE id="D2juYS" name="SignalChainComponent.cpp" compile="1" resource="0"
             file="Source/SignalChainComponent.cpp"/>
       <FILE id="D3arN8" name="SignalChainComponent.h" compile="0" resource="0"

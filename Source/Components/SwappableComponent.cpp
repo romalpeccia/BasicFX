@@ -11,7 +11,7 @@
 #include "SwappableComponent.h"
 #include "../PluginEditor.h"
 
-SwappableComponent::SwappableComponent(std::unique_ptr<SwappableProcessor> processorPtr) : processor(std::move(processorPtr)) {
+SwappableComponent::SwappableComponent() {
 
     xButton.onClick = [this]() {
         int index = signalChainComponent->getComponentIndex(*this);
@@ -50,7 +50,7 @@ void SwappableComponent::mouseDrag(const juce::MouseEvent& e)
 void SwappableComponent::mouseUp(const juce::MouseEvent& e)  {
     //called while the component has stopped being dragged
 
-    setBounds(initialBounds);
+    setBounds(initialBounds); 
     if (signalChainComponent != nullptr) {
         signalChainComponent->handleDraggedComponent(*this);
     }

@@ -27,7 +27,7 @@ class SwappableProcessor : public juce::ActionListener {
 
         void actionListenerCallback(const juce::String& message) override {};
     private:
-            int processorIndex; //TODO: is this obsolete now?
+            int processorIndex;
 };
 
 
