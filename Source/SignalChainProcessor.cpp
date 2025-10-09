@@ -18,10 +18,8 @@ void SignalChainProcessor::actionListenerCallback(const juce::String& message) {
         {
             int index = tokens[1].getIntValue();
             juce::String componentType = tokens[2];
-            if (index < 0 || index > MAX_COMPONENTS) {
-                return;
-            }
-            else if (componentType == "EMPTY" || componentType == "GATE" || componentType == "DISTORTION" || componentType == "FLANGER" || componentType == "EQ") {
+            if ((index >= 0 && index < MAX_COMPONENTS) && (componentType == "EMPTY" || 
+                componentType == "GATE" || componentType == "DISTORTION" || componentType == "FLANGER" || componentType == "EQ")) {
                 if (componentType == "GATE") {
                     signalChain[index] = std::move(std::make_unique<GateProcessor>(apvts, index));
                 }
@@ -47,10 +45,8 @@ void SignalChainProcessor::actionListenerCallback(const juce::String& message) {
         if (tokens.size() == 2)
         {
             int index = tokens[1].getIntValue();
-            if (index < 0 || index > MAX_COMPONENTS || index >= signalChain.size()) {
-                return;
-            }
-            else {
+
+            if (index >=0 && index < MAX_COMPONENTS){
                 signalChain[index] = std::move(std::make_unique<EmptyProcessor>(index));
             }
         }
@@ -65,13 +61,13 @@ void SignalChainProcessor::actionListenerCallback(const juce::String& message) {
         }
     }
     else if (message.startsWith("UPDATE")) {
-        DBG(message);
         juce::StringArray tokens;
         tokens.addTokens(message, "_", "");
         if (tokens.size() == 3) {
             int index = tokens[1].getIntValue();
-            juce::String componentType = tokens[2];
-            signalChain[index]->updateFilters();
+            if (index >= 0 && index < MAX_COMPONENTS) {
+                signalChain[index]->updateFilters();
+            }
         }
     }
 
