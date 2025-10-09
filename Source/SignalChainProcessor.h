@@ -23,8 +23,20 @@ public:
     SignalChainProcessor(juce::AudioProcessorValueTreeState& _apvts) : apvts(_apvts) {
         signalChain.resize(MAX_COMPONENTS);
     }
-    void processBlock(juce::AudioBuffer<float>&) {};
-    void prepareToPlay(double sampleRate, int samplesPerBlock) {};
+    void processBlock(juce::AudioBuffer<float>& buffer) {
+        for (auto& processor : signalChain)
+        {
+            if (processor)
+            processor->processBlock(buffer);
+        }
+    };
+    void prepareToPlay(double sampleRate, int samplesPerBlock) {
+        for (auto& processor : signalChain)
+        {
+            if (processor)
+            processor->prepareToPlay(sampleRate, samplesPerBlock);
+        }
+    };
 
     void swapProcessorParams(int draggedIndex, int otherIndex);
     SwappableProcessor* getProcessor(int index) {}

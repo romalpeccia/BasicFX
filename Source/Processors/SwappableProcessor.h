@@ -22,6 +22,8 @@ class SwappableProcessor : public juce::ActionListener {
         virtual void assignParamPointers(int index) = 0;    //changes the pointers of the processor to point to the params cooresponding to the index supplied
         virtual void moveParamValues(int index) = 0;
         virtual void swapParamValues(SwappableProcessor* otherProcessor) = 0;
+        virtual void updateFilters() {  } //optional override if the inheriting class needs to update internal proccessor variables
+
         void setProcessorIndex(int index) { processorIndex = index; }
         int getProcessorIndex() { return processorIndex; }
 

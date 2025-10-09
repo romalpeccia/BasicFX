@@ -37,6 +37,7 @@ class SwappableComponent : public juce::Component, public juce::ActionBroadcaste
         void resized() override;
         void paint(juce::Graphics& g) override;
 
+        int getIndex();
         SignalChainComponent* getSignalChainComponent() const;
         void setSignalChainComponent(SignalChainComponent* _signalChainComponent); 
 

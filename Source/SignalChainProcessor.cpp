@@ -18,8 +18,6 @@ void SignalChainProcessor::actionListenerCallback(const juce::String& message) {
         {
             int index = tokens[1].getIntValue();
             juce::String componentType = tokens[2];
-            DBG(index);
-            DBG(componentType);
             if (index < 0 || index > MAX_COMPONENTS) {
                 return;
             }
@@ -39,8 +37,6 @@ void SignalChainProcessor::actionListenerCallback(const juce::String& message) {
                 else if (componentType == "EMPTY") {
                     signalChain[index] = std::move(std::make_unique<EmptyProcessor>(index));
                 }
-                DBG("added comp");
-                DBG(signalChain.size());
             }
         }
     }
@@ -68,6 +64,17 @@ void SignalChainProcessor::actionListenerCallback(const juce::String& message) {
             swapProcessorParams(draggedIndex, otherIndex);
         }
     }
+    else if (message.startsWith("UPDATE")) {
+        DBG(message);
+        juce::StringArray tokens;
+        tokens.addTokens(message, "_", "");
+        if (tokens.size() == 3) {
+            int index = tokens[1].getIntValue();
+            juce::String componentType = tokens[2];
+            signalChain[index]->updateFilters();
+        }
+    }
+
 }
 
 void SignalChainProcessor::swapProcessorParams(int draggedIndex, int otherIndex) {

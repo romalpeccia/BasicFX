@@ -83,7 +83,6 @@ void EQProcessor::processBlock(juce::AudioBuffer <float>& buffer) {
         {
             auto channelBlock = block.getSingleChannelBlock(ch);
             juce::dsp::ProcessContextReplacing<float> context(channelBlock);
-            DBG(*eqTypeParam);
             switch (int(*eqTypeParam)) {
                 case 0:
                     lowPassFilters[ch].process(context);

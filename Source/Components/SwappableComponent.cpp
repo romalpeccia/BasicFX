@@ -25,6 +25,7 @@ SwappableComponent::~SwappableComponent() {
 
 }
 
+
 void SwappableComponent::resized(){
     auto bounds = getLocalBounds();
     xButton.setBounds(bounds.withTrimmedBottom(bounds.getHeight() * 0.95).withTrimmedLeft(bounds.getWidth() * 0.75));
@@ -78,4 +79,8 @@ void SwappableComponent::setSignalChainComponent(SignalChainComponent* _signalCh
 
 SignalChainComponent* SwappableComponent::getSignalChainComponent() const {
     return signalChainComponent;
+}
+
+int SwappableComponent::getIndex() {
+    return signalChainComponent->getComponentIndex(*this);
 }

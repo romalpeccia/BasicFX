@@ -20,10 +20,10 @@ EQComponent::EQComponent(juce::AudioProcessorValueTreeState& apvts, int index) :
 
     addActionListener(getProcessor());
     lowFrequencySlider.onValueChange = [this]() {
-        sendActionMessage("");
+        sendActionMessage("UPDATE_" + juce::String(getIndex()) + "_EQ");
         };
     highFrequencySlider.onValueChange = [this]() {
-        sendActionMessage("");
+        sendActionMessage("UPDATE_" + juce::String(getIndex()) + "_EQ");
         };
     menu.onChange = [this](){
         resized();
