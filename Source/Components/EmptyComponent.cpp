@@ -26,9 +26,10 @@ EmptyComponent::EmptyComponent(int index) {
         int selectedId = menu.getSelectedId();
         juce::String selectedText = menu.getText();
         //signal the ComponentManager to do something
-        sendActionMessage("CREATECOMPONENT_" + String(index) + "_" + selectedText);
-
-        };
+        if (selectedText != "EMPTY") {
+            sendActionMessage("CREATECOMPONENT_" + String(index) + "_" + selectedText);
+        }
+    };
 }
 
 void EmptyComponent::setComponentAttachments(int index) {

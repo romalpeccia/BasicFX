@@ -29,7 +29,7 @@ class SwappableProcessor : public juce::ActionListener {
 
         void actionListenerCallback(const juce::String& message) override {};
     private:
-            int processorIndex;
+        int processorIndex;
 };
 
 

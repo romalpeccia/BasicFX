@@ -15,7 +15,7 @@ SwappableComponent::SwappableComponent() {
 
     xButton.onClick = [this]() {
         int index = signalChainComponent->getComponentIndex(*this);
-        //signal the ComponentManager to do something
+        //signal the ComponentManager to replace this component with an EmptyComponent
         sendActionMessage("DELETECOMPONENT_" + String(index));
         };
 
@@ -82,5 +82,10 @@ SignalChainComponent* SwappableComponent::getSignalChainComponent() const {
 }
 
 int SwappableComponent::getIndex() {
-    return signalChainComponent->getComponentIndex(*this);
+    if (signalChainComponent != nullptr) {
+        return signalChainComponent->getComponentIndex(*this);
+    }
+    else {
+        return -1;
+    }
 }

@@ -15,7 +15,6 @@
 
 using namespace juce;
 
-enum class ProcessorType { Gate, Flanger, Distortion };
 const int MAX_COMPONENTS = 16;
 const int MAX_INPUT_CHANNELS = 16;
 const int SAMPLE_RATE_FACTOR = 1000; //TODO: think of something better for this // just gives room for the CircularBuffers
@@ -59,16 +58,15 @@ const juce::String FLANGER_MIX_STRING = "FLANGER_MIX";
 const juce::String FLANGER_ON_STRING = "FLANGER_ON";
 const float DELAY_MAX = 1; 
 
-const juce::Colour COMPONENT_COLOUR_OFF = juce::Colours::dimgrey;
-
 const juce::String EQ_LOW_FREQUENCY_STRING = "EQ_LOW_FREQUENCY";
 const juce::String EQ_HIGH_FREQUENCY_STRING = "EQ_HIGH_FREQUENCY";
 const juce::String EQ_ON_STRING = "EQ_ON";
 const juce::String EQ_TYPE_STRING = "EQ_TYPE";
-
 const juce::String LOW_PASS_STRING = "LOW_PASS";
 const juce::String BAND_PASS_STRING = "BAND_PASS";
 const juce::String HIGH_PASS_STRING = "HIGH_PASS";
+
+const juce::Colour COMPONENT_COLOUR_OFF = juce::Colours::dimgrey;
 
 //math functions
 float calculateRMS(const float* samples, int numSamples);
@@ -76,7 +74,6 @@ float calculateRMSAcrossChannels(juce::AudioBuffer<float>& buffer);
 float calculateAverageAcrossChannels(const juce::AudioBuffer<float>& buffer); 
 
 
-//Custom LNF and components that were small enough to not warrant their own file
 class CustomLookAndFeel : public juce::LookAndFeel_V4 {
 public:
 

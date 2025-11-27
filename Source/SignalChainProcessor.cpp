@@ -10,10 +10,11 @@
 
 #include "SignalChainProcessor.h"
 void SignalChainProcessor::actionListenerCallback(const juce::String& message) {
+    juce::StringArray tokens;
+    tokens.addTokens(message, "_", "");
     if (message.startsWith("CREATECOMPONENT")) {
         //create effect processor
-        juce::StringArray tokens;
-        tokens.addTokens(message, "_", "");
+
         if (tokens.size() == 3)
         {
             int index = tokens[1].getIntValue();
@@ -40,29 +41,24 @@ void SignalChainProcessor::actionListenerCallback(const juce::String& message) {
     }
     else if (message.startsWith("DELETECOMPONENT")) {
         //create empty processor
-        juce::StringArray tokens;
-        tokens.addTokens(message, "_", "");
         if (tokens.size() == 2)
         {
             int index = tokens[1].getIntValue();
-
             if (index >=0 && index < MAX_COMPONENTS){
                 signalChain[index] = std::move(std::make_unique<EmptyProcessor>(index));
             }
         }
     }
     else if (message.startsWith("SWAPPED")) {
-        juce::StringArray tokens;
-        tokens.addTokens(message, "_", "");
         if (tokens.size() == 3) {
             int draggedIndex = tokens[1].getIntValue();
             int otherIndex = tokens[2].getIntValue();
-            swapProcessorParams(draggedIndex, otherIndex);
+            if (draggedIndex >= 0 && draggedIndex < MAX_COMPONENTS && otherIndex >= 0 && otherIndex < MAX_COMPONENTS) {
+                swapProcessorParams(draggedIndex, otherIndex);
+            }
         }
     }
     else if (message.startsWith("UPDATE")) {
-        juce::StringArray tokens;
-        tokens.addTokens(message, "_", "");
         if (tokens.size() == 3) {
             int index = tokens[1].getIntValue();
             if (index >= 0 && index < MAX_COMPONENTS) {
@@ -83,9 +79,9 @@ void SignalChainProcessor::swapProcessorParams(int draggedIndex, int otherIndex)
             // if both components are the same type, simply swap their values, indexes, and pointers
             draggedProcessor->swapParamValues(otherProcessor);
 
-            draggedProcessor->setProcessorIndex(otherIndex);
+            draggedProcessor->setProcessorIndex(otherIndex); 
             otherProcessor->setProcessorIndex(draggedIndex);
-            draggedProcessor->assignParamPointers(otherIndex);
+            draggedProcessor->assignParamPointers(otherIndex); 
             otherProcessor->assignParamPointers(draggedIndex);
         }
         else {
@@ -93,6 +89,6 @@ void SignalChainProcessor::swapProcessorParams(int draggedIndex, int otherIndex)
             draggedProcessor->moveParamValues(otherIndex);
             otherProcessor->moveParamValues(draggedIndex);
         }
-        std::swap(signalChain[draggedIndex], signalChain[otherIndex]);
+        std::swap(signalChain[draggedIndex], signalChain[otherIndex]); //swap the UI elements
     }
 }

@@ -18,6 +18,7 @@ SignalChainComponent::SignalChainComponent(BasicFXAudioProcessor& p, juce::Audio
 }
 
 void SignalChainComponent::initializeComponents() {
+    //initializes individual components on creation of SignalChainComponent
     bool paramsFromMemory = false;
 
     if (!paramsFromMemory) {
@@ -25,14 +26,8 @@ void SignalChainComponent::initializeComponents() {
         for (int i = 0; i < MAX_COMPONENTS; i++)
         {
             swappableComponents.push_back(std::make_unique<EmptyComponent>(i));
-            swappableComponents[i]->addActionListener(this);
-            swappableComponents[i]->addActionListener(audioProcessor.signalChainProcessor.get());
-            swappableComponents[i]->setSignalChainComponent(this);
-            swappableComponents[i]->setComponentAttachments(i);
-            addAndMakeVisible(swappableComponents.back().get());
-
             juce::String message = "CREATECOMPONENT_" + String(i) + "_EMPTY";
-            audioProcessor.signalChainProcessor->actionListenerCallback(message);
+            addComponentToChain(i, "EMPTY", message);
         }
     }
     else {
@@ -42,64 +37,57 @@ void SignalChainComponent::initializeComponents() {
 }
 
 void SignalChainComponent::actionListenerCallback(const juce::String& message) {
-
+    juce::StringArray tokens;
+    tokens.addTokens(message, "_", "");
     if (message.startsWith("CREATECOMPONENT")) { //called by EmptyComponent.menu.onChange()
-
-        juce::StringArray tokens;
-        tokens.addTokens(message, "_", "");
         if (tokens.size() == 3)
         {
             int index = tokens[1].getIntValue();
             juce::String componentType = tokens[2];
-
-            if (index < 0 || index > MAX_COMPONENTS || index >= swappableComponents.size())
-                return;
-            if (componentType != "EMPTY" && (componentType == "GATE" || componentType == "DISTORTION" || componentType == "FLANGER" || componentType == "EQ")) {
-
-                //replace the EmptyComponent (by changing its pointer, it automatically deletes due to unique_ptr logic) with the new Component
-                if (componentType == "GATE") {
-                    swappableComponents[index] = std::make_unique<GateComponent>(apvts, index);
-                }
-                else if (componentType == "DISTORTION") {
-                    swappableComponents[index] = std::make_unique<DistortionComponent>(apvts, index);
-                }
-                else if (componentType == "FLANGER") {
-                    swappableComponents[index] = std::make_unique<FlangerComponent>(apvts, index);
-                }
-                else if (componentType == "EQ") {
-                    swappableComponents[index] = std::make_unique<EQComponent>(apvts, index);
-                }
-                //TODO: maybe some of these calls should be in the swappableComponent constructor ?
-                //TODO make this a function
-                swappableComponents[index]->addActionListener(this); //for SwappableComponent.xButton to signal a delete
-                swappableComponents[index]->addActionListener(audioProcessor.signalChainProcessor.get());
-                swappableComponents[index]->setSignalChainComponent(this); 
-                swappableComponents[index]->setComponentAttachments(index); //TODO: why doesnt this work in the constructor?
-
-                addAndMakeVisible(swappableComponents[index].get());
-                resized();
-                audioProcessor.signalChainProcessor->actionListenerCallback(message);//notify the processor that the UI has changed
-            }
+            addComponentToChain(index, componentType, message);
         }
     }
     if (message.startsWith("DELETECOMPONENT")) { //called by SwappableComponent.xButton.onClick()
-
-        juce::StringArray tokens;
-        tokens.addTokens(message, "_", "");
         if (tokens.size() == 2)
         {
             int index = tokens[1].getIntValue();
-            if (index < 0 || index > MAX_COMPONENTS || index >= swappableComponents.size())
-                return;
-
-            swappableComponents[index] = std::make_unique<EmptyComponent>(index);
-            swappableComponents[index]->addActionListener(this);
-            swappableComponents[index]->addActionListener(audioProcessor.signalChainProcessor.get());
-            swappableComponents[index]->setSignalChainComponent(this);
-            addAndMakeVisible(swappableComponents[index].get());
-            resized();
-            audioProcessor.signalChainProcessor->actionListenerCallback(message); //notify the processor that the UI has changed
+            addComponentToChain(index, "EMPTY", message);
         }
+    }
+}
+
+void SignalChainComponent::addComponentToChain(int index, juce::String componentType, juce::String message) {
+    //TODO: maybe some of these calls should be in the swappableComponent constructor ?
+    //TODO make componentType enum and check if it exists within that enum
+    if (index < 0 || index > MAX_COMPONENTS || index >= swappableComponents.size())
+        return;
+    if (componentType == "EMPTY" || componentType == "GATE" || componentType == "DISTORTION" || componentType == "FLANGER" || componentType == "EQ") {
+
+        //replace the Component (by changing its pointer, it automatically deletes due to unique_ptr logic) with the new Component
+        if (componentType == "GATE") {
+            swappableComponents[index] = std::make_unique<GateComponent>(apvts, index);
+        }
+        else if (componentType == "DISTORTION") {
+            swappableComponents[index] = std::make_unique<DistortionComponent>(apvts, index);
+        }
+        else if (componentType == "FLANGER") {
+            swappableComponents[index] = std::make_unique<FlangerComponent>(apvts, index);
+        }
+        else if (componentType == "EQ") {
+            swappableComponents[index] = std::make_unique<EQComponent>(apvts, index);
+        }
+        else if (componentType == "EMPTY") {
+            swappableComponents[index] = std::make_unique<EmptyComponent>(index);
+        }
+
+        swappableComponents[index]->addActionListener(this); //for SwappableComponent.xButton and SwappableComponent.menu to signal a change
+        swappableComponents[index]->addActionListener(audioProcessor.signalChainProcessor.get()); //for components to signal filter updates
+        swappableComponents[index]->setSignalChainComponent(this); 
+        swappableComponents[index]->setComponentAttachments(index); //attach apvts params to component //TODO: why doesnt this work in the constructor?
+
+        addAndMakeVisible(swappableComponents[index].get());
+        resized();
+        audioProcessor.signalChainProcessor->actionListenerCallback(message);//notify the processor that the UI has changed
     }
 }
 
@@ -127,7 +115,7 @@ void SignalChainComponent::handleDraggedComponent(SwappableComponent& draggedCom
     for (auto& compPtr : swappableComponents) {
         auto comp = compPtr.get();
         if (comp != nullptr && comp != &draggedComp) {
-            //compare overlap in area of other components with this component
+            //compare overlap in area of other components with dragged component
             auto intersection = draggedComp.getDraggedBounds().getIntersection(comp->getBounds());
             int area = intersection.getWidth() * intersection.getHeight();
 
@@ -183,6 +171,5 @@ int SignalChainComponent::getComponentIndex(const SwappableComponent& component)
     for (int i = 0; i < swappableComponents.size(); i++)
         if (swappableComponents[i].get() == &component)
             return i;
-
     return -1;
 }

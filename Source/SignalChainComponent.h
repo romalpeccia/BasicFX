@@ -32,6 +32,7 @@ public:
     void handleDraggedComponent(SwappableComponent& draggedComp);
     void swapComponents(SwappableComponent& draggedComp, SwappableComponent& otherComp);
 
+    void addComponentToChain(int index, juce::String componentType, juce::String message);
     int getComponentIndex(const SwappableComponent& component);
     std::vector<SwappableComponent*> getComponentList();
 
