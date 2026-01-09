@@ -11,7 +11,7 @@
 #include "DistortionProcessor.h"
 
 
-DistortionProcessor::DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) : SwappableProcessor(index), apvts(_apvts) {
+DistortionProcessor::DistortionProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) : apvts(_apvts) {
     assignParamPointers(index);
 }
 
@@ -34,7 +34,7 @@ void DistortionProcessor::moveParamValues(int index) {
     setDistortionType(0);
 
     //change index and move pointers to new index
-    setProcessorIndex(index);
+    //setProcessorIndex(index);
     assignParamPointers(index);
 
     //overwrite newly pointed to values
@@ -189,7 +189,7 @@ void DistortionProcessor::processDistortionSlewLimiter(juce::AudioBuffer<float>&
 
 void DistortionProcessor::setOnState(bool value)
 {
-    if (auto* param = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(makeID(DISTORTION_ON_STRING, getProcessorIndex()))))
+    if (auto* param = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(makeID(DISTORTION_ON_STRING, getIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(value ? 1.0f : 0.0f);
@@ -200,7 +200,7 @@ void DistortionProcessor::setOnState(bool value)
 void DistortionProcessor::setAmount(float value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
-        apvts.getParameter(makeID(DISTORTION_AMOUNT_STRING, getProcessorIndex()))))
+        apvts.getParameter(makeID(DISTORTION_AMOUNT_STRING, getIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));
@@ -211,7 +211,7 @@ void DistortionProcessor::setAmount(float value)
 void DistortionProcessor::setDistortionType(int value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterChoice*>(
-        apvts.getParameter(makeID(DISTORTION_TYPE_STRING, getProcessorIndex()))))
+        apvts.getParameter(makeID(DISTORTION_TYPE_STRING, getIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(static_cast<float>(value)));

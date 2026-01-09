@@ -18,7 +18,7 @@ EQComponent::EQComponent(juce::AudioProcessorValueTreeState& apvts, int index) :
     menu.addItem("HIGH PASS", 3);
     menu.setSelectedId(1);
 
-    addActionListener(getProcessor());
+    //addActionListener(getProcessor());
     lowFrequencySlider.onValueChange = [this]() {
         sendActionMessage("UPDATE_" + juce::String(getIndex()) + "_EQ");
         };

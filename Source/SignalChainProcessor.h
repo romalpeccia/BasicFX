@@ -38,8 +38,16 @@ public:
         }
     };
 
+
     void swapProcessorParams(int draggedIndex, int otherIndex);
-    SwappableProcessor* getProcessor(int index) {}
+    int getProcessorIndex(const SwappableProcessor &processor) {
+        //returns index of a component if it is in std::vector<std::unique_ptr<SwappableProcessor>> signalChain
+        for (int i = 0; i < signalChain.size(); i++)
+            if (signalChain[i].get() == &processor)
+                return i;
+        return -1;
+        
+    }
     void actionListenerCallback(const juce::String& message);
 private:
     std::vector<std::unique_ptr<SwappableProcessor>> signalChain;

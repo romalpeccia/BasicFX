@@ -11,7 +11,6 @@
 #pragma once
 #include <JuceHeader.h>
 #include "../Utilities.h"
-#include "../Processors/SwappableProcessor.h"
 
 class SignalChainComponent; //forward declaration of SignalChainComponent to avoid circular dependencies
 
@@ -41,7 +40,7 @@ class SwappableComponent : public juce::Component, public juce::ActionBroadcaste
         SignalChainComponent* getSignalChainComponent() const;
         void setSignalChainComponent(SignalChainComponent* _signalChainComponent); 
 
-        SwappableProcessor* getProcessor() { return nullptr; };
+
     private:
 
         juce::ComponentDragger componentDragger; //adding this member allows us to drag the component using the mouseEvent that triggered it

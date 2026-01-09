@@ -11,7 +11,7 @@
 #include "EQProcessor.h"
 
 
-EQProcessor::EQProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) : SwappableProcessor(index), apvts(_apvts) {
+EQProcessor::EQProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) : apvts(_apvts) {
     assignParamPointers(index);
     prepareToPlay(sampleRate, totalNumInputChannels);
 }
@@ -37,7 +37,7 @@ void EQProcessor::moveParamValues(int index) {
     setEQType(0);
 
     //change index and move pointers to new index
-    setProcessorIndex(index);
+    //setProcessorIndex(index);
     assignParamPointers(index);
 
     //overwrite newly pointed to values
@@ -141,7 +141,7 @@ void EQProcessor::actionListenerCallback(const juce::String& message) {
 
 void EQProcessor::setOnState(bool value)
 {
-    if (auto* param = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(makeID(EQ_ON_STRING, getProcessorIndex()))))
+    if (auto* param = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(makeID(EQ_ON_STRING, getIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(value ? 1.0f : 0.0f);
@@ -152,7 +152,7 @@ void EQProcessor::setOnState(bool value)
 void EQProcessor::setHighFrequency(float value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
-        apvts.getParameter(makeID(EQ_HIGH_FREQUENCY_STRING, getProcessorIndex()))))
+        apvts.getParameter(makeID(EQ_HIGH_FREQUENCY_STRING, getIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));
@@ -164,7 +164,7 @@ void EQProcessor::setHighFrequency(float value)
 void EQProcessor::setLowFrequency(float value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
-        apvts.getParameter(makeID(EQ_LOW_FREQUENCY_STRING, getProcessorIndex()))))
+        apvts.getParameter(makeID(EQ_LOW_FREQUENCY_STRING, getIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));
@@ -176,7 +176,7 @@ void EQProcessor::setLowFrequency(float value)
 void EQProcessor::setEQType(int value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterChoice*>(
-        apvts.getParameter(makeID(EQ_TYPE_STRING, getProcessorIndex()))))
+        apvts.getParameter(makeID(EQ_TYPE_STRING, getIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(static_cast<float>(value)));

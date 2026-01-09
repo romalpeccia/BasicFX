@@ -23,19 +23,17 @@ class SignalChainComponent : public juce::Component, public juce::ActionListener
 public:
 
     SignalChainComponent(BasicFXAudioProcessor& p, juce::AudioProcessorValueTreeState& _apvts);
-
     void initializeComponents();
-    //void createComponent(juce::String componentType, int index, const juce::String& message);
 
     void resized() override;
     void actionListenerCallback(const juce::String& message) override;
-    void handleDraggedComponent(SwappableComponent& draggedComp);
-    void swapComponents(SwappableComponent& draggedComp, SwappableComponent& otherComp);
 
     void addComponentToChain(int index, juce::String componentType, juce::String message);
     int getComponentIndex(const SwappableComponent& component);
     std::vector<SwappableComponent*> getComponentList();
 
+    void handleDraggedComponent(SwappableComponent& draggedComp);
+    void swapComponents(SwappableComponent& draggedComp, SwappableComponent& otherComp);
 
 private:
     std::vector<std::unique_ptr<SwappableComponent>> swappableComponents; // contains pointers to all of our components. Unique pointers allow us to change what they point to delete the old component and assign a new one

@@ -10,7 +10,7 @@
 
 #include "FlangerProcessor.h"
 
-FlangerProcessor::FlangerProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) : SwappableProcessor(index), apvts(_apvts) {
+FlangerProcessor::FlangerProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) :  apvts(_apvts) {
     assignParamPointers(index);
     prepareToPlay(sampleRate, totalNumInputChannels);
 }
@@ -32,7 +32,7 @@ void FlangerProcessor::moveParamValues(int index) {
     setMix(0.0f);
 
     //change index and move pointers to new index
-    setProcessorIndex(index);
+    //setProcessorIndex(index);
     assignParamPointers(index);
 
     //overwrite newly pointed to values
@@ -88,7 +88,7 @@ void FlangerProcessor::processBlock(juce::AudioBuffer<float>& buffer) {
 void FlangerProcessor::setOnState(bool value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterBool*>(
-        apvts.getParameter(makeID(FLANGER_ON_STRING, getProcessorIndex()))))
+        apvts.getParameter(makeID(FLANGER_ON_STRING, getIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(value ? 1.0f : 0.0f);
@@ -99,7 +99,7 @@ void FlangerProcessor::setOnState(bool value)
 void FlangerProcessor::setDelay(float value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
-        apvts.getParameter(makeID(FLANGER_DELAY_STRING, getProcessorIndex()))))
+        apvts.getParameter(makeID(FLANGER_DELAY_STRING, getIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));
@@ -110,7 +110,7 @@ void FlangerProcessor::setDelay(float value)
 void FlangerProcessor::setMix(float value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
-        apvts.getParameter(makeID(FLANGER_MIX_STRING, getProcessorIndex()))))
+        apvts.getParameter(makeID(FLANGER_MIX_STRING, getIndex()))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));

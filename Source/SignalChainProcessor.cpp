@@ -34,7 +34,7 @@ void SignalChainProcessor::actionListenerCallback(const juce::String& message) {
                     signalChain[index] = std::move(std::make_unique<EQProcessor>(apvts, index));
                 }
                 else if (componentType == "EMPTY") {
-                    signalChain[index] = std::move(std::make_unique<EmptyProcessor>(index));
+                    signalChain[index] = std::move(std::make_unique<EmptyProcessor>());
                 }
             }
         }
@@ -45,7 +45,7 @@ void SignalChainProcessor::actionListenerCallback(const juce::String& message) {
         {
             int index = tokens[1].getIntValue();
             if (index >=0 && index < MAX_COMPONENTS){
-                signalChain[index] = std::move(std::make_unique<EmptyProcessor>(index));
+                signalChain[index] = std::move(std::make_unique<EmptyProcessor>());
             }
         }
     }
@@ -70,25 +70,27 @@ void SignalChainProcessor::actionListenerCallback(const juce::String& message) {
 }
 
 void SignalChainProcessor::swapProcessorParams(int draggedIndex, int otherIndex) {
-
+    DBG(draggedIndex);
+    DBG(otherIndex);
     SwappableProcessor* draggedProcessor = signalChain[draggedIndex].get();
     SwappableProcessor* otherProcessor = signalChain[otherIndex].get();
 
     if (draggedIndex >= 0 && otherIndex >= 0 && draggedIndex < signalChain.size() && otherIndex < signalChain.size()) {
+
         if (typeid(*draggedProcessor) == typeid(*otherProcessor)) {
-            // if both components are the same type, simply swap their values, indexes, and pointers
+            // if both components are the same type, simply swap their values and pointers
             draggedProcessor->swapParamValues(otherProcessor);
 
-            draggedProcessor->setProcessorIndex(otherIndex); 
-            otherProcessor->setProcessorIndex(draggedIndex);
+            //draggedProcessor->setProcessorIndex(otherIndex); 
+            //otherProcessor->setProcessorIndex(draggedIndex);
             draggedProcessor->assignParamPointers(otherIndex); 
             otherProcessor->assignParamPointers(draggedIndex);
         }
         else {
-            // otherwise, reset the current values and then swap the indexes and pointers (internally), and values
+            // otherwise, reset the current values and then swap the pointers and values
             draggedProcessor->moveParamValues(otherIndex);
             otherProcessor->moveParamValues(draggedIndex);
         }
-        std::swap(signalChain[draggedIndex], signalChain[otherIndex]); //swap the UI elements
+        std::swap(signalChain[draggedIndex], signalChain[otherIndex]); //swap the processors in the vector
     }
 }

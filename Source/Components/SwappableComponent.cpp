@@ -9,7 +9,7 @@
 */
 
 #include "SwappableComponent.h"
-#include "../PluginEditor.h"
+#include "../SignalChainComponent.h" 
 
 SwappableComponent::SwappableComponent() {
 
