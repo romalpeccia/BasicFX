@@ -224,21 +224,19 @@ juce::AudioProcessorEditor* BasicFXAudioProcessor::createEditor()
 //==============================================================================
 void BasicFXAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
-
-    juce::MemoryOutputStream mos(destData, true);
-    apvts.state.writeToStream(mos);
+    // Flush pending parameter changes before serialising the state snapshot.
+    const auto state = apvts.copyState();
+    juce::MemoryOutputStream mos(destData, false);
+    state.writeToStream(mos);
 }
 
 void BasicFXAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getOnStateInformation() call.
+    if (data == nullptr || sizeInBytes <= 0)
+        return;
 
     auto tree = juce::ValueTree::readFromData(data, sizeInBytes);
-    if (tree.isValid()) {
+    if (tree.isValid() && tree.hasType(apvts.state.getType())) {
         apvts.replaceState(tree);
     }
 }
