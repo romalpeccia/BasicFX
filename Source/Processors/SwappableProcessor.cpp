@@ -25,6 +25,7 @@ int SwappableProcessor::getIndex() {
         return signalChainProcessor->getProcessorIndex(*this);
     }
     else {
+        DBG("INDEX NOT FOUND");
         return -1;
     }
 }

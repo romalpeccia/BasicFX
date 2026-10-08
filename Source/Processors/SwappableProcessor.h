@@ -32,6 +32,8 @@ class SwappableProcessor : public juce::ActionListener {
         void actionListenerCallback(const juce::String& message) override {};
     private:
         SignalChainProcessor* signalChainProcessor = nullptr;
+    protected:
+        int componentIndex = -1; // for keeping track of where the component holding this processor lives
 };
 
 

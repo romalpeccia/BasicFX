@@ -36,7 +36,9 @@ void SignalChainProcessor::actionListenerCallback(const juce::String& message) {
                 else if (componentType == "EMPTY") {
                     signalChain[index] = std::move(std::make_unique<EmptyProcessor>());
                 }
+                signalChain[index]->setSignalChainProcessor(this);
             }
+            
         }
     }
     else if (message.startsWith("DELETECOMPONENT")) {

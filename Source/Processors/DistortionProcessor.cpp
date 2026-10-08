@@ -16,6 +16,7 @@ DistortionProcessor::DistortionProcessor(juce::AudioProcessorValueTreeState& _ap
 }
 
 void DistortionProcessor::assignParamPointers(int index) {
+    componentIndex = index;
     onStateParam = apvts.getRawParameterValue(makeID(DISTORTION_ON_STRING, index));
     amountParam = apvts.getRawParameterValue(makeID(DISTORTION_AMOUNT_STRING, index));
     distortionTypeParam = apvts.getRawParameterValue(makeID(DISTORTION_TYPE_STRING, index));
@@ -189,7 +190,7 @@ void DistortionProcessor::processDistortionSlewLimiter(juce::AudioBuffer<float>&
 
 void DistortionProcessor::setOnState(bool value)
 {
-    if (auto* param = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(makeID(DISTORTION_ON_STRING, getIndex()))))
+    if (auto* param = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(makeID(DISTORTION_ON_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(value ? 1.0f : 0.0f);
@@ -200,7 +201,7 @@ void DistortionProcessor::setOnState(bool value)
 void DistortionProcessor::setAmount(float value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
-        apvts.getParameter(makeID(DISTORTION_AMOUNT_STRING, getIndex()))))
+        apvts.getParameter(makeID(DISTORTION_AMOUNT_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));
@@ -211,7 +212,7 @@ void DistortionProcessor::setAmount(float value)
 void DistortionProcessor::setDistortionType(int value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterChoice*>(
-        apvts.getParameter(makeID(DISTORTION_TYPE_STRING, getIndex()))))
+        apvts.getParameter(makeID(DISTORTION_TYPE_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(static_cast<float>(value)));

@@ -16,7 +16,7 @@ GateProcessor::GateProcessor(juce::AudioProcessorValueTreeState& _apvts, int ind
 }
 
 void GateProcessor::assignParamPointers(int index){
-
+    componentIndex = index;
     onStateParam = apvts.getRawParameterValue(makeID(GATE_ON_STRING, index));
     thresholdParam = apvts.getRawParameterValue(makeID(THRESHOLD_STRING, index));
     gateTypeParam = apvts.getRawParameterValue(makeID(GATE_STATE_STRING, index));
@@ -254,7 +254,7 @@ void GateProcessor::processGateAdvanced(juce::AudioBuffer<float>& buffer) {
 void GateProcessor::setOnState(bool value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterBool*>(
-        apvts.getParameter(makeID(GATE_ON_STRING, getIndex()))))
+        apvts.getParameter(makeID(GATE_ON_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(value ? 1.0f : 0.0f);
@@ -265,7 +265,7 @@ void GateProcessor::setOnState(bool value)
 void GateProcessor::setThreshold(float value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
-        apvts.getParameter(makeID(THRESHOLD_STRING, getIndex()))))
+        apvts.getParameter(makeID(THRESHOLD_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));
@@ -276,7 +276,7 @@ void GateProcessor::setThreshold(float value)
 void GateProcessor::setGateType(int value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterChoice*>(
-        apvts.getParameter(makeID(GATE_STATE_STRING, getIndex()))))
+        apvts.getParameter(makeID(GATE_STATE_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(static_cast<float>(value)));
@@ -287,7 +287,7 @@ void GateProcessor::setGateType(int value)
 void GateProcessor::setAttack(float value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
-        apvts.getParameter(makeID(ATTACK_STRING, getIndex()))))
+        apvts.getParameter(makeID(ATTACK_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));
@@ -298,7 +298,7 @@ void GateProcessor::setAttack(float value)
 void GateProcessor::setRelease(float value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
-        apvts.getParameter(makeID(RELEASE_STRING, getIndex()))))
+        apvts.getParameter(makeID(RELEASE_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));
@@ -309,7 +309,7 @@ void GateProcessor::setRelease(float value)
 void GateProcessor::setHold(float value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
-        apvts.getParameter(makeID(HOLD_STRING, getIndex()))))
+        apvts.getParameter(makeID(HOLD_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));

@@ -15,6 +15,7 @@ FlangerProcessor::FlangerProcessor(juce::AudioProcessorValueTreeState& _apvts, i
     prepareToPlay(sampleRate, totalNumInputChannels);
 }
 void FlangerProcessor::assignParamPointers(int index) {
+    componentIndex = index;
     delayParam = apvts.getRawParameterValue(makeID(FLANGER_DELAY_STRING, index));
     onStateParam = apvts.getRawParameterValue(makeID(FLANGER_ON_STRING, index));
     mixParam = apvts.getRawParameterValue(makeID(FLANGER_MIX_STRING, index));
@@ -88,7 +89,7 @@ void FlangerProcessor::processBlock(juce::AudioBuffer<float>& buffer) {
 void FlangerProcessor::setOnState(bool value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterBool*>(
-        apvts.getParameter(makeID(FLANGER_ON_STRING, getIndex()))))
+        apvts.getParameter(makeID(FLANGER_ON_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(value ? 1.0f : 0.0f);
@@ -99,7 +100,7 @@ void FlangerProcessor::setOnState(bool value)
 void FlangerProcessor::setDelay(float value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
-        apvts.getParameter(makeID(FLANGER_DELAY_STRING, getIndex()))))
+        apvts.getParameter(makeID(FLANGER_DELAY_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));
@@ -110,7 +111,7 @@ void FlangerProcessor::setDelay(float value)
 void FlangerProcessor::setMix(float value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
-        apvts.getParameter(makeID(FLANGER_MIX_STRING, getIndex()))))
+        apvts.getParameter(makeID(FLANGER_MIX_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));

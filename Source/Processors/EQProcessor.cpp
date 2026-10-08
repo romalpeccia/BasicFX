@@ -17,6 +17,7 @@ EQProcessor::EQProcessor(juce::AudioProcessorValueTreeState& _apvts, int index) 
 }
 
 void EQProcessor::assignParamPointers(int index) {
+    componentIndex = index;
     onStateParam = apvts.getRawParameterValue(makeID(EQ_ON_STRING, index));
     lowFrequencyParam = apvts.getRawParameterValue(makeID(EQ_LOW_FREQUENCY_STRING, index));
     highFrequencyParam = apvts.getRawParameterValue(makeID(EQ_HIGH_FREQUENCY_STRING, index));
@@ -141,7 +142,7 @@ void EQProcessor::actionListenerCallback(const juce::String& message) {
 
 void EQProcessor::setOnState(bool value)
 {
-    if (auto* param = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(makeID(EQ_ON_STRING, getIndex()))))
+    if (auto* param = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(makeID(EQ_ON_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(value ? 1.0f : 0.0f);
@@ -152,7 +153,7 @@ void EQProcessor::setOnState(bool value)
 void EQProcessor::setHighFrequency(float value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
-        apvts.getParameter(makeID(EQ_HIGH_FREQUENCY_STRING, getIndex()))))
+        apvts.getParameter(makeID(EQ_HIGH_FREQUENCY_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));
@@ -164,7 +165,7 @@ void EQProcessor::setHighFrequency(float value)
 void EQProcessor::setLowFrequency(float value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterFloat*>(
-        apvts.getParameter(makeID(EQ_LOW_FREQUENCY_STRING, getIndex()))))
+        apvts.getParameter(makeID(EQ_LOW_FREQUENCY_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(value));
@@ -176,7 +177,7 @@ void EQProcessor::setLowFrequency(float value)
 void EQProcessor::setEQType(int value)
 {
     if (auto* param = dynamic_cast<juce::AudioParameterChoice*>(
-        apvts.getParameter(makeID(EQ_TYPE_STRING, getIndex()))))
+        apvts.getParameter(makeID(EQ_TYPE_STRING, componentIndex))))
     {
         param->beginChangeGesture();
         param->setValueNotifyingHost(param->convertTo0to1(static_cast<float>(value)));
